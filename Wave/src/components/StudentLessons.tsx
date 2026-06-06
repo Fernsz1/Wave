@@ -98,9 +98,11 @@ export default function StudentLessons({
   const [summativeSubmitted, setSummativeSubmitted] = useState<boolean>(false);
   const [summativeScore, setSummativeScore] = useState<number>(0);
 
-  // Filter remediation materials specific to this student
+  // Remedial packs for this student: section-targeted packs (canonical) reach
+  // everyone in the section; legacy packs fall back to per-student targeting.
+  const studentSection = student.section || student.gradeLevel;
   const myRemediations = remediationMaterials.filter(
-    mat => mat.assignedStudentLrn === student.lrn && mat.isPublished
+    mat => mat.isPublished && (mat.targetSection ? mat.targetSection === studentSection : mat.assignedStudentLrn === student.lrn)
   );
 
   // Find current and next topic for navigation in the active lesson

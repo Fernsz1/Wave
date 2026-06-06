@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.5
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Home, BookOpen, Trophy, BrainCircuit, User, 
@@ -12,7 +12,10 @@ import {
 } from 'lucide-react';
 
 // Models
-import { UserRole, StudentUser, TeacherUser, StudentProgress, TeacherRemediationMaterial } from './types';
+import { UserRole, StudentUser, TeacherUser, StudentProgress, TeacherRemediationMaterial, Lesson } from './types';
+
+// Data-access seam (Mock by default; Http+MQTT when VITE_API_BASE is set)
+import { createRepository, RepoUpdate } from './repo';
 
 // Seed Mock Data
 import { 
@@ -95,6 +98,7 @@ export default function App() {
       localStorage.setItem('wave_enrolled_students', JSON.stringify(updated));
       return updated;
     });
+    repo.enrollStudent(newStudent).catch(() => {});
   };
 
   // Tab states: 学生 default -> 'dashboard', 教师 default -> 'dashboard'
@@ -104,10 +108,55 @@ export default function App() {
   const [progressRecords, setProgressRecords] = useState<Record<string, StudentProgress>>(INITIAL_PROGRESS_RECORDS);
   const [remediationMaterials, setRemediationMaterials] = useState<TeacherRemediationMaterial[]>(INITIAL_REMEDIATION_MATERIALS);
 
+  // Repository seam + catalog store. Mock keeps the in-memory defaults above;
+  // the Http repo replaces them from the server on mount.
+  const repo = useMemo(() => createRepository(), []);
+  const [lessonsBySubject, setLessonsBySubject] = useState<Record<string, Lesson[]>>(MOCK_LESSONS_BY_SUBJECT);
+
+  // Apply a live "down" update arriving over MQTT (Http mode only).
+  const applyRepoUpdate = (u: RepoUpdate) => {
+    if (u.kind === 'progress') {
+      setProgressRecords(prev => ({ ...prev, [u.record.studentLrn]: { ...prev[u.record.studentLrn], ...u.record } }));
+    } else if (u.kind === 'remediation') {
+      setRemediationMaterials(prev => [u.material, ...prev.filter(m => m.id !== u.material.id)]);
+    }
+    // 'rankings' updates are reflected client-side via the progress recomputation.
+  };
+
+  // Cold-start hydration from the server (no-op for Mock — defaults already set).
+  useEffect(() => {
+    if (!repo.isLive) return;
+    repo.bootstrap()
+      .then(b => {
+        setStudents(b.students);
+        setLessonsBySubject(b.lessonsBySubject);
+        setProgressRecords(b.progressRecords);
+        setRemediationMaterials(b.remediationMaterials);
+      })
+      .catch(e => console.error('[wave] bootstrap failed', e));
+  }, [repo]);
+
   // Course subject tracks: mathematics, science, english
   const [activeSubject, setActiveSubject] = useState<string>('science');
-  const [activeSection, setActiveSection] = useState<string>('Grade 6 - Section Newton');
+  // Default to a section that has seeded, active student data so the dashboard
+  // opens onto meaningful records (and live updates have somewhere to land).
+  const [activeSection, setActiveSection] = useState<string>('Grade 4 - Section Newton');
   const [hasSelectedSubject, setHasSelectedSubject] = useState<boolean>(false);
+
+  // Live "down" subscription. Re-runs when the viewed section/subject changes so
+  // the teacher's live feed always follows whatever section they're looking at;
+  // for a student it tracks their own section + LRN topics.
+  useEffect(() => {
+    if (!repo.isLive || !currentUser || !role) return;
+    const lrn = role === 'student' ? (currentUser as StudentUser).lrn : undefined;
+    const section = role === 'student'
+      ? ((currentUser as StudentUser).section || (currentUser as StudentUser).gradeLevel)
+      : activeSection;
+    repo.subscribeLive({ role, lrn, section, subject: activeSubject, onUpdate: applyRepoUpdate });
+    return () => repo.unsubscribeLive();
+    // applyRepoUpdate only calls stable setState fns, so it's safe to omit from deps.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [repo, currentUser, role, activeSection, activeSubject]);
 
   // Student dashboard custom direct lesson-topic navigation state hooks
   const [navTopicId, setNavTopicId] = useState<string>('');
@@ -141,7 +190,7 @@ export default function App() {
     setRole(null);
     setActiveTab('dashboard');
     setActiveSubject('science');
-    setActiveSection('Grade 6 - Section Newton');
+    setActiveSection('Grade 4 - Section Newton');
     setHasSelectedSubject(false);
   };
 
@@ -158,6 +207,13 @@ export default function App() {
       if (presetSection) {
         setActiveSection(presetSection);
       }
+    }
+
+    // Establish a write token when backed by the server. The live subscription
+    // itself is (re)created by the effect below so it follows section changes.
+    if (repo.isLive) {
+      const principalId = selectedRole === 'student' ? (user as StudentUser).lrn : (user as TeacherUser).teacherId;
+      repo.authenticate(selectedRole, principalId, user.name).catch(() => {});
     }
   };
 
@@ -199,6 +255,10 @@ export default function App() {
       ...prev,
       [lrn]: updatedProgress
     }));
+
+    // Sync "up" to the server (Mock no-ops). Section drives the down-broadcast.
+    const section = (currentUser as StudentUser).section || (currentUser as StudentUser).gradeLevel;
+    repo.saveQuizAttempt({ lrn, topicId, lessonId, score, answers, section, subject: activeSubject }).catch(() => {});
   };
 
   // Dynamic Summative scoring
@@ -225,11 +285,15 @@ export default function App() {
       ...prev,
       [lrn]: updatedProgress
     }));
+
+    const section = (currentUser as StudentUser).section || (currentUser as StudentUser).gradeLevel;
+    repo.saveSummativeResult({ lrn, lessonId, score, section, subject: activeSubject }).catch(() => {});
   };
 
   // Publish remedial material via wizard triggers
   const handlePublishRemedialMaterial = (newMaterial: TeacherRemediationMaterial) => {
     setRemediationMaterials(prev => [newMaterial, ...prev]);
+    repo.publishRemediation(newMaterial, { subject: activeSubject, section: activeSection }).catch(() => {});
 
     // Force add student progress record trace if none exists, keeping overall systems calculated correctly.
     const studentLrn = newMaterial.assignedStudentLrn;
@@ -493,7 +557,7 @@ export default function App() {
               >
                 {/* Resolve current lessons based on selected subject */}
                 {(() => {
-                  const currentLessons = MOCK_LESSONS_BY_SUBJECT[activeSubject] || MOCK_LESSONS;
+                  const currentLessons = lessonsBySubject[activeSubject] || MOCK_LESSONS;
 
                   return (
                     <>

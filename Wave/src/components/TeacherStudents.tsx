@@ -131,10 +131,25 @@ export default function TeacherStudents({
       status = 'Needs Remediation';
     }
 
+    // Where the student actually is, by TOPIC completion — mirrors how the
+    // student app computes their "current lesson", so both views agree on
+    // progress even before a summative is taken.
+    const startedLessons = activeLessonsProgress.filter(l => l.completedCount > 0);
+    const currentLesson = startedLessons.length > 0
+      ? startedLessons[startedLessons.length - 1]
+      : activeLessonsProgress[0];
+    const currentLessonTopicsDone = !!currentLesson && currentLesson.completedCount === currentLesson.totalCount;
+    const currentSummativeTaken = prog
+      ? Object.keys(prog.summativeScores).includes(currentLesson?.lessonId ?? '')
+      : true;
+
     return {
       student,
       completedTopics,
       activeLessonsProgress,
+      currentLesson,
+      currentLessonTopicsDone,
+      currentSummativeTaken,
       quizAvg,
       summativeScore,
       overallGrade,
@@ -221,6 +236,16 @@ export default function TeacherStudents({
                         <div className="text-[10px] font-mono tracking-wider text-slate-405 mt-0.5">
                           LRN: {row.student.lrn}
                         </div>
+                        {row.currentLesson && (
+                          <div className="mt-1 inline-flex items-center gap-1.5 text-[10px] font-semibold">
+                            <span className="text-indigo-600">On {row.currentLesson.lessonTitle}</span>
+                            {row.hasRealProgress && row.currentLessonTopicsDone && !row.currentSummativeTaken && (
+                              <span className="text-amber-700 bg-amber-50 border border-amber-100 px-1.5 py-0.5 rounded-full uppercase tracking-wide text-[8px] font-extrabold">
+                                summative pending
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </td>
 
@@ -396,16 +421,36 @@ export default function TeacherStudents({
                 {progressRecords[selectedStudent.lrn] ? (
                   <div className="space-y-4">
                     {currentLessons.map((lesson) => {
-                      const lessonAttempts = Object.values(progressRecords[selectedStudent.lrn].quizAttempts)
+                      const record = progressRecords[selectedStudent.lrn];
+                      const lessonAttempts = Object.values(record.quizAttempts)
                         .filter(att => lesson.topics.some(t => t.id === att.topicId));
 
                       if (lessonAttempts.length === 0) return null;
 
+                      const topicsDone = lesson.topics.filter(t => record.completedTopicIds.includes(t.id)).length;
+                      const topicsTotal = lesson.topics.length;
+                      const summativeTaken = Object.keys(record.summativeScores).includes(lesson.id);
+                      const topicsComplete = topicsDone === topicsTotal;
+
                       return (
                         <div key={lesson.id} className="p-3.5 bg-slate-50/50 rounded-xl space-y-2.5 border border-slate-100">
-                          <span className="font-sans font-bold text-xs text-indigo-900 block border-b border-indigo-100/60 pb-1.5">
-                            {lesson.title}
-                          </span>
+                          <div className="flex items-center justify-between gap-2 border-b border-indigo-100/60 pb-1.5">
+                            <span className="font-sans font-bold text-xs text-indigo-900">
+                              {lesson.title}
+                            </span>
+                            <span className="flex items-center gap-1.5 shrink-0">
+                              <span className="text-[10px] font-bold text-slate-500">{topicsDone}/{topicsTotal} topics</span>
+                              {summativeTaken ? (
+                                <span className="text-[8px] font-extrabold uppercase tracking-wide text-emerald-700 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded-full">
+                                  Summative done
+                                </span>
+                              ) : topicsComplete ? (
+                                <span className="text-[8px] font-extrabold uppercase tracking-wide text-amber-700 bg-amber-50 border border-amber-100 px-1.5 py-0.5 rounded-full">
+                                  Summative pending
+                                </span>
+                              ) : null}
+                            </span>
+                          </div>
                           <div className="space-y-2">
                             {lessonAttempts.map((att) => {
                               let topicObj = lesson.topics.find(t => t.id === att.topicId);

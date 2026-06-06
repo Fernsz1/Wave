@@ -9,6 +9,7 @@ export default defineConfig(() => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
+        '@protocol': path.resolve(__dirname, '../protocol'),
       },
     },
     server: {

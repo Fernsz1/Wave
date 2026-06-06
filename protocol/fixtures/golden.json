@@ -1,0 +1,130 @@
+{
+  "_comment": "Golden {type, object, tokenArray} triples. Both the Vitest (TS) and pytest (Python) suites assert encode(object) === tokenArray AND decode(tokenArray) === object. Matching golden values across both languages is the guarantee that the app and server agree over MQTT/LoRa. Optional fields absent from `object` encode as null and must NOT reappear on decode.",
+  "cases": [
+    {
+      "name": "StudentSignup basic",
+      "type": "StudentSignup",
+      "object": {
+        "lrn": "101234567900",
+        "name": "Jacob Flores",
+        "gradeLevel": "Grade 6 - Section Einstein",
+        "section": "Grade 6 - Section Einstein",
+        "pin": "123456"
+      },
+      "tokenArray": [
+        "101234567900",
+        "Jacob Flores",
+        "Grade 6 - Section Einstein",
+        "Grade 6 - Section Einstein",
+        "123456"
+      ]
+    },
+    {
+      "name": "QuizScore failing",
+      "type": "QuizScore",
+      "object": { "score": 0, "total": 3, "percent": 0, "passed": false },
+      "tokenArray": [0, 3, 0, false]
+    },
+    {
+      "name": "StudentProgress with maps and nested refs",
+      "type": "StudentProgress",
+      "object": {
+        "studentLrn": "101234567900",
+        "section": "Grade 6 - Section Einstein",
+        "completedTopicIds": ["L1-T1", "L1-T2"],
+        "quizAttempts": {
+          "L1-T2": {
+            "topicId": "L1-T2",
+            "score": 0,
+            "perfectScore": 3,
+            "answers": [0, 1, 0],
+            "completedAt": "2026-06-03"
+          }
+        },
+        "quizScores": {
+          "L1-T2": { "score": 0, "total": 3, "percent": 0, "passed": false }
+        },
+        "summativeScores": {
+          "L1": { "score": 7, "perfectScore": 20, "feedback": "Needs targeted tutoring." }
+        }
+      },
+      "tokenArray": [
+        "101234567900",
+        "Grade 6 - Section Einstein",
+        ["L1-T1", "L1-T2"],
+        [["L1-T2", ["L1-T2", 0, 3, [0, 1, 0], "2026-06-03"]]],
+        [["L1-T2", [0, 3, 0, false]]],
+        [["L1", [7, 20, "Needs targeted tutoring."]]]
+      ]
+    },
+    {
+      "name": "StudentSummativeResults with failedItems",
+      "type": "StudentSummativeResults",
+      "object": {
+        "studentLrn": "101234567900",
+        "section": "Grade 6 - Section Einstein",
+        "lessonId": "L1",
+        "score": 7,
+        "total": 20,
+        "percent": 35,
+        "passed": false,
+        "failedItems": [
+          { "questionId": "Q2-1", "topicId": "L1-T2", "selectedOption": 0, "correctOption": 2 }
+        ]
+      },
+      "tokenArray": [
+        "101234567900",
+        "Grade 6 - Section Einstein",
+        "L1",
+        7,
+        20,
+        35,
+        false,
+        [["Q2-1", "L1-T2", 0, 2]]
+      ]
+    },
+    {
+      "name": "QuizAttemptRequest summative with absent optionals",
+      "type": "QuizAttemptRequest",
+      "object": {
+        "studentLrn": "101234567891",
+        "section": "Grade 4 - Section Newton",
+        "subject": "science",
+        "lessonId": "L1",
+        "mode": "summative",
+        "summativeConfig": { "total": 20, "passMark": 12 },
+        "seed": 20260605
+      },
+      "tokenArray": [
+        "101234567891",
+        "Grade 4 - Section Newton",
+        0,
+        "L1",
+        null,
+        null,
+        null,
+        1,
+        null,
+        [20, 12, null, null, null, null],
+        20260605,
+        null
+      ]
+    },
+    {
+      "name": "Rankings with one standing",
+      "type": "Rankings",
+      "object": {
+        "section": "Grade 4 - Section Newton",
+        "subject": "science",
+        "standings": [
+          { "rank": 1, "studentLrn": "101234567891", "name": "Sophia Cruz", "score": 19, "perfect": 20, "percent": 95 }
+        ]
+      },
+      "tokenArray": [
+        "Grade 4 - Section Newton",
+        0,
+        [[1, "101234567891", "Sophia Cruz", 19, 20, 95]]
+      ]
+    }
+  ]
+}

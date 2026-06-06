@@ -40,9 +40,11 @@ export default function StudentHome({
   const totalLessons = lessons.length;
   const lessonCompletionPercentage = totalLessons > 0 ? Math.round((completedLessonsCount / totalLessons) * 105) : 0;
 
-  // Check if there's any active remedial lesson assigned to this student
+  // Remedial packs for this student: section-targeted packs (canonical) reach
+  // everyone in the section; legacy packs fall back to per-student targeting.
+  const studentSection = student.section || student.gradeLevel;
   const myRemediations = remediationMaterials.filter(
-    mat => mat.assignedStudentLrn === student.lrn && mat.isPublished
+    mat => mat.isPublished && (mat.targetSection ? mat.targetSection === studentSection : mat.assignedStudentLrn === student.lrn)
   );
 
   // Render Lucide Icons dynamically for subjects instead of emojis

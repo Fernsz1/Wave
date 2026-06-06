@@ -9,6 +9,7 @@ export interface StudentUser {
   lrn: string;
   name: string;
   gradeLevel: string;
+  section?: string; // canonical section; defaults to gradeLevel when absent
   pin?: string;
 }
 
@@ -79,6 +80,7 @@ export interface TeacherRemediationMaterial {
   teacherNotes: string;
   createdQuiz: QuizQuestion[];
   publishDate: string;
-  assignedStudentLrn: string; // specific student who needs remediation
+  assignedStudentLrn: string; // legacy: the student whose failure seeded the pack
+  targetSection?: string; // canonical recipient — the whole section the pack broadcasts to
   isPublished: boolean;
 }

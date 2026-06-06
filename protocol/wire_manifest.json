@@ -1,0 +1,240 @@
+{
+  "version": "1.0.0",
+  "_comment": "Single source of truth for the Wave tokenized-array wire protocol. Field ORDER here is authoritative: both the TS codec (Wave/src/protocol/codec.ts) and the Python codec (server/wave_api/codec.py) walk these lists positionally so the app and server decode identical arrays over MQTT/LoRa. Field types: str | int | bool | enum:<name> | array:<elem> | map:<elem> | <DefName> (ref). 'array' alone in the envelope = raw passthrough of an already-encoded payload array. Enums encode to their index (small int) for compactness. Optional fields encode as null and decode back to absent.",
+  "protocolVersion": 1,
+
+  "enums": {
+    "type": [
+      "StudentSignup",
+      "TeacherSignup",
+      "StudentProgress",
+      "StudentSummativeResults",
+      "QuizAttemptRequest",
+      "Rankings",
+      "TeacherRemediationMaterial",
+      "LessonCatalog"
+    ],
+    "direction": ["up", "down"],
+    "subject": ["science", "mathematics", "english"],
+    "mode": ["topic", "summative", "remedial"]
+  },
+
+  "envelope": {
+    "fields": [
+      { "name": "version", "t": "int" },
+      { "name": "msgId", "t": "str" },
+      { "name": "type", "t": "enum:type" },
+      { "name": "direction", "t": "enum:direction" },
+      { "name": "subject", "t": "enum:subject", "optional": true },
+      { "name": "section", "t": "str", "optional": true },
+      { "name": "createdAt", "t": "str" },
+      { "name": "chunkIndex", "t": "int" },
+      { "name": "chunkTotal", "t": "int" },
+      { "name": "payload", "t": "array" }
+    ]
+  },
+
+  "messages": {
+    "StudentSignup": {
+      "tag": 1,
+      "fields": [
+        { "name": "lrn", "t": "str" },
+        { "name": "name", "t": "str" },
+        { "name": "gradeLevel", "t": "str" },
+        { "name": "section", "t": "str" },
+        { "name": "pin", "t": "str" }
+      ]
+    },
+    "TeacherSignup": {
+      "tag": 2,
+      "fields": [
+        { "name": "teacherId", "t": "str" },
+        { "name": "name", "t": "str" },
+        { "name": "department", "t": "str" }
+      ]
+    },
+    "StudentProgress": {
+      "tag": 3,
+      "fields": [
+        { "name": "studentLrn", "t": "str" },
+        { "name": "section", "t": "str" },
+        { "name": "completedTopicIds", "t": "array:str" },
+        { "name": "quizAttempts", "t": "map:StudentQuizAttempt" },
+        { "name": "quizScores", "t": "map:QuizScore" },
+        { "name": "summativeScores", "t": "map:SummativeScore" }
+      ]
+    },
+    "StudentSummativeResults": {
+      "tag": 4,
+      "fields": [
+        { "name": "studentLrn", "t": "str" },
+        { "name": "section", "t": "str" },
+        { "name": "lessonId", "t": "str" },
+        { "name": "score", "t": "int" },
+        { "name": "total", "t": "int" },
+        { "name": "percent", "t": "int" },
+        { "name": "passed", "t": "bool" },
+        { "name": "failedItems", "t": "array:FailedItem" }
+      ]
+    },
+    "QuizAttemptRequest": {
+      "tag": 5,
+      "fields": [
+        { "name": "studentLrn", "t": "str" },
+        { "name": "section", "t": "str" },
+        { "name": "subject", "t": "enum:subject" },
+        { "name": "lessonId", "t": "str" },
+        { "name": "lessonTitle", "t": "str", "optional": true },
+        { "name": "topicId", "t": "str", "optional": true },
+        { "name": "topicTitle", "t": "str", "optional": true },
+        { "name": "mode", "t": "enum:mode" },
+        { "name": "quizzesPerTopic", "t": "int", "optional": true },
+        { "name": "summativeConfig", "t": "SummativeConfig", "optional": true },
+        { "name": "seed", "t": "int" },
+        { "name": "focusTopicIds", "t": "array:str", "optional": true }
+      ]
+    },
+    "Rankings": {
+      "tag": 6,
+      "fields": [
+        { "name": "section", "t": "str" },
+        { "name": "subject", "t": "enum:subject" },
+        { "name": "standings", "t": "array:Standing" }
+      ]
+    },
+    "TeacherRemediationMaterial": {
+      "tag": 7,
+      "fields": [
+        { "name": "id", "t": "str" },
+        { "name": "originalTopicId", "t": "str" },
+        { "name": "title", "t": "str" },
+        { "name": "content", "t": "str" },
+        { "name": "teacherNotes", "t": "str" },
+        { "name": "createdQuiz", "t": "array:QuizQuestion" },
+        { "name": "publishDate", "t": "str" },
+        { "name": "targetSection", "t": "str" },
+        { "name": "chunks", "t": "array:Chunk" },
+        { "name": "isPublished", "t": "bool" }
+      ]
+    },
+    "LessonCatalog": {
+      "tag": 8,
+      "fields": [
+        { "name": "subject", "t": "enum:subject" },
+        { "name": "lessons", "t": "array:Lesson" }
+      ]
+    }
+  },
+
+  "defs": {
+    "StudentQuizAttempt": {
+      "fields": [
+        { "name": "topicId", "t": "str" },
+        { "name": "score", "t": "int" },
+        { "name": "perfectScore", "t": "int" },
+        { "name": "answers", "t": "array:int" },
+        { "name": "completedAt", "t": "str" }
+      ]
+    },
+    "QuizScore": {
+      "fields": [
+        { "name": "score", "t": "int" },
+        { "name": "total", "t": "int" },
+        { "name": "percent", "t": "int" },
+        { "name": "passed", "t": "bool" }
+      ]
+    },
+    "SummativeScore": {
+      "fields": [
+        { "name": "score", "t": "int" },
+        { "name": "perfectScore", "t": "int" },
+        { "name": "feedback", "t": "str" }
+      ]
+    },
+    "FailedItem": {
+      "fields": [
+        { "name": "questionId", "t": "str" },
+        { "name": "topicId", "t": "str" },
+        { "name": "selectedOption", "t": "int" },
+        { "name": "correctOption", "t": "int" }
+      ]
+    },
+    "Standing": {
+      "fields": [
+        { "name": "rank", "t": "int" },
+        { "name": "studentLrn", "t": "str" },
+        { "name": "name", "t": "str" },
+        { "name": "score", "t": "int" },
+        { "name": "perfect", "t": "int" },
+        { "name": "percent", "t": "int" }
+      ]
+    },
+    "QuizQuestion": {
+      "fields": [
+        { "name": "id", "t": "str" },
+        { "name": "question", "t": "str" },
+        { "name": "options", "t": "array:str" },
+        { "name": "correctAnswerIndex", "t": "int" },
+        { "name": "explanation", "t": "str" }
+      ]
+    },
+    "Chunk": {
+      "fields": [
+        { "name": "index", "t": "int" },
+        { "name": "total", "t": "int" },
+        { "name": "data", "t": "str" }
+      ]
+    },
+    "SummativeConfig": {
+      "fields": [
+        { "name": "total", "t": "int" },
+        { "name": "passMark", "t": "int" },
+        { "name": "itemsPerTopic", "t": "int", "optional": true },
+        { "name": "shuffleOptions", "t": "bool", "optional": true },
+        { "name": "shuffleQuestions", "t": "bool", "optional": true },
+        { "name": "templateIds", "t": "array:str", "optional": true }
+      ]
+    },
+    "Lesson": {
+      "fields": [
+        { "name": "id", "t": "str" },
+        { "name": "title", "t": "str" },
+        { "name": "description", "t": "str" },
+        { "name": "topics", "t": "array:Topic" }
+      ]
+    },
+    "Topic": {
+      "fields": [
+        { "name": "id", "t": "str" },
+        { "name": "name", "t": "str" },
+        { "name": "description", "t": "str" },
+        { "name": "readingTime", "t": "str" },
+        { "name": "isCustomRemedial", "t": "bool", "optional": true },
+        { "name": "content", "t": "TopicContent" },
+        { "name": "quiz", "t": "array:QuizQuestion" }
+      ]
+    },
+    "TopicContent": {
+      "fields": [
+        { "name": "introduction", "t": "str" },
+        { "name": "sections", "t": "array:ContentSection" },
+        { "name": "definition", "t": "Definition", "optional": true },
+        { "name": "keyTakeaway", "t": "str" },
+        { "name": "importantNote", "t": "str", "optional": true }
+      ]
+    },
+    "ContentSection": {
+      "fields": [
+        { "name": "title", "t": "str" },
+        { "name": "body", "t": "str" },
+        { "name": "codeExample", "t": "str", "optional": true }
+      ]
+    },
+    "Definition": {
+      "fields": [
+        { "name": "term", "t": "str" },
+        { "name": "meaning", "t": "str" }
+      ]
+    }
+  }
+}

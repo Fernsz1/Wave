@@ -1,0 +1,62 @@
+[
+  {
+    "lrn": "101234567891",
+    "name": "Sophia Cruz",
+    "gradeLevel": "Grade 4 - Section Newton",
+    "pin": "123456"
+  },
+  {
+    "lrn": "101234567892",
+    "name": "Ethan Reyes",
+    "gradeLevel": "Grade 4 - Section Newton",
+    "pin": "123456"
+  },
+  {
+    "lrn": "101234567893",
+    "name": "Chloe Santos",
+    "gradeLevel": "Grade 4 - Section Einstein",
+    "pin": "123456"
+  },
+  {
+    "lrn": "101234567894",
+    "name": "Liam Garcia",
+    "gradeLevel": "Grade 5 - Section Newton",
+    "pin": "123456"
+  },
+  {
+    "lrn": "101234567895",
+    "name": "Mia Fernandez",
+    "gradeLevel": "Grade 5 - Section Newton",
+    "pin": "123456"
+  },
+  {
+    "lrn": "101234567896",
+    "name": "Noah Villanueva",
+    "gradeLevel": "Grade 5 - Section Einstein",
+    "pin": "123456"
+  },
+  {
+    "lrn": "101234567897",
+    "name": "Ava Mendoza",
+    "gradeLevel": "Grade 6 - Section Newton",
+    "pin": "123456"
+  },
+  {
+    "lrn": "101234567898",
+    "name": "Lucas Torres",
+    "gradeLevel": "Grade 6 - Section Newton",
+    "pin": "123456"
+  },
+  {
+    "lrn": "101234567899",
+    "name": "Ella Ramos",
+    "gradeLevel": "Grade 6 - Section Einstein",
+    "pin": "123456"
+  },
+  {
+    "lrn": "101234567900",
+    "name": "Jacob Flores",
+    "gradeLevel": "Grade 6 - Section Einstein",
+    "pin": "123456"
+  }
+]

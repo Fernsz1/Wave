@@ -1,0 +1,36 @@
+# ── Claude Code / agent artifacts ────────────────────────────
+.claude/
+CLAUDE.local.md
+*.plan.md
+
+# ── Environment / secrets ────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Node / frontend ──────────────────────────────────────────
+node_modules/
+dist/
+dist-ssr/
+*.local
+*.log
+.vite/
+
+# ── Python / Django backend ──────────────────────────────────
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+db.sqlite3
+db.sqlite3-journal
+.pytest_cache/
+.mypy_cache/
+
+# ── Editor / OS ──────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+
+# Note: .env.example IS committed (template). Seed JSON under
+# server/wave_api/seed/ IS committed (generated from the frontend).
