@@ -1,0 +1,129 @@
+{
+  "$comment": "Templates + variable banks that VARIATE generation of topic-quiz and summative test items. The AI server (Gemini) or an offline generator binds 'variables' into 'questionTemplate'/'optionTemplates', resolves the correct option, and emits QuizQuestion objects matching lesson_catalog.schema.json#/$defs/QuizQuestion. Deterministic when driven by QuizAttemptRequest.seed.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "wave/quiz_generation_templates.json",
+  "version": "1.0.0",
+
+  "globals": {
+    "topicQuizSize": 3,
+    "summativePerfectScore": 20,
+    "summativePassMark": 12,
+    "optionCount": 4,
+    "answerKeyStrategy": "correctAnswerIndex",
+    "idPattern": {
+      "topicItem": "Q{topicNumber}-{itemNumber}",
+      "summativeItem": "S{lessonNumber}-{sequence}",
+      "remedialItem": "QREM-{topicCode}{sequence}"
+    }
+  },
+
+  "questionTemplates": [
+    {
+      "templateId": "tmpl-mcq-definition",
+      "intent": "Recall a definition/term.",
+      "questionTemplate": "What is the term for {definition}?",
+      "correctSource": "term",
+      "distractorSource": "siblingTerms",
+      "appliesTo": ["topic", "summative"]
+    },
+    {
+      "templateId": "tmpl-mcq-function",
+      "intent": "Identify the function/role of a structure.",
+      "questionTemplate": "What is the main job of the {structure}?",
+      "correctSource": "function",
+      "distractorSource": "otherFunctions",
+      "appliesTo": ["topic", "summative"]
+    },
+    {
+      "templateId": "tmpl-mcq-example",
+      "intent": "Pick the correct example of a concept.",
+      "questionTemplate": "Which of the following is an example of {concept}?",
+      "correctSource": "exampleTrue",
+      "distractorSource": "exampleFalse",
+      "appliesTo": ["topic", "summative"]
+    },
+    {
+      "templateId": "tmpl-mcq-compare",
+      "intent": "Distinguish between two related ideas.",
+      "questionTemplate": "Which statement correctly describes {conceptA} versus {conceptB}?",
+      "correctSource": "compareTrue",
+      "distractorSource": "compareFalse",
+      "appliesTo": ["summative"]
+    },
+    {
+      "templateId": "tmpl-mcq-numeric",
+      "intent": "Compute or recall a numeric fact (math-friendly).",
+      "questionTemplate": "{numericPrompt}",
+      "correctSource": "numericAnswer",
+      "distractorSource": "numericDistractors",
+      "appliesTo": ["topic", "summative"]
+    }
+  ],
+
+  "variableBindings": {
+    "$comment": "Per-topic data the templates bind into. Keyed by topicId. Values feed correctSource/distractorSource. Real banks would be expanded from TopicContent.definition / sections.",
+    "L1-T1": {
+      "structure": "skull",
+      "function": "protect the brain",
+      "otherFunctions": ["produce saliva", "pump blood", "digest food"],
+      "definition": "the soft tissue inside bones where blood cells are made",
+      "term": "Bone Marrow",
+      "siblingTerms": ["Cartilage", "Tendon", "Vertebrae"],
+      "numericPrompt": "How many bones are in an adult human body?",
+      "numericAnswer": "206 bones",
+      "numericDistractors": ["106 bones", "306 bones", "270 bones"]
+    },
+    "L1-T2": {
+      "concept": "an involuntary muscle",
+      "exampleTrue": "Heart muscle pumping blood",
+      "exampleFalse": ["Finger muscles holding a pencil", "Arm muscles waving hello", "Leg muscles kicking a ball"],
+      "conceptA": "voluntary muscles",
+      "conceptB": "involuntary muscles",
+      "compareTrue": "Voluntary muscles move by choice; involuntary muscles work automatically",
+      "compareFalse": [
+        "Voluntary muscles work automatically; involuntary need thought",
+        "Both types only work while asleep",
+        "Both types can only push, never pull"
+      ],
+      "definition": "the tough cords that connect muscle to bone",
+      "term": "Tendons",
+      "siblingTerms": ["Cartilage", "Blood vessels", "Vertebrae"]
+    },
+    "L-MATH1-T1": {
+      "definition": "the bottom number showing total equal parts",
+      "term": "Denominator",
+      "siblingTerms": ["Numerator", "Multiplier", "Decimal"],
+      "numericPrompt": "Which fraction is equivalent to 1/2?",
+      "numericAnswer": "3/6",
+      "numericDistractors": ["2/3", "1/4", "4/5"]
+    }
+  },
+
+  "summativeAssembly": {
+    "$comment": "How a summative exam is built from the above. Mirrors QuizAttemptRequest.summativeConfig.",
+    "strategy": "drawPerTopic",
+    "itemsPerTopic": 2,
+    "scaleTo": 20,
+    "rounding": "nearest",
+    "shuffleQuestions": true,
+    "shuffleOptions": true,
+    "weighting": {
+      "$comment": "When focusTopicIds present (remedial), multiply a topic's draw count by its weight.",
+      "default": 1,
+      "failedTopicMultiplier": 2
+    },
+    "deterministic": {
+      "seedFrom": "QuizAttemptRequest.seed",
+      "note": "Same seed + same templates + same variableBindings version => identical exam on any node."
+    }
+  },
+
+  "emittedItemShape": {
+    "$comment": "Generators MUST emit this shape so items drop straight into the frontend quiz engine.",
+    "id": "string (per globals.idPattern)",
+    "question": "string (resolved questionTemplate)",
+    "options": ["string", "string", "string", "string"],
+    "correctAnswerIndex": "integer (index of correctSource value within options after shuffle)",
+    "explanation": "string (why the correct option is right)"
+  }
+}

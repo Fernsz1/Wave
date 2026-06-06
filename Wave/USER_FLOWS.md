@@ -40,11 +40,21 @@ Every learner/teacher session is scoped to one **subject track**, each with 4 le
 - 📚 **English** — Parts of Speech, Vocabulary & Comprehension
 
 ### Data Objects (the "tokenized payload" contents)
-- `StudentUser` → `{ lrn, name, gradeLevel, pin }`
-- `TeacherUser` → `{ teacherId, name, department }`
-- `StudentProgress` → `{ studentLrn, completedTopicIds[], quizAttempts{}, summativeScores{} }`
-- `TeacherRemediationMaterial` → `{ id, originalTopicId, title, content, teacherNotes, createdQuiz[], publishDate, assignedStudentLrn, isPublished }`
-- `Lesson` → `Topic[]` → each `Topic` carries reading `content` + a `quiz` (QuizQuestion[])
+
+Each payload is tagged with its **sync direction** so the router/LoRa layer knows which way to relay it.
+
+**↑ Student → Teacher (sent "up")**
+- `StudentSignup` → `{ lrn, name, gradeLevel, section, pin }` — new learner registration credentials.
+- `StudentProgress` → `{ studentLrn, section, completedTopicIds[], quizAttempts{}, quizScores{ topicId: { score, total, percent, passed } }, summativeScores{} }` — per-topic completion + **quiz scores** keyed by topic.
+- `StudentSummativeResults` → `{ studentLrn, section, lessonId, score, total, percent, passed, failedItems[ { questionId, topicId, selectedOption, correctOption } ] }` — final-assessment outcome including the **list of failed items** that drive remediation targeting.
+
+**↓ Teacher → Student (sent "down")**
+- `TeacherSignup` → `{ teacherId, name, department }` — faculty account registration credentials.
+- `Rankings` → `{ section, subject, standings[ { rank, studentLrn, name, score, perfect, percent } ] }` — section leaderboard the teacher's end computes and pushes back to students.
+- `TeacherRemediationMaterial` → `{ id, originalTopicId, title, content, teacherNotes, createdQuiz[], publishDate, targetSection, chunks[], isPublished }` — AI remedial lessons/quizzes. **Always addressed to a `targetSection`** (never a single student), and **fragmented into `chunks[]`** so each piece fits within a LoRa frame and is reassembled on the student device.
+
+**Shared catalog**
+- `Lesson` → `Topic[]` → each `Topic` carries reading `content` + a `quiz` (QuizQuestion[]).
 
 These are exactly the structures that would be serialized, tokenized, and relayed over LoRa between the student app, the router, and the teacher's end.
 
@@ -66,9 +76,9 @@ Although the front-end runs locally, the intended production data flow ties the 
         └───────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**What the student sends "up":** signup/login credentials, per-topic `quizAttempts`, `summativeScores`, `completedTopicIds`.
+**What the student sends "up":** signup credentials (`StudentSignup`), per-topic `quizAttempts` + `quizScores`, `summativeScores`/`StudentSummativeResults` (with failed items), `completedTopicIds`.
 
-**What the teacher sends "down":** AI-generated remedial materials (`TeacherRemediationMaterial`) and custom class lessons/quizzes, addressed to a specific `assignedStudentLrn` or a whole section.
+**What the teacher sends "down":** faculty signup (`TeacherSignup`), section `Rankings`, and AI-generated remedial materials (`TeacherRemediationMaterial`) + custom class lessons/quizzes — **always addressed to a whole `targetSection`, never to a single student**, and delivered in reassembled `chunks`.
 
 In the current app, this round-trip is represented by **shared React state** in `App.tsx`:
 - `progressRecords` (student → teacher visibility)
@@ -189,7 +199,7 @@ This is a multi-state screen (`viewState`: `syllabus` → `reading` → `quiz` �
 - Options `#option-{q}-{opt}` (single-select, checkmark).
 - Navigation: **Previous**, `#next-question-btn` **Next Question** (disabled until an option is chosen), and on last question `#submit-quiz-answers` **Submit Evaluation**.
 - **Results view:** score `#quiz-final-score`, %, correct/incorrect counts, "Completed" badge. Then `#return-to-lesson-btn` **Return to Lesson** and (if available) `#continue-to-next-topic-btn` **Continue to Next Topic**.
-- **On submit** → `onSaveQuizScore` writes a `StudentQuizAttempt` into `progressRecords` (perfect score = 3 per topic) and marks the topic completed. **→ This is the moment data is "sent up" to the teacher.**
+- **On submit** → `onSaveQuizScore` writes a `StudentQuizAttempt` plus the topic's **`quizScores` entry** (`{ score, total, percent, passed }`) into `progressRecords` (perfect score = 3 per topic) and marks the topic completed. **→ This is the moment quiz-score data is "sent up" to the teacher.**
 
 **(e) Summative assessment** (`viewState='summative'`):
 - Aggregates every topic quiz question in the lesson; single page of questions.
@@ -252,7 +262,7 @@ Once a class context is applied:
 4. **Recently Published Remedial Content** *(conditional)* — cards for class lessons published via the custom wizard.
 5. **Platform Fast Links** — **Open Class Records** (→ students tab) · **Inspect Course Analytics** (→ analytics tab).
 6. **Faculty AI Tools — Copilot Remedial Wizard** — `#faculty-launch-wizard` **Run AI Wizard** → opens the per-student `RemediationWizard` with no preselection.
-7. **Remedial Tickers** (right panel) — live list of failing students (`dynamicAlerts`). Each ticket: student, topic, score, and **"Resolve in AI Wizard"** → opens the wizard **pre-targeted** to that student + topic (`onLaunchWizardForStudent`). Plus a Summative Exam deadline reminder.
+7. **Remedial Tickers** (right panel) — live list of failing students (`dynamicAlerts`). Each ticket: student, topic, score, and **"Resolve in AI Wizard"** → opens the wizard with the **topic context pre-filled** from that student's failure (`onLaunchWizardForStudent`), while the published pack still **broadcasts to the student's whole section**. Plus a Summative Exam deadline reminder.
 
 **Custom AI Lesson Wizard (modal) steps:** `generating` (animated % + status messages) → `preview` (fully **editable** title, intro, content modules [add/delete], and quiz questions with editable options/correct-answer/explanation) → `confirm` (read-only review + broadcast warning) → `success` (broadcast confirmation). Footer buttons move between steps; **Confirm & Post Remediation** appends to `publishedLessons` and broadcasts to the whole section.
 
@@ -283,14 +293,14 @@ Once a class context is applied:
 ---
 
 ### Scenario T4 — Generating & Publishing AI Remediation (`RemediationWizard.tsx`)
-The flagship teacher→student action. Steps (`step` state):
-1. **Setup** — Target section (read-only), **Target Lesson** dropdown `#select-lesson`, **Target Topic** dropdown `#select-topic`. If Jacob Flores is selected, an auto-diagnostic note confirms his failed Muscular System (0/3). Button `#generate-material-btn` **Autogenerate outlines**.
-2. **Generating** — animated `WaveLogo` + progress %, status messages ("Connecting to Gemini…", "Decomposing failed quiz telemetry…", etc.). On 100% it synthesizes topic-appropriate content + a custom quiz.
-3. **Preview** — title, notes-to-student, markdown handbook, and custom diagnostic questions (correct option highlighted). Buttons: `#go-edit-remedial` **Polish Content**, `#discard-material-btn` **Discard**, **Configure setup**, `#confirm-publish-remedi` **Publish to student**.
+The flagship teacher→section action. **All generated lessons/quizzes are addressed to a `targetSection`, never to an individual student** — a flagged student (e.g. Jacob Flores) only seeds the diagnostic context; the published pack still broadcasts to that student's whole section. Steps (`step` state):
+1. **Setup** — **Target Section** (read-only, the active section), **Target Lesson** dropdown `#select-lesson`, **Target Topic** dropdown `#select-topic`. If a flagged student informs the topic, an auto-diagnostic note confirms the failed Muscular System (0/3) used to shape the content. Button `#generate-material-btn` **Autogenerate outlines**.
+2. **Generating** — animated `WaveLogo` + progress %, status messages ("Connecting to Gemini…", "Decomposing failed quiz telemetry…", etc.). On 100% it synthesizes topic-appropriate content + a custom quiz, **fragmented into `chunks[]`** for LoRa relay.
+3. **Preview** — title, notes-to-section, markdown handbook, and custom diagnostic questions (correct option highlighted). Buttons: `#go-edit-remedial` **Polish Content**, `#discard-material-btn` **Discard**, **Configure setup**, `#confirm-publish-remedi` **Publish to section**.
 4. **Edit** — editable title / teacher notes / handbook content; **Save Changes** → back to preview.
-5. **Published** — confirmation that the pack is on *"{student}'s portal"*. `#finish-wizard-close-btn` **Close wizard**.
+5. **Published** — confirmation that the pack is on *"{section}'s portal"*. `#finish-wizard-close-btn` **Close wizard**.
 
-**On publish** → `handlePublishRemedialMaterial` prepends to `remediationMaterials` and ensures a progress record exists. **→ This is the moment data is "sent down" to the student.**
+**On publish** → `handlePublishRemedialMaterial` prepends to `remediationMaterials` (with `targetSection`) and ensures a progress record exists for each student in the section. **→ This is the moment data is "sent down" to the whole section.**
 
 ---
 
@@ -320,9 +330,9 @@ These end-to-end stories show the two roles meeting through the shared/synced st
 ### Interaction C — Failing Student → AI Remediation → Student Receives It (data "down")
 1. **Student** (e.g. Jacob Flores) fails Muscular System (0/3) — seeded in data, or produced live via Interaction B.
 2. **Teacher** sees Jacob in **Remedial Tickers** / Class Records with **Needs Remediation**.
-3. Teacher clicks **Resolve in AI Wizard / Remedial** → `RemediationWizard` opens pre-targeted to Jacob + `L1-T2`.
-4. Teacher generates → previews/edits → **Publish to student**.
-5. **Student Jacob** logs in → **Home** shows "Custom Remedial Path Generated"; **Syllabus** shows the "Teacher-Assigned Study Pack".
+3. Teacher clicks **Resolve in AI Wizard / Remedial** → `RemediationWizard` opens with the topic context pre-filled from Jacob's failure (`L1-T2`), but the **target is his whole section**, not Jacob alone.
+4. Teacher generates → previews/edits → **Publish to section**.
+5. **Student Jacob** (and every section-mate) logs in → **Home** shows "Custom Remedial Path Generated"; **Syllabus** shows the "Teacher-Assigned Study Pack".
 6. Jacob runs the workbook + custom quiz → new results flow back (Interaction B) → teacher sees the recovery.
 
 ### Interaction D — Whole-Class Custom Lesson Broadcast
@@ -377,9 +387,10 @@ App.tsx  (session state, routing, shared stores: progressRecords + remediationMa
 ### Shared State Bridges (the in-app "sync layer")
 | Store (in `App.tsx`) | Written by | Read by | Real-world transport |
 |----------------------|-----------|---------|----------------------|
-| `progressRecords` | Student (quiz/summative submissions) | Teacher (records, analytics, tickers) | App → router → LoRa → AI server → Teacher |
-| `remediationMaterials` | Teacher (RemediationWizard publish) | Student (home alert, lessons pack) | Teacher → AI server → LoRa → router → App |
-| `students` (+ localStorage) | Teacher (enrollment) | Login validation, rankings, tables | Roster sync both directions |
+| `progressRecords` | Student (quiz/summative submissions — `quizScores`, `StudentSummativeResults` w/ failed items) | Teacher (records, analytics, tickers) | App → router → LoRa → AI server → Teacher |
+| `remediationMaterials` | Teacher (RemediationWizard publish — addressed to `targetSection`, sent in `chunks`) | Student (home alert, lessons pack — every LRN in the section) | Teacher → AI server → LoRa → router → App |
+| `rankings` | Teacher end (section leaderboard computation) | Student (Rankings tab) | Teacher → AI server → LoRa → router → App |
+| `students` (+ localStorage) | Teacher (enrollment) / Student (`StudentSignup`) | Login validation, rankings, tables | Roster sync both directions |
 
 ---
 

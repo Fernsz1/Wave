@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "wave/teacher_remediation_material.schema.json",
+  "title": "TeacherRemediationMaterial",
+  "description": "AI remedial lesson/quiz. ALWAYS addressed to a whole section, fragmented into chunks for LoRa. Sent DOWN.",
+  "type": "object",
+  "required": ["id", "originalTopicId", "title", "content", "teacherNotes", "createdQuiz", "publishDate", "targetSection", "chunks", "isPublished"],
+  "properties": {
+    "id": { "type": "string", "examples": ["REM-001"] },
+    "originalTopicId": { "type": "string", "description": "Topic that seeded the diagnostic context.", "examples": ["L1-T2"] },
+    "title": { "type": "string" },
+    "content": { "type": "string", "description": "Markdown handbook body." },
+    "teacherNotes": { "type": "string", "description": "Notes addressed to the section." },
+    "createdQuiz": {
+      "type": "array",
+      "items": { "$ref": "wave/lesson_catalog.schema.json#/$defs/QuizQuestion" }
+    },
+    "publishDate": { "type": "string", "format": "date" },
+    "targetSection": {
+      "type": "string",
+      "description": "Whole-section recipient. Never a single LRN.",
+      "examples": ["Grade 6 - Section Newton"]
+    },
+    "chunks": {
+      "type": "array",
+      "description": "LoRa-frame-sized fragments of content/createdQuiz, reassembled on device.",
+      "items": {
+        "type": "object",
+        "required": ["index", "total", "data"],
+        "properties": {
+          "index": { "type": "integer", "minimum": 0 },
+          "total": { "type": "integer", "minimum": 1 },
+          "data": { "type": "string", "description": "Encoded fragment payload." }
+        }
+      }
+    },
+    "isPublished": { "type": "boolean" }
+  }
+}

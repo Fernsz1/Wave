@@ -1,0 +1,97 @@
+{
+  "$comment": "QuizAttemptRequest — emitted when a student starts a topic quiz or summative. This is the trigger that asks the catalog/AI server for a fresh set of items. Two concrete samples follow under 'examples', and every key is documented in 'keyReference'.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "wave/quiz_attempt_request.payload.json",
+  "title": "QuizAttemptRequest",
+  "type": "object",
+  "required": ["studentLrn", "section", "subject", "lessonId", "mode", "seed"],
+  "properties": {
+    "studentLrn": { "type": "string", "pattern": "^[0-9]{12}$" },
+    "section": { "type": "string", "examples": ["Grade 6 - Section Newton"] },
+    "subject": { "type": "string", "enum": ["science", "mathematics", "english"] },
+    "lessonId": { "type": "string", "examples": ["L1"] },
+    "lessonTitle": { "type": "string", "examples": ["Lesson 1: The Human Body Systems"] },
+    "topicId": {
+      "type": ["string", "null"],
+      "description": "Set for mode=topic. null for mode=summative (aggregates all topics in the lesson).",
+      "examples": ["L1-T2"]
+    },
+    "topicTitle": { "type": "string", "examples": ["Muscular System"] },
+    "mode": { "type": "string", "enum": ["topic", "summative", "remedial"] },
+    "quizzesPerTopic": { "type": "integer", "default": 3, "description": "Items requested per topic quiz." },
+    "summativeConfig": { "$ref": "#/$defs/SummativeConfig" },
+    "seed": {
+      "type": "integer",
+      "description": "Deterministic RNG seed. Same seed + same templates => same generated item set (reproducible / offline-syncable)."
+    },
+    "focusTopicIds": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "For mode=remedial: topicIds derived from StudentSummativeResults.failedItems to weight item selection."
+    }
+  },
+  "$defs": {
+    "SummativeConfig": {
+      "type": "object",
+      "description": "Drives summative item generation/aggregation. Only present when mode=summative.",
+      "required": ["total", "passMark"],
+      "properties": {
+        "total": { "type": "integer", "default": 20, "description": "Perfect score the raw score is normalized to." },
+        "passMark": { "type": "integer", "default": 12, "description": "Minimum to pass (of total)." },
+        "itemsPerTopic": { "type": "integer", "default": 2, "description": "How many items to draw/generate per topic." },
+        "shuffleOptions": { "type": "boolean", "default": true },
+        "shuffleQuestions": { "type": "boolean", "default": true },
+        "templateIds": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Which question templates (see quiz_generation_templates.json) are eligible.",
+          "examples": [["tmpl-mcq-definition", "tmpl-mcq-function", "tmpl-mcq-compare"]]
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "$label": "Topic quiz trigger (3 items for the Muscular System)",
+      "studentLrn": "101234567900",
+      "section": "Grade 6 - Section Einstein",
+      "subject": "science",
+      "lessonId": "L1",
+      "lessonTitle": "Lesson 1: The Human Body Systems",
+      "topicId": "L1-T2",
+      "topicTitle": "Muscular System",
+      "mode": "topic",
+      "quizzesPerTopic": 3,
+      "seed": 84412
+    },
+    {
+      "$label": "Summative trigger (20-pt exam aggregating all L1 topics)",
+      "studentLrn": "101234567891",
+      "section": "Grade 4 - Section Newton",
+      "subject": "science",
+      "lessonId": "L1",
+      "lessonTitle": "Lesson 1: The Human Body Systems",
+      "topicId": null,
+      "mode": "summative",
+      "summativeConfig": {
+        "total": 20,
+        "passMark": 12,
+        "itemsPerTopic": 2,
+        "shuffleOptions": true,
+        "shuffleQuestions": true,
+        "templateIds": ["tmpl-mcq-definition", "tmpl-mcq-function", "tmpl-mcq-compare", "tmpl-mcq-example"]
+      },
+      "seed": 20260605
+    }
+  ],
+  "keyReference": {
+    "lessonId": "Maps to Lesson.id in lesson_catalog. Selects the pool of topics.",
+    "topicId": "Maps to Topic.id. For topic mode, restricts items to that topic's quiz pool + generated variants.",
+    "quizzesPerTopic": "Per-topic quiz size (3 in current app; perfectScore per topic = 3).",
+    "summativeConfig.total": "Normalization target (20). Raw correct count is scaled to /20.",
+    "summativeConfig.itemsPerTopic": "Generation breadth per topic for the summative.",
+    "templateIds": "Selects which generators in quiz_generation_templates.json may produce items.",
+    "seed": "Makes generation deterministic so the same exam can be regenerated on any node without re-sync.",
+    "focusTopicIds": "Remedial weighting from failedItems so weak topics get more items."
+  }
+}

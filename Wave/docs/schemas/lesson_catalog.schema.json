@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "wave/lesson_catalog.schema.json",
+  "title": "LessonCatalog",
+  "description": "Shared read content + per-topic quizzes (Lesson -> Topic -> QuizQuestion[]).",
+  "type": "object",
+  "required": ["subject", "lessons"],
+  "properties": {
+    "subject": { "type": "string", "enum": ["science", "mathematics", "english"] },
+    "lessons": { "type": "array", "items": { "$ref": "#/$defs/Lesson" } }
+  },
+  "$defs": {
+    "Lesson": {
+      "type": "object",
+      "required": ["id", "title", "description", "topics"],
+      "properties": {
+        "id": { "type": "string", "examples": ["L1", "L-MATH1", "L-ENG1"] },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "topics": { "type": "array", "items": { "$ref": "#/$defs/Topic" } }
+      }
+    },
+    "Topic": {
+      "type": "object",
+      "required": ["id", "name", "description", "readingTime", "content", "quiz"],
+      "properties": {
+        "id": { "type": "string", "examples": ["L1-T1"] },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "readingTime": { "type": "string", "examples": ["5 mins"] },
+        "isCustomRemedial": { "type": "boolean", "default": false },
+        "content": { "$ref": "#/$defs/TopicContent" },
+        "quiz": { "type": "array", "items": { "$ref": "#/$defs/QuizQuestion" } }
+      }
+    },
+    "TopicContent": {
+      "type": "object",
+      "required": ["introduction", "sections", "keyTakeaway"],
+      "properties": {
+        "introduction": { "type": "string" },
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "body"],
+            "properties": {
+              "title": { "type": "string" },
+              "body": { "type": "string" },
+              "codeExample": { "type": "string" }
+            }
+          }
+        },
+        "definition": {
+          "type": "object",
+          "properties": {
+            "term": { "type": "string" },
+            "meaning": { "type": "string" }
+          }
+        },
+        "keyTakeaway": { "type": "string" },
+        "importantNote": { "type": "string" }
+      }
+    },
+    "QuizQuestion": {
+      "type": "object",
+      "required": ["id", "question", "options", "correctAnswerIndex", "explanation"],
+      "properties": {
+        "id": { "type": "string", "examples": ["Q1-1"] },
+        "question": { "type": "string" },
+        "options": { "type": "array", "items": { "type": "string" }, "minItems": 2 },
+        "correctAnswerIndex": { "type": "integer", "minimum": 0 },
+        "explanation": { "type": "string" }
+      }
+    }
+  }
+}

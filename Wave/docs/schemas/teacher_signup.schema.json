@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "wave/teacher_signup.schema.json",
+  "title": "TeacherSignup",
+  "description": "Faculty account registration credentials, sent DOWN (teacher -> student/system).",
+  "type": "object",
+  "required": ["teacherId", "name", "department"],
+  "properties": {
+    "teacherId": { "type": "string", "examples": ["T-2026-001"] },
+    "name": { "type": "string" },
+    "department": { "type": "string", "default": "General Academics" }
+  }
+}

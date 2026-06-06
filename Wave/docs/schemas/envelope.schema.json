@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "wave/envelope.schema.json",
+  "title": "SyncEnvelope",
+  "description": "Wraps every tokenized payload relayed over app -> router -> LoRa -> AI server (and reverse).",
+  "type": "object",
+  "required": ["msgId", "type", "direction", "createdAt", "payload"],
+  "properties": {
+    "msgId": { "type": "string", "format": "uuid", "description": "Dedupe + ACK key." },
+    "type": {
+      "type": "string",
+      "enum": [
+        "StudentSignup",
+        "TeacherSignup",
+        "StudentProgress",
+        "StudentSummativeResults",
+        "QuizAttemptRequest",
+        "Rankings",
+        "TeacherRemediationMaterial",
+        "LessonCatalog"
+      ]
+    },
+    "direction": { "type": "string", "enum": ["up", "down"], "description": "up = student->teacher, down = teacher->student." },
+    "subject": { "type": "string", "enum": ["science", "mathematics", "english"] },
+    "section": { "type": "string", "examples": ["Grade 6 - Section Newton"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "chunk": {
+      "type": "object",
+      "description": "LoRa fragmentation. total = 1 when the payload fits one frame.",
+      "required": ["index", "total"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 0 },
+        "total": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "payload": { "type": "object", "description": "One of the typed bodies; see per-type schemas." }
+  }
+}

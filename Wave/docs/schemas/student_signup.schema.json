@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "wave/student_signup.schema.json",
+  "title": "StudentSignup",
+  "description": "New learner registration credentials, sent UP (student -> teacher).",
+  "type": "object",
+  "required": ["lrn", "name", "gradeLevel", "section", "pin"],
+  "properties": {
+    "lrn": { "type": "string", "pattern": "^[0-9]{12}$", "description": "12-digit Learner Reference Number." },
+    "name": { "type": "string" },
+    "gradeLevel": { "type": "string", "examples": ["Grade 6 - Section Newton"] },
+    "section": { "type": "string", "examples": ["Grade 6 - Section Newton"] },
+    "pin": { "type": "string", "pattern": "^[0-9]{6}$", "description": "6-digit PIN; default seeded 123456." }
+  }
+}

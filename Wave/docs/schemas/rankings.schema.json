@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "wave/rankings.schema.json",
+  "title": "Rankings",
+  "description": "Section leaderboard computed teacher-side and pushed DOWN to students.",
+  "type": "object",
+  "required": ["section", "subject", "standings"],
+  "properties": {
+    "section": { "type": "string", "examples": ["Grade 6 - Section Newton"] },
+    "subject": { "type": "string", "enum": ["science", "mathematics", "english"] },
+    "standings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rank", "studentLrn", "name", "score", "perfect", "percent"],
+        "properties": {
+          "rank": { "type": "integer", "minimum": 1 },
+          "studentLrn": { "type": "string", "pattern": "^[0-9]{12}$" },
+          "name": { "type": "string" },
+          "score": { "type": "integer", "minimum": 0 },
+          "perfect": { "type": "integer", "minimum": 1, "description": "Max attainable score for the scope." },
+          "percent": { "type": "integer", "minimum": 0, "maximum": 100 }
+        }
+      }
+    }
+  }
+}
