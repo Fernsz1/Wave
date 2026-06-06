@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Wave",
+  "description": "An AI-powered premium educational platform featuring student learning modules, rankings, assessments, and teacher record dashboards with AI-assisted remediation wizards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
