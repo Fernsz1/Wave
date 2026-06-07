@@ -24,7 +24,7 @@ export default function LoginScreen({ onLoginSuccess, students }: LoginScreenPro
   
   // Teacher inputs
   const [teacherId, setTeacherId] = useState('');
-  const [teacherName, setTeacherName] = useState('');
+  const [password, setPassword] = useState('');
   
   // Error handling
   const [error, setError] = useState('');
@@ -57,19 +57,27 @@ export default function LoginScreen({ onLoginSuccess, students }: LoginScreenPro
         setError('Student LRN is not enrolled on this platform. Please contact your teacher to enroll your account.');
       }
     } else {
-      if (!teacherId.trim() || !teacherName.trim()) {
-        setError('Please enter both your Teacher ID and Name.');
+      const cleanId = teacherId.trim();
+      const cleanPassword = password.trim();
+
+      if (!cleanId || !cleanPassword) {
+        setError('Please enter both your Teacher ID and Password.');
         return;
       }
       
-      const found = MOCK_TEACHERS.find(t => t.teacherId === teacherId.trim());
+      const found = MOCK_TEACHERS.find(t => t.teacherId === cleanId);
       if (found) {
-        onLoginSuccess('teacher', found);
+        if (found.password === cleanPassword) {
+          onLoginSuccess('teacher', found);
+        } else {
+          setError('Incorrect password. Please try again.');
+        }
       } else {
         const newTeacher: TeacherUser = {
-          teacherId: teacherId.trim(),
-          name: teacherName.trim(),
-          department: 'General Academics'
+          teacherId: cleanId,
+          name: `Teacher ${cleanId}`,
+          department: 'General Academics',
+          password: cleanPassword
         };
         onLoginSuccess('teacher', newTeacher);
       }
@@ -169,12 +177,10 @@ export default function LoginScreen({ onLoginSuccess, students }: LoginScreenPro
                     type="text"
                     id="student-lrn"
                     maxLength={12}
-                    placeholder="e.g. 101234567891"
                     value={lrn}
                     onChange={(e) => setLrn(e.target.value.replace(/\D/g, ''))}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner"
                   />
-                  <p className="text-[10px] text-slate-400 mt-1">Provide standard 12-digit DepEd LRN</p>
                 </div>
 
                 <div>
@@ -185,12 +191,10 @@ export default function LoginScreen({ onLoginSuccess, students }: LoginScreenPro
                     type="password"
                     id="student-pin"
                     maxLength={6}
-                    placeholder="e.g. 123456"
                     value={pin}
                     onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner font-mono tracking-widest"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner font-mono tracking-widest"
                   />
-                  <p className="text-[10px] text-slate-400 mt-1">6-digit numeric secure code</p>
                 </div>
               </>
             ) : (
@@ -202,24 +206,22 @@ export default function LoginScreen({ onLoginSuccess, students }: LoginScreenPro
                   <input
                     type="text"
                     id="teacher-id"
-                    placeholder="e.g. T-2026-001"
                     value={teacherId}
                     onChange={(e) => setTeacherId(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 tracking-wide uppercase mb-1.5" htmlFor="teacher-name">
-                    Teacher Full Name
+                  <label className="block text-xs font-semibold text-slate-700 tracking-wide uppercase mb-1.5" htmlFor="teacher-password">
+                    Password
                   </label>
                   <input
-                    type="text"
-                    id="teacher-name"
-                    placeholder="e.g. Mrs. Elena Santos"
-                    value={teacherName}
-                    onChange={(e) => setTeacherName(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner"
+                    type="password"
+                    id="teacher-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner"
                   />
                 </div>
               </>
@@ -231,7 +233,7 @@ export default function LoginScreen({ onLoginSuccess, students }: LoginScreenPro
               className="w-full mt-2 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl text-sm shadow-md shadow-blue-500/10 hover:shadow-lg transition-all flex items-center justify-center gap-2"
             >
               <LogIn className="h-4 w-4" />
-              {role === 'student' ? 'Sign In to Portal' : 'Sign In to Platform'}
+              Sign In
             </button>
           </form>
 

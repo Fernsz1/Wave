@@ -54,7 +54,7 @@ Each payload carries a small **envelope** so the router/LoRa layer can route, ch
 
 | # | `type` | Body keys | Source in app |
 |---|--------|-----------|---------------|
-| 5 | `TeacherSignup` | `teacherId, name, department` | `LoginScreen` teacher login |
+| 5 | `TeacherSignup` | `teacherId, name, department, password` | `LoginScreen` teacher login |
 | 6 | `Rankings` | `section, subject, standings[]` | computed teacher-side, pushed to `StudentRankings` |
 | 7 | `TeacherRemediationMaterial` | `id, originalTopicId, title, content, teacherNotes, createdQuiz[], publishDate, targetSection, chunks[], isPublished` | `RemediationWizard` / Custom AI Lesson Wizard |
 
@@ -83,6 +83,7 @@ classDiagram
       +string teacherId
       +string name
       +string department
+      +string password
     }
     class Lesson {
       +string id

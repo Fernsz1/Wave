@@ -19,8 +19,8 @@ export const MOCK_STUDENTS: StudentUser[] = [
 ];
 
 export const MOCK_TEACHERS: TeacherUser[] = [
-  { teacherId: "T-2026-001", name: "Mrs. Elena Santos", department: "Science Dept." },
-  { teacherId: "T-2026-002", name: "Mr. Ricardo Perez", department: "Science Dept." },
+  { teacherId: "T-2026-001", name: "Mrs. Elena Santos", department: "Science Dept.", password: "password123" },
+  { teacherId: "T-2026-002", name: "Mr. Ricardo Perez", department: "Science Dept.", password: "password123" },
 ];
 
 export const MOCK_LESSONS: Lesson[] = [

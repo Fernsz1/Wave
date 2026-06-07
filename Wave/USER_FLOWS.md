@@ -23,7 +23,7 @@
 | Role | Identity Key | Primary Goal |
 |------|--------------|--------------|
 | **Student** | 12-digit **LRN** (Learner Reference Number) + 6-digit PIN | Read lessons, take quizzes & summative exams, track rank/progress, complete teacher-assigned remedial work. |
-| **Teacher** | **Teacher ID** (e.g. `T-2026-001`) + Name | Monitor class records & analytics, flag failing students, and generate/publish AI remedial lessons + quizzes. |
+| **Teacher** | **Teacher ID** (e.g. `T-2026-001`) + Password | Monitor class records & analytics, flag failing students, and generate/publish AI remedial lessons + quizzes. |
 
 ### Tech Stack (front-end)
 - **React 19** + **TypeScript** + **Vite**
@@ -49,7 +49,7 @@ Each payload is tagged with its **sync direction** so the router/LoRa layer know
 - `StudentSummativeResults` → `{ studentLrn, section, lessonId, score, total, percent, passed, failedItems[ { questionId, topicId, selectedOption, correctOption } ] }` — final-assessment outcome including the **list of failed items** that drive remediation targeting.
 
 **↓ Teacher → Student (sent "down")**
-- `TeacherSignup` → `{ teacherId, name, department }` — faculty account registration credentials.
+- `TeacherSignup` → `{ teacherId, name, department, password }` — faculty account registration credentials.
 - `Rankings` → `{ section, subject, standings[ { rank, studentLrn, name, score, perfect, percent } ] }` — section leaderboard the teacher's end computes and pushes back to students.
 - `TeacherRemediationMaterial` → `{ id, originalTopicId, title, content, teacherNotes, createdQuiz[], publishDate, targetSection, chunks[], isPublished }` — AI remedial lessons/quizzes. **Always addressed to a `targetSection`** (never a single student), and **fragmented into `chunks[]`** so each piece fits within a LoRa frame and is reassembled on the student device.
 
@@ -107,7 +107,7 @@ So a quiz a student submits instantly appears in the teacher's analytics, and a 
 | `#student-lrn` | Exactly **12 digits** (non-digits stripped on input). |
 | `#student-pin` | Exactly **6 digits**, masked. Default seeded PIN = `123456`. |
 
-Button: `#login-submit-btn` → **"Sign In to Portal"**
+Button: `#login-submit-btn` → **"Sign In"**
 
 **Validation branches (`handleManualLogin`):**
 1. LRN ≠ 12 digits → *"Learner Reference Number (LRN) must be exactly 12 digits."*
@@ -119,12 +119,12 @@ Button: `#login-submit-btn` → **"Sign In to Portal"**
 ### 3b. Teacher Login Flow
 | Field | Rule |
 |-------|------|
-| `#teacher-id` | e.g. `T-2026-001` |
-| `#teacher-name` | Full name |
+| `#teacher-id` | Teacher ID |
+| `#teacher-password` | Password |
 
-Button: `#login-submit-btn` → **"Sign In to Platform"**
+Button: `#login-submit-btn` → **"Sign In"**
 
-**Behavior:** If the Teacher ID matches `MOCK_TEACHERS`, that teacher logs in. If not, a **new teacher account is created on the fly** (department defaults to "General Academics"). Empty fields → *"Please enter both your Teacher ID and Name."*
+**Behavior:** If the Teacher ID matches `MOCK_TEACHERS`, that teacher logs in with their password. If not, a **new teacher account is created on the fly** (department defaults to "General Academics" and name is generated based on ID). Empty fields → *"Please enter both your Teacher ID and Password."*
 
 ### 3c. Quick Demo Shortcuts (`handleShortcutLogin`)
 - `#dev-login-juan` — **Sophia Cruz** (top-ranked active student).
@@ -364,7 +364,7 @@ These end-to-end stories show the two roles meeting through the shared/synced st
 ```
 App.tsx  (session state, routing, shared stores: progressRecords + remediationMaterials)
 │
-├─ LoginScreen.tsx ............ shared auth (student LRN+PIN / teacher ID+name / demo shortcuts)
+├─ LoginScreen.tsx ............ shared auth (student LRN+PIN / teacher ID+password / demo shortcuts)
 │
 ├─ STUDENT (role === 'student')
 │   ├─ [overlay] Subject Focus picker (in App.tsx)
