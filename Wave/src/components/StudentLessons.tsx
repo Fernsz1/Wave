@@ -64,9 +64,11 @@ export default function StudentLessons({
 
   // Handle outside direct navigation
   useEffect(() => {
-    if (navTopicId && lessons.length > 0) {
+    if (navTopicId) {
+      // 1. Try finding in standard lessons
       const foundLesson = lessons.find(l => l.topics.some(t => t.id === navTopicId));
       const foundTopic = foundLesson?.topics.find(t => t.id === navTopicId);
+      
       if (foundTopic && foundLesson) {
         setSelectedTopic(foundTopic);
         setSelectedLessonId(foundLesson.id);
@@ -79,9 +81,40 @@ export default function StudentLessons({
         if (clearNavContext) {
           clearNavContext();
         }
+      } else {
+        // 2. Try finding in remediation materials
+        const foundRemedial = remediationMaterials.find(m => m.id === navTopicId);
+        if (foundRemedial) {
+          const remedialTopic: Topic = {
+            id: foundRemedial.id,
+            name: foundRemedial.title,
+            description: foundRemedial.teacherNotes,
+            readingTime: "5 mins",
+            content: {
+              introduction: foundRemedial.content,
+              sections: [],
+              keyTakeaway: "Complete the quiz to finalize your remedial review.",
+              importantNote: foundRemedial.teacherNotes ? `Teacher notes: ${foundRemedial.teacherNotes}` : undefined,
+            },
+            quiz: foundRemedial.createdQuiz,
+            isCustomRemedial: true
+          };
+          setSelectedTopic(remedialTopic);
+          // Set selectedLessonId to the prefix of the originalTopicId, e.g. "L1" from "L1-T1"
+          setSelectedLessonId(foundRemedial.originalTopicId.split('-')[0]);
+          setViewState(navViewState);
+          if (navViewState === 'quiz') {
+            setCurrentQuestionIdx(0);
+            setUserSelectedAnswers([]);
+            setQuizResults(null);
+          }
+          if (clearNavContext) {
+            clearNavContext();
+          }
+        }
       }
     }
-  }, [navTopicId, navViewState, lessons, clearNavContext]);
+  }, [navTopicId, navViewState, lessons, remediationMaterials, clearNavContext]);
 
   // Interactive Quiz Running State
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState<number>(0);
@@ -338,7 +371,12 @@ export default function StudentLessons({
               </h2>
               <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 {myRemediations.map((mat) => (
-                  <div key={mat.id} className="bg-white rounded-xl p-4 border border-amber-100 hover:shadow-sm transition-shadow flex flex-col justify-between">
+                  <div 
+                    key={mat.id} 
+                    className={`bg-white rounded-xl p-4 border border-amber-100 hover:shadow-sm transition-shadow flex flex-col justify-between ${
+                      myRemediations.length === 1 ? 'md:col-span-2' : ''
+                    }`}
+                  >
                     <div>
                       <h3 className="text-xs font-bold text-amber-900 mb-1">{mat.title}</h3>
                       <p className="text-[11px] text-amber-700 font-medium mb-2.5">Date: {mat.publishDate}</p>
@@ -650,15 +688,19 @@ export default function StudentLessons({
 
           {/* Reading Layout Body */}
           <div className="p-6 sm:p-10 max-w-3xl mx-auto space-y-6">
-            <span className="text-[10px] bg-blue-50 border border-blue-150 text-blue-700 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">
-              Wave Curated Curriculum
+            <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider border ${
+              selectedTopic.isCustomRemedial
+                ? 'bg-amber-50 border-amber-200 text-amber-700'
+                : 'bg-blue-50 border-blue-150 text-blue-700'
+            }`}>
+              {selectedTopic.isCustomRemedial ? 'Tailored AI Remediation' : 'Wave Curated Curriculum'}
             </span>
             
             <h1 className="font-lexend font-extrabold text-2xl sm:text-3xl text-slate-900 mt-2">
               {selectedTopic.name}
             </h1>
             
-            <p className="text-slate-600 text-sm leading-relaxed antialiased mt-3">
+            <p className="text-slate-600 text-sm leading-relaxed antialiased mt-3 whitespace-pre-line">
               {selectedTopic.content.introduction}
             </p>
 
@@ -719,7 +761,11 @@ export default function StudentLessons({
                   type="button"
                   id="jump-to-topic-quiz"
                   onClick={() => handleOpenQuiz(selectedTopic, selectedLessonId)}
-                  className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 shadow-sm shadow-blue-500/10"
+                  className={`px-4 py-2.5 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 shadow-sm ${
+                    selectedTopic.isCustomRemedial
+                      ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-500/10'
+                      : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/10'
+                  }`}
                 >
                   Proceed to Quiz
                   <ArrowRight className="h-4 w-4" />
@@ -849,7 +895,11 @@ export default function StudentLessons({
                 className="space-y-6"
               >
                 <div className="text-center space-y-3">
-                  <div className="inline-flex h-16 w-16 bg-blue-50 border border-blue-200 rounded-2xl items-center justify-center text-blue-600 shadow-sm">
+                  <div className={`inline-flex h-16 w-16 rounded-2xl items-center justify-center shadow-sm ${
+                    selectedTopic.isCustomRemedial
+                      ? 'bg-amber-50 border border-amber-200 text-amber-600'
+                      : 'bg-blue-50 border border-blue-200 text-blue-600'
+                  }`}>
                     <Award className="h-9 w-9" />
                   </div>
                   
@@ -869,7 +919,9 @@ export default function StudentLessons({
                       
                       <div>
                         <span className="block text-[10px] text-slate-400 font-bold uppercase font-sans">PERCENTAGE</span>
-                        <span className="text-2xl font-black text-blue-600">
+                        <span className={`text-2xl font-black ${
+                          selectedTopic.isCustomRemedial ? 'text-amber-600' : 'text-blue-600'
+                        }`}>
                           {Math.round((quizResults.correctCount / quizResults.total) * 100)}%
                         </span>
                       </div>
@@ -917,7 +969,7 @@ export default function StudentLessons({
                     Return to Lesson
                   </button>
 
-                  {nextTopic && (
+                  {nextTopic && !selectedTopic.isCustomRemedial && (
                     <button
                       type="button"
                       id="continue-to-next-topic-btn"

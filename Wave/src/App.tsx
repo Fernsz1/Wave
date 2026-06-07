@@ -452,15 +452,15 @@ export default function App() {
 
           {/* Header Bar */}
           <header className={`bg-white border-b border-slate-100 py-3 px-4 sm:px-6 sticky top-0 z-40 shadow-sm`}>
-            <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
+            <div className="max-w-5xl mx-auto grid grid-cols-3 items-center gap-4">
               
               {/* Left Side: Brand Logo and Wordmark */}
-              <div className="flex items-center gap-2.5 shrink-0">
+              <div className="flex items-center gap-2.5 shrink-0 justify-self-start">
                 <WaveLogo size={32} showText={true} textColor="text-slate-850" textSize="text-lg" />
               </div>
 
               {/* Center Side: Student Name / Grade / Section */}
-              <div className="flex-1 text-center min-w-0">
+              <div className="text-center min-w-0 justify-self-center">
                 <h2 className="text-xs sm:text-sm font-bold text-slate-850 tracking-tight truncate">
                   {currentUser.name}
                 </h2>
@@ -472,7 +472,7 @@ export default function App() {
               </div>
 
               {/* Right Side: Profile Circle serving as Navigation */}
-              <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <div className="flex items-center gap-2 sm:gap-3 shrink-0 justify-self-end">
                 {role === 'student' ? (
                   <button
                     type="button"
@@ -683,7 +683,7 @@ export default function App() {
           </main>
 
           {/* Bottom Navigation Ribbon (Mobile & responsive) */}
-          <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2.5 px-4 shadow-xl z-30">
+          <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2.5 px-4 sm:px-6 shadow-xl z-30">
             <div className="max-w-5xl mx-auto flex items-center justify-around sm:justify-center sm:gap-16">
               {role === 'student' ? (
                 <>
