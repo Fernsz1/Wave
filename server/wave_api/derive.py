@@ -39,7 +39,7 @@ def assemble_progress(student: Student) -> dict:
         }
 
     summative_scores = {
-        s.lesson_id: {"score": s.score, "perfectScore": s.total, "feedback": s.feedback}
+        s.lesson_id: {"score": s.score, "perfectScore": s.total, "feedback": s.feedback, "attempts": s.attempts}
         for s in summatives
     }
 

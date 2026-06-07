@@ -41,6 +41,7 @@ export const SummativeScoreSchema = z.object({
   score: z.number().int(),
   perfectScore: z.number().int(),
   feedback: z.string(),
+  attempts: z.number().int().optional(),
 });
 
 export const FailedItemSchema = z.object({
@@ -112,6 +113,7 @@ export const TeacherRemediationMaterialSchema = z.object({
   content: z.string(),
   teacherNotes: z.string(),
   createdQuiz: z.array(QuizQuestionSchema),
+  createdSummative: z.array(QuizQuestionSchema).optional(),
   publishDate: z.string(),
   targetSection: z.string(),
   chunks: z.array(ChunkSchema),
@@ -145,6 +147,7 @@ export const LessonSchema = z.object({
   title: z.string(),
   description: z.string(),
   topics: z.array(TopicSchema),
+  summative: z.array(QuizQuestionSchema),
 });
 export const LessonCatalogSchema = z.object({
   subject: SubjectSchema,

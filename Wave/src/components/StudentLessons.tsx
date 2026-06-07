@@ -93,7 +93,11 @@ export default function StudentLessons({
     submitted: boolean;
   } | null>(null);
 
+  // Read-only quiz review mode (entered via "View" button after 3 attempts)
+  const [quizReadOnly, setQuizReadOnly] = useState(false);
+
   // Interactive Summative State
+  const [summativeQuestions, setSummativeQuestions] = useState<QuizQuestion[]>([]);
   const [summativeAnswers, setSummativeAnswers] = useState<number[]>([]);
   const [summativeSubmitted, setSummativeSubmitted] = useState<boolean>(false);
   const [summativeScore, setSummativeScore] = useState<number>(0);
@@ -131,6 +135,7 @@ export default function StudentLessons({
     setCurrentQuestionIdx(0);
     setUserSelectedAnswers([]);
     setQuizResults(null);
+    setQuizReadOnly(false);
     setViewState('quiz');
   };
 
@@ -163,10 +168,40 @@ export default function StudentLessons({
     onSaveQuizScore(selectedTopic.id, selectedLessonId, correct, userSelectedAnswers);
   };
 
+  // View last quiz results (read-only, when topic quiz is locked at 3 attempts)
+  const handleViewQuizResults = (topic: Topic, lessonId: string) => {
+    const attempt = progress?.quizAttempts?.[topic.id];
+    if (!attempt) return;
+    setSelectedTopic(topic);
+    setSelectedLessonId(lessonId);
+    setUserSelectedAnswers(attempt.answers);
+    setQuizResults({
+      correctCount: attempt.score,
+      wrongCount: attempt.perfectScore - attempt.score,
+      total: attempt.perfectScore,
+      submitted: true,
+    });
+    setQuizReadOnly(true);
+    setViewState('quiz');
+  };
+
+  // View last summative result (read-only, when summative is locked at 3 attempts)
+  const handleViewSummativeResults = (lesson: Lesson) => {
+    const result = progress?.summativeScores?.[lesson.id];
+    if (!result) return;
+    setSelectedLesson(lesson);
+    setSummativeQuestions([]);
+    setSummativeScore(result.score);
+    setSummativeSubmitted(true);
+    setViewState('summative');
+  };
+
   // Launch Summative Assessment on full lesson completion
   const handleOpenSummative = (lesson: Lesson) => {
-    // Generate questions by taking 2 questions from each topic in the lesson
+    const pool = lesson.summative ?? [];
+    const questions = pool.slice(0, 20);
     setSelectedLesson(lesson);
+    setSummativeQuestions(questions);
     setSummativeAnswers([]);
     setSummativeSubmitted(false);
     setSummativeScore(0);
@@ -182,21 +217,12 @@ export default function StudentLessons({
   const handleSubmitSummative = () => {
     if (!selectedLesson) return;
     let correct = 0;
-    
-    // Simple mock key: let's evaluate correctness
-    // We aggregate all topic quiz questions in this lesson
-    const allQuestions = selectedLesson.topics.flatMap(t => t.quiz);
-    allQuestions.forEach((q, idx) => {
-      if (summativeAnswers[idx] === q.correctAnswerIndex) {
-        correct++;
-      }
+    summativeQuestions.forEach((q, idx) => {
+      if (summativeAnswers[idx] === q.correctAnswerIndex) correct++;
     });
-
-    // Score out of 20 - let's normalize to scale
-    const calcScore = Math.round((correct / allQuestions.length) * 20);
+    const calcScore = correct; // score is already out of 20
     setSummativeScore(calcScore);
     setSummativeSubmitted(true);
-    
     onSaveSummativeScore(selectedLesson.id, calcScore);
   };
 
@@ -552,30 +578,57 @@ export default function StudentLessons({
                                     </div>
 
                                     {/* Score display column & controls */}
-                                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 shrink-0 w-full md:w-auto">
-                                      <div className="shrink-0">
+                                    <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0 w-full md:w-auto">
+                                      <div className="shrink-0 w-full sm:w-auto">
                                         {assessmentBox}
                                       </div>
 
                                       {/* Primary Study & Quiz Actions */}
-                                      <div className="flex sm:flex-col gap-2 shrink-0">
-                                        <button
-                                          type="button"
-                                          id={`read-topic-${topic.id}`}
-                                          onClick={() => handleOpenReading(topic, lesson.id)}
-                                          className="flex-1 sm:flex-none px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 transition-all flex items-center justify-center gap-1.5 shadow-sm"
-                                        >
-                                          <BookOpen className="h-4 w-4" /> Study
-                                        </button>
-                                        <button
-                                          type="button"
-                                          id={`quiz-topic-${topic.id}`}
-                                          onClick={() => handleOpenQuiz(topic, lesson.id)}
-                                          className="flex-1 sm:flex-none px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm"
-                                        >
-                                          <PlayCircle className="h-4 w-4" /> Take Quiz
-                                        </button>
-                                      </div>
+                                      {(() => {
+                                        const topicAttempts = progress?.quizAttempts?.[topic.id]?.attempts ?? 0;
+                                        const quizLocked = topicAttempts >= 3;
+                                        return (
+                                          <div className="flex flex-col gap-2 w-full sm:w-36 mr-1">
+                                            {/* Study — always available */}
+                                            <button
+                                              type="button"
+                                              id={`read-topic-${topic.id}`}
+                                              onClick={() => handleOpenReading(topic, lesson.id)}
+                                              className="w-full px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-xl border border-slate-200 transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                                            >
+                                              <BookOpen className="h-3.5 w-3.5" /> Study
+                                            </button>
+
+                                            {/* Quiz action — swaps to View at 3 attempts */}
+                                            {quizLocked ? (
+                                              <button
+                                                type="button"
+                                                id={`view-quiz-results-${topic.id}`}
+                                                onClick={() => handleViewQuizResults(topic, lesson.id)}
+                                                className="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm shadow-indigo-500/20"
+                                              >
+                                                <BookOpenCheck className="h-3.5 w-3.5" />
+                                                View Result
+                                              </button>
+                                            ) : (
+                                              <div className="flex flex-col gap-1">
+                                                <button
+                                                  type="button"
+                                                  id={`quiz-topic-${topic.id}`}
+                                                  onClick={() => handleOpenQuiz(topic, lesson.id)}
+                                                  className="w-full px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm shadow-blue-500/20"
+                                                >
+                                                  <PlayCircle className="h-3.5 w-3.5" />
+                                                  Attempt Quiz
+                                                </button>
+                                                <p className="text-center text-[10px] text-slate-400 font-medium">
+                                                  {topicAttempts}/3 attempts used
+                                                </p>
+                                              </div>
+                                            )}
+                                          </div>
+                                        );
+                                      })()}
                                     </div>
                                   </div>
                                 </div>
@@ -583,37 +636,99 @@ export default function StudentLessons({
                             })}
                           </div>
 
-                          {/* Summative Assessment Trigger Row (when lesson is complete) */}
-                          {isLessonCompleted && (
-                            <div className="pt-5 border-t border-dashed border-slate-200 sm:pl-12">
-                              <div className="bg-gradient-to-r from-indigo-500/5 via-indigo-500/10 to-transparent p-5 rounded-2xl border border-indigo-100 flex flex-col md:flex-row items-center justify-between gap-5">
-                                <div className="flex items-start gap-3">
-                                  <div className="p-2 bg-indigo-100 rounded-xl text-indigo-600 shadow-sm shrink-0">
-                                    <Award className="h-5 w-5" />
+                          {/* Summative Assessment Row — always visible, locked until all topics done */}
+                          <div className="pt-5 border-t border-dashed border-slate-200 sm:pl-12">
+                            {isLessonCompleted ? (
+                              (() => {
+                                const summativeAttempts = progress?.summativeScores?.[lesson.id]?.attempts ?? 0;
+                                const summativeLocked = summativeAttempts >= 3;
+                                const remedialSummative = myRemediations.find(
+                                  m => m.createdSummative && m.createdSummative.length > 0 &&
+                                    (!m.targetSubject || m.targetSubject === activeSubject)
+                                );
+                                return (
+                                  <div className="bg-gradient-to-r from-indigo-500/5 via-indigo-500/10 to-transparent p-5 rounded-2xl border border-indigo-100 flex flex-col md:flex-row items-center justify-between gap-5">
+                                    <div className="flex items-start gap-3">
+                                      <div className={`p-2 rounded-xl shadow-sm shrink-0 ${summativeLocked && !remedialSummative ? 'bg-slate-200 text-slate-400' : 'bg-indigo-100 text-indigo-600'}`}>
+                                        <Award className="h-5 w-5" />
+                                      </div>
+                                      <div>
+                                        <span className="text-[10px] font-bold text-indigo-650 uppercase tracking-widest block mb-0.5">
+                                          {summativeLocked ? (remedialSummative ? 'Remedial Assessment Available' : 'Max Attempts Reached') : 'Lesson Complete'}
+                                        </span>
+                                        <h4 className="text-xs font-bold text-slate-800">
+                                          {summativeLocked ? (remedialSummative ? 'Teacher-Generated Summative Ready' : 'Summative Assessment Locked') : 'Summative Assessment Unlocked'}
+                                        </h4>
+                                        <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                                          {summativeLocked
+                                            ? (remedialSummative
+                                                ? 'Your teacher published a remedial summative. Take it after reviewing the remedial lesson.'
+                                                : 'You have used all 3 attempts. View your last score below.')
+                                            : `Attempt ${summativeAttempts + 1} of 3. Ready to lock in your summative score?`}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <div className="flex flex-col gap-2 w-full md:w-auto shrink-0">
+                                      {summativeLocked ? (
+                                        <>
+                                          <button
+                                            type="button"
+                                            id={`view-summative-${lesson.id}`}
+                                            onClick={() => handleViewSummativeResults(lesson)}
+                                            className="w-full px-5 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap shadow-sm bg-slate-700 text-white hover:bg-slate-800"
+                                          >
+                                            View
+                                          </button>
+                                          {remedialSummative && (
+                                            <button
+                                              type="button"
+                                              onClick={() => {
+                                                const questions = remedialSummative.createdSummative!.slice(0, 20);
+                                                setSelectedLesson(lesson);
+                                                setSummativeQuestions(questions);
+                                                setSummativeAnswers([]);
+                                                setSummativeSubmitted(false);
+                                                setSummativeScore(0);
+                                                setViewState('summative');
+                                              }}
+                                              className="w-full px-5 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap shadow-sm bg-indigo-600 text-white hover:bg-indigo-700"
+                                            >
+                                              Remedial Summative
+                                            </button>
+                                          )}
+                                        </>
+                                      ) : (
+                                        <button
+                                          type="button"
+                                          id={`start-summative-${lesson.id}`}
+                                          onClick={() => handleOpenSummative(lesson)}
+                                          className={`w-full px-5 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap shadow-sm ${
+                                            hasSummative
+                                              ? 'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700'
+                                              : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-600/10'
+                                          }`}
+                                        >
+                                          {hasSummative ? 'Re-take Assessment' : 'Attempt Summative (20pts)'}
+                                        </button>
+                                      )}
+                                    </div>
                                   </div>
-                                  <div>
-                                    <span className="text-[10px] font-bold text-indigo-650 uppercase tracking-widest block mb-0.5">Lesson Complete</span>
-                                    <h4 className="text-xs font-bold text-slate-800">Summative Assessment Unlocked</h4>
-                                    <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
-                                      Fantastic job clearing all {lesson.topics.length} core sections! Ready to lock in your summative score of all topics?
-                                    </p>
-                                  </div>
+                                );
+                              })()
+                            ) : (
+                              <div className="p-5 rounded-2xl border border-dashed border-slate-300 bg-slate-50 flex items-center gap-4">
+                                <div className="p-2 bg-slate-200 rounded-xl text-slate-400 shrink-0">
+                                  <Award className="h-5 w-5" />
                                 </div>
-                                <button
-                                  type="button"
-                                  id={`start-summative-${lesson.id}`}
-                                  onClick={() => handleOpenSummative(lesson)}
-                                  className={`w-full md:w-auto px-5 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap shrink-0 shadow-sm ${
-                                    hasSummative 
-                                      ? 'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700' 
-                                      : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-600/10'
-                                  }`}
-                                >
-                                  {hasSummative ? 'Re-take Assessment' : 'Launch Summative Quiz (20pts)'}
-                                </button>
+                                <div className="flex-1">
+                                  <h4 className="text-xs font-bold text-slate-500">Summative Assessment Locked</h4>
+                                  <p className="text-[11px] text-slate-400 mt-0.5">
+                                    Complete all {lesson.topics.length} topic quizzes to unlock — {completedInLesson}/{lesson.topics.length} done.
+                                  </p>
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
+                          </div>
 
                         </div>
                       </motion.div>
@@ -717,15 +832,35 @@ export default function StudentLessons({
                 >
                   Done Reading
                 </button>
-                <button
-                  type="button"
-                  id="jump-to-topic-quiz"
-                  onClick={() => handleOpenQuiz(selectedTopic, selectedLessonId)}
-                  className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 shadow-sm shadow-blue-500/10"
-                >
-                  Proceed to Quiz
-                  <ArrowRight className="h-4 w-4" />
-                </button>
+                {(() => {
+                  const readingAttempts = progress?.quizAttempts?.[selectedTopic.id]?.attempts ?? 0;
+                  const readingLocked = readingAttempts >= 3;
+                  return readingLocked ? (
+                    <button
+                      type="button"
+                      onClick={() => handleViewQuizResults(selectedTopic, selectedLessonId)}
+                      className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-2 shadow-sm shadow-indigo-500/20"
+                    >
+                      <BookOpenCheck className="h-4 w-4" />
+                      View
+                    </button>
+                  ) : (
+                    <div className="flex flex-col items-end gap-1">
+                      <button
+                        type="button"
+                        id="jump-to-topic-quiz"
+                        onClick={() => handleOpenQuiz(selectedTopic, selectedLessonId)}
+                        className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-2 shadow-sm shadow-blue-500/20"
+                      >
+                        Attempt
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
+                      <span className="text-[10px] text-slate-400 font-medium pr-0.5">
+                        {readingAttempts}/3 attempts used
+                      </span>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           </div>
@@ -744,17 +879,18 @@ export default function StudentLessons({
           {/* Header status */}
           <div className="px-5 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
             <div>
-              <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">{selectedTopic.name} - Quiz</h2>
-              <span className="text-[11px] text-blue-600 font-bold mt-1">AI Evaluated Trial</span>
+              <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">{selectedTopic.name} — Quiz</h2>
+              <span className={`text-[11px] font-bold mt-1 ${quizReadOnly ? 'text-indigo-600' : 'text-blue-600'}`}>
+                {quizReadOnly ? 'Read-Only Review' : 'AI Evaluated Trial'}
+              </span>
             </div>
-            
-            <button 
+            <button
               type="button"
               id="exit-quiz-early"
               onClick={() => setViewState('syllabus')}
               className="text-xs text-slate-400 hover:text-slate-600 transition"
             >
-              Abort Setup
+              {quizReadOnly ? 'Back' : 'Abort'}
             </button>
           </div>
 
@@ -843,9 +979,96 @@ export default function StudentLessons({
                   )}
                 </div>
               </div>
+            ) : quizReadOnly ? (
+              // ── READ-ONLY REVIEW: all questions with color-coded answers ──
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-5"
+              >
+                {/* Score banner */}
+                <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Last Attempt Score</p>
+                    <p className="text-2xl font-black text-indigo-900 mt-0.5">
+                      {quizResults.correctCount}
+                      <span className="text-base font-normal text-indigo-400"> / {quizResults.total}</span>
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Percentage</p>
+                    <p className="text-2xl font-black text-indigo-700 mt-0.5">
+                      {Math.round((quizResults.correctCount / quizResults.total) * 100)}%
+                    </p>
+                  </div>
+                </div>
+
+                {/* All questions read-only */}
+                <div className="space-y-5">
+                  {selectedTopic.quiz.map((q, qIdx) => {
+                    const studentAnswer = userSelectedAnswers[qIdx];
+                    const isCorrect = studentAnswer === q.correctAnswerIndex;
+                    return (
+                      <div key={q.id} className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
+                        {/* Question header */}
+                        <div className="flex items-start gap-2">
+                          <span className={`shrink-0 mt-0.5 h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold ${isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
+                            {isCorrect ? '✓' : '✗'}
+                          </span>
+                          <p className="text-xs font-semibold text-slate-800 leading-relaxed">
+                            <span className="text-slate-400 font-bold mr-1">Q{qIdx + 1}.</span>
+                            {q.question}
+                          </p>
+                        </div>
+
+                        {/* Options — static, color-coded */}
+                        <div className="grid grid-cols-1 gap-2 pl-7">
+                          {q.options.map((opt, optIdx) => {
+                            const isStudentPick = optIdx === studentAnswer;
+                            const isCorrectAnswer = optIdx === q.correctAnswerIndex;
+                            let cls = 'bg-white border-slate-200 text-slate-500';
+                            let badge = null;
+                            if (isCorrectAnswer && isStudentPick) {
+                              cls = 'bg-emerald-50 border-emerald-400 text-emerald-800';
+                              badge = <span className="ml-auto shrink-0 text-[9px] font-bold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded-full">Your answer · Correct</span>;
+                            } else if (isStudentPick && !isCorrectAnswer) {
+                              cls = 'bg-red-50 border-red-400 text-red-800';
+                              badge = <span className="ml-auto shrink-0 text-[9px] font-bold text-red-600 bg-red-100 px-1.5 py-0.5 rounded-full">Your answer · Wrong</span>;
+                            } else if (isCorrectAnswer) {
+                              cls = 'bg-emerald-50 border-emerald-300 text-emerald-700';
+                              badge = <span className="ml-auto shrink-0 text-[9px] font-bold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded-full">Correct answer</span>;
+                            }
+                            return (
+                              <div key={optIdx} className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-xs ${cls}`}>
+                                <span className="font-medium">{opt}</span>
+                                {badge}
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Explanation */}
+                        {q.explanation && (
+                          <p className="pl-7 text-[11px] text-slate-400 italic leading-relaxed border-t border-slate-100 pt-2">
+                            {q.explanation}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setViewState('syllabus')}
+                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition flex items-center justify-center gap-1.5"
+                >
+                  <ArrowLeft className="h-4 w-4" /> Back to Lesson
+                </button>
+              </motion.div>
             ) : (
-              // Quiz Results View (Evaluation complete banner and answers breakdowns)
-              <motion.div 
+              // ── NORMAL RESULTS SUMMARY (after submitting a live attempt) ──
+              <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1 }}
                 className="space-y-6"
@@ -854,23 +1077,19 @@ export default function StudentLessons({
                   <div className="inline-flex h-16 w-16 bg-blue-50 border border-blue-200 rounded-2xl items-center justify-center text-blue-600 shadow-sm">
                     <Award className="h-9 w-9" />
                   </div>
-                  
                   <h1 className="font-display font-medium text-xl text-slate-900">Quiz Completed!</h1>
-                  <p className="text-xs text-slate-400">Analysis complete. Scores saved directly to platform registers.</p>
-                  
+                  <p className="text-xs text-slate-400">Score saved to your progress record.</p>
                   <div className="pt-3 max-w-xs mx-auto">
                     <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-center justify-around">
                       <div>
-                        <span className="block text-[10px] text-slate-400 font-bold uppercase">SCORE</span>
+                        <span className="block text-[10px] text-slate-400 font-bold uppercase">Score</span>
                         <span id="quiz-final-score" className="text-2xl font-black text-slate-800">
                           {quizResults.correctCount} <span className="text-slate-400 text-base font-normal">/ {quizResults.total}</span>
                         </span>
                       </div>
-                      
                       <div className="h-8 border-r border-slate-200" />
-                      
                       <div>
-                        <span className="block text-[10px] text-slate-400 font-bold uppercase font-sans">PERCENTAGE</span>
+                        <span className="block text-[10px] text-slate-400 font-bold uppercase">Percentage</span>
                         <span className="text-2xl font-black text-blue-600">
                           {Math.round((quizResults.correctCount / quizResults.total) * 100)}%
                         </span>
@@ -879,35 +1098,24 @@ export default function StudentLessons({
                   </div>
                 </div>
 
-                {/* Completion Status & Stats */}
                 <div className="bg-slate-50 border border-slate-200 rounded-3xl p-6 space-y-4 max-w-sm mx-auto">
                   <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">Evaluation metrics</h3>
-                  
                   <div className="grid grid-cols-2 gap-3.5">
                     <div className="bg-white border border-slate-100 rounded-2xl p-3.5 text-center shadow-sm">
                       <span className="block text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Correct</span>
-                      <span id="quiz-correct-count" className="text-xl font-black text-emerald-700 mt-1 block">
-                        {quizResults.correctCount}
-                      </span>
+                      <span id="quiz-correct-count" className="text-xl font-black text-emerald-700 mt-1 block">{quizResults.correctCount}</span>
                     </div>
-
                     <div className="bg-white border border-slate-100 rounded-2xl p-3.5 text-center shadow-sm">
                       <span className="block text-[10px] font-bold text-red-600 uppercase tracking-wider">Incorrect</span>
-                      <span id="quiz-wrong-count" className="text-xl font-black text-red-700 mt-1 block">
-                        {quizResults.wrongCount}
-                      </span>
+                      <span id="quiz-wrong-count" className="text-xl font-black text-red-700 mt-1 block">{quizResults.wrongCount}</span>
                     </div>
                   </div>
-
                   <div className="bg-white border border-slate-100 rounded-2xl p-4 flex items-center justify-between text-xs shadow-sm">
-                    <span className="font-semibold text-slate-500">Completion Status</span>
-                    <span id="quiz-completion-status" className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-bold uppercase text-[9px] tracking-wider">
-                      Completed
-                    </span>
+                    <span className="font-semibold text-slate-500">Status</span>
+                    <span id="quiz-completion-status" className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-bold uppercase text-[9px] tracking-wider">Completed</span>
                   </div>
                 </div>
 
-                {/* Return and Navigation Controls */}
                 <div className="flex flex-col sm:flex-row gap-3 pt-4">
                   <button
                     type="button"
@@ -915,10 +1123,8 @@ export default function StudentLessons({
                     onClick={() => setViewState('syllabus')}
                     className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-semibold rounded-xl text-xs shadow-sm transition-colors flex items-center justify-center gap-1.5"
                   >
-                    <ArrowLeft className="h-4 w-4" />
-                    Return to Lesson
+                    <ArrowLeft className="h-4 w-4" /> Return to Lesson
                   </button>
-
                   {nextTopic && (
                     <button
                       type="button"
@@ -926,8 +1132,7 @@ export default function StudentLessons({
                       onClick={() => handleOpenReading(nextTopic, selectedLessonId || (currentLesson ? currentLesson.id : ''))}
                       className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs shadow-md shadow-blue-500/10 transition-colors flex items-center justify-center gap-1.5"
                     >
-                      Continue to Next Topic
-                      <ArrowRight className="h-4 w-4" />
+                      Continue to Next Topic <ArrowRight className="h-4 w-4" />
                     </button>
                   )}
                 </div>
@@ -950,14 +1155,18 @@ export default function StudentLessons({
           <div className="px-5 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
             <div>
               <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">{selectedLesson.title}</h2>
-              <span className="text-[11px] text-indigo-700 font-bold mt-1">Summative Milestone assessment (20pts)</span>
+              <span className="text-[11px] text-indigo-700 font-bold mt-1">
+                {summativeSubmitted && summativeQuestions.length === 0
+                  ? 'Summative Results (View Only)'
+                  : 'Summative Milestone Assessment (20pts)'}
+              </span>
             </div>
-            <button 
+            <button
               type="button"
               onClick={() => setViewState('syllabus')}
               className="text-xs text-slate-400 hover:text-slate-600 transition"
             >
-              Abort Final
+              {summativeSubmitted && summativeQuestions.length === 0 ? 'Back' : 'Abort Final'}
             </button>
           </div>
 
@@ -974,8 +1183,8 @@ export default function StudentLessons({
                   </div>
                 </div>
 
-                {/* Iterate aggregate quiz questions */}
-                {selectedLesson.topics.flatMap(t => t.quiz).map((q, qIdx) => (
+                {/* Iterate 20 summative questions */}
+                {summativeQuestions.map((q, qIdx) => (
                   <div key={q.id} className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
                     <h4 className="text-xs text-slate-500 uppercase font-bold">Question {qIdx + 1}</h4>
                     <p className="font-display font-medium text-sm text-slate-800 leading-normal">{q.question}</p>
@@ -1011,7 +1220,7 @@ export default function StudentLessons({
                   type="button"
                   onClick={handleSubmitSummative}
                   id="submit-summative-btn"
-                  disabled={selectedLesson.topics.flatMap(t => t.quiz).some((_, idx) => summativeAnswers[idx] === undefined)}
+                  disabled={summativeQuestions.some((_, idx) => summativeAnswers[idx] === undefined)}
                   className="w-full mt-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs transition-shadow shadow-md shadow-indigo-500/10 disabled:opacity-40"
                 >
                   Post Final Answers

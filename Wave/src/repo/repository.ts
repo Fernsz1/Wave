@@ -9,10 +9,11 @@
  * syncs with Django over REST + MQTT. Returns the app's INTERNAL types so the UI
  * components are unchanged.
  */
-import { Lesson, StudentProgress, StudentUser, TeacherRemediationMaterial } from '../types';
+import { Lesson, StudentProgress, StudentUser, TeacherUser, TeacherRemediationMaterial } from '../types';
 
 export interface RepoBootstrap {
   students: StudentUser[];
+  teachers: TeacherUser[];
   lessonsBySubject: Record<string, Lesson[]>;
   progressRecords: Record<string, StudentProgress>;
   remediationMaterials: TeacherRemediationMaterial[];
@@ -62,7 +63,9 @@ export interface WaveRepository {
   /** Cold-start data load. */
   bootstrap(): Promise<RepoBootstrap>;
   /** Establish a session/token (no-op for Mock). */
-  authenticate(role: 'student' | 'teacher', principalId: string, name?: string): Promise<void>;
+  authenticate(role: 'student' | 'teacher', principalId: string, name?: string, pin?: string): Promise<void>;
+  /** Flush any writes queued while offline. Call after authenticate resolves. No-op for Mock. */
+  flushPendingWrites(): Promise<void>;
   saveQuizAttempt(w: QuizAttemptWrite): Promise<void>;
   saveSummativeResult(w: SummativeWrite): Promise<void>;
   publishRemediation(material: TeacherRemediationMaterial, opts: { subject: string; section: string }): Promise<void>;

@@ -4,12 +4,9 @@
  */
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Sparkles, Users, BookOpen, Wand2, ArrowRight, ArrowLeft,
-  CheckCircle2, AlertCircle, FileText, HelpCircle, Edit3, Trash2, X
-} from 'lucide-react';
-import { StudentUser, Topic, QuizQuestion, TeacherRemediationMaterial, StudentProgress } from '../types';
+import { motion } from 'motion/react';
+import { Sparkles, Wand2, CheckCircle2, Edit3, Trash2, X } from 'lucide-react';
+import { StudentUser, QuizQuestion, TeacherRemediationMaterial, StudentProgress } from '../types';
 import { MOCK_LESSONS, MOCK_LESSONS_BY_SUBJECT } from '../data';
 import WaveLogo from './WaveLogo';
 
@@ -76,7 +73,9 @@ export default function RemediationWizard({
   const [student, setStudent] = useState<StudentUser | null>(
     preSelectedStudent || finalWizardStudents[0] || null
   );
-  const [targetTopicId, setTargetTopicId] = useState<string>(preSelectedTopicId || "L1-T2");
+  const [targetTopicId, setTargetTopicId] = useState<string>(
+    preSelectedTopicId || availableLessons[0]?.topics[0]?.id || ""
+  );
 
   // Lesson state & auto sync
   const initialLesson = availableLessons.find(l => l.topics.some(t => t.id === targetTopicId)) || availableLessons[0];
@@ -105,15 +104,6 @@ export default function RemediationWizard({
     }
   }, [preSelectedStudent, activeSubject, activeSection]);
 
-  // Pre-load Jacob + Muscular System shortcut behavior/target sync
-  useEffect(() => {
-    if (preSelectedStudent) {
-      setStudent(preSelectedStudent);
-    }
-    if (preSelectedTopicId) {
-      setTargetTopicId(preSelectedTopicId);
-    }
-  }, [preSelectedStudent, preSelectedTopicId]);
 
   // Sync Lesson state with changes to targetTopicId
   useEffect(() => {
@@ -132,42 +122,6 @@ export default function RemediationWizard({
     }
   };
 
-  // Handle students selections
-  const handleSelectStudentLrn = (lrn: string) => {
-    const found = students.find(s => s.lrn === lrn);
-    if (found) {
-      setStudent(found);
-      
-      // Look up any failing quiz target topic for this student in the current subject
-      const prog = progressRecords[lrn];
-      let foundFailId = "";
-      if (prog) {
-        Object.values(prog.quizAttempts).some(att => {
-          if (activeTopicIds.has(att.topicId)) {
-            const pct = att.perfectScore > 0 ? (att.score / att.perfectScore) * 100 : 100;
-            if (pct < 70) {
-              foundFailId = att.topicId;
-              return true;
-            }
-          }
-          return false;
-        });
-      }
-
-      if (foundFailId) {
-        setTargetTopicId(foundFailId);
-      } else {
-        // Auto-set low performance topic arrays based on student identity
-        if (lrn === "101234567900") {
-          setTargetTopicId("L1-T2"); // Jacob fails Muscular System!
-        } else if (availableLessons[0]?.topics[0]) {
-          setTargetTopicId(availableLessons[0].topics[0].id);
-        } else {
-          setTargetTopicId("L1-T1"); // Fallback Skeletal System
-        }
-      }
-    }
-  };
 
   // Launch AI generator
   const triggerGenerationFlow = () => {
@@ -176,119 +130,67 @@ export default function RemediationWizard({
     setGenStatusMessage('Connecting to Gemini model instance channels...');
   };
 
-  // AI Progression Simulator Loop
+  // Call Gemini API via Django to generate the remedial pack
   useEffect(() => {
     if (step !== 'generating') return;
 
-    const timer = setInterval(() => {
-      setGenPercentage(prev => {
-        const next = prev + 10;
-        if (next === 30) {
-          setGenStatusMessage('Decomposing student failed quiz answer telemetry...');
-        } else if (next === 50) {
-          setGenStatusMessage('Writing customized analogy structure (Rubber band elasticity)...');
-        } else if (next === 70) {
-          setGenStatusMessage('Formulating custom diagnostic test elements...');
-        } else if (next === 90) {
-          setGenStatusMessage('Polishing terminology formatting constraints...');
-        } else if (next >= 100) {
-          clearInterval(timer);
-          
-          // Complete generating: populate realistic AI outputs
-          // We look up the original target topic
-          const originalTopic = MOCK_LESSONS.flatMap(l => l.topics).find(t => t.id === targetTopicId);
-          const topicName = originalTopic?.name || "Muscular System";
+    const topicObj = availableLessons.flatMap(l => l.topics).find(t => t.id === targetTopicId);
+    const topicName = topicObj?.name ?? targetTopicId;
 
-          const titleVal = `AI Remedial Topic: Simplified Analogy for ${topicName}`;
-          let contentVal = `## Welcome to your Remedial Lesson for ${topicName}!\nThis lesson is custom-created specifically by Wave's AI co-grader to help you master the core concepts.\n\n`;
-          let notesVal = `Hi ${student?.name || 'Student'}, I noticed you struggled with some questions on the ${topicName} quiz. Let's make it super simple!`;
-          let quizQuestions: QuizQuestion[] = [];
+    const prog = student ? progressRecords[student.lrn] : null;
+    const failedItems = prog
+      ? Object.values(prog.quizAttempts)
+          .filter(a => a.topicId === targetTopicId)
+          .flatMap(a =>
+            a.answers.map((selected, idx) => ({
+              questionId: `Q-${idx + 1}`,
+              topicId: a.topicId,
+              selectedOption: selected,
+              correctOption: 0,
+            }))
+          )
+      : [];
 
-          if (targetTopicId === "L1-T2") {
-            contentVal += `### The Rubber Band Analogy for Muscles\nThink of your muscles as stretchy rubber bands. When they contract (squeeze and shorten), they pull on your bones to move them. But here is the trick: a rubber band can only **pull**, it cannot push!\n\nBecause muscles can only pull and cannot push, they always work in **opposing pairs**:\n• **Bending your arm**: Your bicep muscle contracts (tightens and pulls) while your tricep muscle relaxes.\n• **Straightening your arm**: Your tricep muscle contracts (tightens and pulls) while your bicep muscle relaxes.\n\n### Voluntary vs. Involuntary Muscles\n• **Voluntary**: Muscles you control (like hand muscles holding a pencil).\n• **Involuntary**: Muscles that work automatically without having to think (like your beating heart!).`;
-            notesVal = `Hi ${student?.name || 'Jacob'}, I wrote a special rubber band analogy to help you understand bicep and tricep opposing action pairs. Try the quick quiz below!`;
-            quizQuestions = [
-              {
-                id: "QREM-MS1",
-                question: "Why do skeletal muscles always work in opposing pairs?",
-                options: [
-                  "Because they are located on both sides of the nose",
-                  "Because muscles can only pull bones, they cannot push them back",
-                  "To produce bone marrow twice as fast",
-                  "To store extra water and calcium in biological nodes"
-                ],
-                correctAnswerIndex: 1,
-                explanation: "Skeletal muscles can only contract and pull. To move a bone back and forth, they must work in contraction pairs."
-              },
-              {
-                id: "QREM-MS2",
-                question: "Which of your muscles is an example of an involuntary muscle?",
-                options: [
-                  "Bicep muscle in your arm wiggling a finger",
-                  "The heart muscle beating on its own constantly",
-                  "Leg muscles wiggling a foot",
-                  "Jaw muscle chewing gum"
-                ],
-                correctAnswerIndex: 1,
-                explanation: "The heart beats automatically without you choosing to do so, making it involuntary."
-              }
-            ];
-          } else if (targetTopicId === "L1-T1") {
-            contentVal += `### The Construction Frame Analogy for Bones\nThink of your skeleton as the strong wooden or metal frame of a house. Without it, the roof would fall and walls would collapse! Your bones form a sturdy frame that supports your body, lets you stand tall, and protects your soft organs (like your brain inside the skull, and heart inside the chest).\n\n### Key Functions\n• **Protects**: Skull protects brain; Rib Cage protects heart and lungs.\n• **Supports**: Spinal column backbone keeps you standing.\n• **Creates**: Bone marrow inside makes blood cells.`;
-            quizQuestions = [
-              {
-                id: "QREM-SS1",
-                question: "Which hard skeletal bone acts like a helmet protecting your brain?",
-                options: ["Rib cage", "Skull", "Backbone", "Thigh bone"],
-                correctAnswerIndex: 1,
-                explanation: "The skull is a round, hard bone that houses and protects your fragile brain from injuries."
-              },
-              {
-                id: "QREM-SS2",
-                question: "What is produced in the soft marrow found inside larger bones?",
-                options: ["Oxygen gas", "Water cells", "Blood cells", "Skeletal tendons"],
-                correctAnswerIndex: 2,
-                explanation: "Bone marrow tissue inside bones is a manufacturing center for producing brand new blood cells."
-              }
-            ];
-          } else {
-            contentVal += `### Core Summary of ${topicName}\nLet's break down ${topicName} into easy steps:\n\n1. Review your main definitions.\n2. Observe real-world examples (like how water freeze or heat travels).\n3. Answer custom questions to reinforce your scientific reasoning.\n\nStudying sciences is all about observing how things work in the natural world!`;
-            quizQuestions = [
-              {
-                id: "QREM-GEN1",
-                question: `What is the best way to understand ${topicName}?`,
-                options: [
-                  "By connecting concepts with physical examples in nature",
-                  "By memorizing words without thinking about their meanings"
-                ],
-                correctAnswerIndex: 0,
-                explanation: "Real understanding comes from visualizing concepts and checking physical examples."
-              }
-            ];
-          }
+    const apiBase = import.meta.env.VITE_API_BASE ?? 'http://localhost:8000';
 
-          setGeneratedTitle(titleVal);
-          setGeneratedContent(contentVal);
-          setGeneratedNotes(notesVal);
-          setGeneratedQuiz(quizQuestions);
+    setGenStatusMessage('Connecting to Gemini AI model...');
+    setGenPercentage(15);
 
-          setStep('preview');
-          return 100;
-        }
-        return next;
+    fetch(`${apiBase}/api/remediation/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topicId: targetTopicId,
+        topicName,
+        subject: activeSubject,
+        gradeLevel: 'Grade 6',
+        section: activeSection,
+        studentLrn: student?.lrn ?? '',
+        failedItems,
+      }),
+    })
+      .then(res => {
+        if (!res.ok) throw new Error(`Server returned HTTP ${res.status}`);
+        setGenPercentage(70);
+        setGenStatusMessage('Processing Gemini response...');
+        return res.json();
+      })
+      .then(data => {
+        setGenPercentage(100);
+        setGeneratedTitle(data.title);
+        setGeneratedContent(data.content);
+        setGeneratedNotes(data.teacherNotes);
+        setGeneratedQuiz(data.createdQuiz);
+        setStep('preview');
+      })
+      .catch(err => {
+        setGenStatusMessage(
+          `Generation failed: ${err.message}. Check that the server has internet and GEMINI_API_KEY is set.`
+        );
+        setGenPercentage(0);
       });
-    }, 300);
+  }, [step]);
 
-    return () => clearInterval(timer);
-  }, [step, targetTopicId, student]);
-
-  // Save edits
-  const saveWizardEdits = (title: string, content: string, notes: string) => {
-    setGeneratedTitle(title);
-    setGeneratedContent(content);
-    setGeneratedNotes(notes);
-    setStep('preview');
-  };
 
   // Publish Material to local database
   const handlePublishAssessment = () => {
@@ -399,15 +301,6 @@ export default function RemediationWizard({
                 </div>
               </div>
 
-              {/* Autocomplete notification */}
-              {student?.lrn === "101234567900" && (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2.5">
-                  <AlertCircle className="h-4 w-4 text-amber-700 shrink-0 mt-0.5" />
-                  <p className="text-[11px] text-amber-800 font-medium">
-                    Diagnostic system checks matched. <strong>Jacob Flores</strong> failed the <strong>Muscular System</strong> quiz with a recorded 0/3 score. Subject auto-filled.
-                  </p>
-                </div>
-              )}
             </div>
 
             {/* Footer */}

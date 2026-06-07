@@ -8,32 +8,45 @@
  * Reads seed data from data.ts and the localStorage roster; mutations are no-ops
  * here because App.tsx keeps the authoritative React state (optimistic updates).
  */
-import {
-  MOCK_LESSONS_BY_SUBJECT,
-  MOCK_STUDENTS,
-  INITIAL_PROGRESS_RECORDS,
-  INITIAL_REMEDIATION_MATERIALS,
-} from '../data';
-import { StudentUser } from '../types';
+import { MOCK_LESSONS_BY_SUBJECT } from '../data';
+import { StudentUser, TeacherUser } from '../types';
 import { RepoBootstrap, WaveRepository } from './repository';
 
 const ROSTER_KEY = 'wave_enrolled_students';
+const TEACHERS_KEY = 'wave_enrolled_teachers';
+
+const DEMO_STUDENT: StudentUser = {
+  lrn: '101234567891',
+  name: 'Maria Santos',
+  gradeLevel: 'Grade 6',
+  section: 'Grade 6 - Section Einstein',
+  pin: '123456',
+};
+
+const DEMO_TEACHER: TeacherUser = {
+  teacherId: 'T-2026-001',
+  name: 'Mrs. Elena Santos',
+  department: 'General Academics',
+};
 
 function loadRoster(): StudentUser[] {
   const stored = localStorage.getItem(ROSTER_KEY);
   if (stored) {
-    try {
-      const parsed = JSON.parse(stored);
-      if (parsed.some((s: any) => s.gradeLevel?.includes('Grade 4') || s.gradeLevel?.includes('Grade 6'))) {
-        return parsed;
-      }
-    } catch {
-      /* fall through to seed */
-    }
+    try { return JSON.parse(stored); } catch { /* fall through */ }
   }
-  const initial = MOCK_STUDENTS.map((s) => ({ ...s, pin: s.pin || '123456' }));
-  localStorage.setItem(ROSTER_KEY, JSON.stringify(initial));
-  return initial;
+  const seed = [DEMO_STUDENT];
+  localStorage.setItem(ROSTER_KEY, JSON.stringify(seed));
+  return seed;
+}
+
+function loadTeachers(): TeacherUser[] {
+  const stored = localStorage.getItem(TEACHERS_KEY);
+  if (stored) {
+    try { return JSON.parse(stored); } catch { /* fall through */ }
+  }
+  const seed = [DEMO_TEACHER];
+  localStorage.setItem(TEACHERS_KEY, JSON.stringify(seed));
+  return seed;
 }
 
 export class MockRepository implements WaveRepository {
@@ -42,13 +55,15 @@ export class MockRepository implements WaveRepository {
   async bootstrap(): Promise<RepoBootstrap> {
     return {
       students: loadRoster(),
+      teachers: loadTeachers(),
       lessonsBySubject: MOCK_LESSONS_BY_SUBJECT,
-      progressRecords: structuredClone(INITIAL_PROGRESS_RECORDS),
-      remediationMaterials: structuredClone(INITIAL_REMEDIATION_MATERIALS),
+      progressRecords: {},
+      remediationMaterials: [],
     };
   }
 
   async authenticate(): Promise<void> {}
+  async flushPendingWrites(): Promise<void> {}
   async saveQuizAttempt(): Promise<void> {}
   async saveSummativeResult(): Promise<void> {}
   async publishRemediation(): Promise<void> {}

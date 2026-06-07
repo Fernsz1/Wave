@@ -152,6 +152,7 @@ export default function StudentHome({
             <span className="block text-[10px] text-blue-200 uppercase font-bold tracking-widest mb-1">LEARNER RECORD</span>
             <div className="text-sm font-semibold tracking-wide">{student.lrn}</div>
             <div className="text-xs text-blue-100 font-bold capitalize mt-0.5">{activeSubject} Course</div>
+            <div className="text-xs text-blue-200 mt-0.5">{student.section || student.gradeLevel}</div>
           </div>
         </div>
       </motion.div>

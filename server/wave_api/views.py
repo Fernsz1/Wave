@@ -34,13 +34,15 @@ def login(request):
             }
         )
     if role == "teacher":
-        tid = data.get("teacherId", "")
-        if not tid or not data.get("name"):
+        tid = data.get("teacherId", "").strip()
+        name = data.get("name", "").strip()
+        if not tid or not name:
             return Response({"error": "Teacher ID and Name required."}, status=status.HTTP_400_BAD_REQUEST)
-        teacher, _ = Teacher.objects.get_or_create(
-            teacher_id=tid,
-            defaults={"name": data["name"], "department": "General Academics"},
-        )
+        teacher = Teacher.objects.filter(teacher_id=tid).first()
+        if not teacher:
+            return Response({"error": "Teacher ID not recognized."}, status=status.HTTP_404_NOT_FOUND)
+        if teacher.name.strip().lower() != name.lower():
+            return Response({"error": "Incorrect name for this Teacher ID."}, status=status.HTTP_401_UNAUTHORIZED)
         token = ApiToken.issue("teacher", teacher.teacher_id)
         return Response(
             {
@@ -55,12 +57,16 @@ def login(request):
 @api_view(["GET"])
 @permission_classes([permissions.AllowAny])
 def roster(request):
-    """Student list for login validation (demo convenience; pins included for the LAN demo)."""
+    """Student and teacher lists for login validation."""
     students = [
         {"lrn": s.lrn, "name": s.name, "gradeLevel": s.grade_level, "section": s.section, "pin": s.pin}
         for s in Student.objects.all()
     ]
-    return Response({"students": students})
+    teachers = [
+        {"teacherId": t.teacher_id, "name": t.name, "department": t.department}
+        for t in Teacher.objects.all()
+    ]
+    return Response({"students": students, "teachers": teachers})
 
 
 @api_view(["GET"])
@@ -116,6 +122,7 @@ def remediation(request):
             "content": m.content,
             "teacherNotes": m.teacher_notes,
             "createdQuiz": m.created_quiz,
+            "createdSummative": m.created_summative,
             "publishDate": m.publish_date,
             "targetSection": m.target_section,
             "chunks": [],

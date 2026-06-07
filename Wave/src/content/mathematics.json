@@ -1,0 +1,4982 @@
+{
+  "subject": "Mathematics",
+  "gradeLevel": "Grade 6",
+  "lessons": [
+    {
+      "id": "L-MATH1",
+      "title": "Lesson 1: Fractions and Decimals",
+      "description": "Explore fractions and decimals, learning how to read, compare, add, subtract, multiply, and divide them.",
+      "topics": [
+        {
+          "id": "L-MATH1-T1",
+          "name": "Understanding Fractions",
+          "description": "Learn what fractions are, including numerators, denominators, proper and improper fractions, mixed numbers, and equivalent fractions.",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "A fraction shows a part of a whole. When you cut a cake into equal pieces and take some, you can name your share using a fraction.",
+            "sections": [
+              {
+                "title": "Parts of a Fraction",
+                "body": "Every fraction has two numbers. The top number is the numerator, which tells how many parts you have. The bottom number is the denominator, which tells how many equal parts the whole is divided into. In 3/4, the 3 is the numerator and the 4 is the denominator."
+              },
+              {
+                "title": "Types of Fractions",
+                "body": "A proper fraction has a numerator smaller than the denominator, like 3/5. An improper fraction has a numerator equal to or bigger than the denominator, like 9/4. A mixed number has a whole number and a fraction together, like 2 1/3."
+              },
+              {
+                "title": "Equivalent Fractions",
+                "body": "Equivalent fractions name the same amount even though they look different. For example, 1/2 = 2/4 = 3/6. You can make equivalent fractions by multiplying or dividing the top and bottom by the same number."
+              }
+            ],
+            "definition": {
+              "term": "Fraction",
+              "meaning": "A number that shows a part of a whole, written with a numerator on top and a denominator on the bottom."
+            },
+            "keyTakeaway": "The numerator counts the parts you have, and the denominator counts the total equal parts in the whole.",
+            "importantNote": "Equivalent fractions like 1/2 and 2/4 are equal in value even though their numbers are different."
+          },
+          "quiz": [
+            {
+              "id": "QM1-1",
+              "question": "What is the top number of a fraction called?",
+              "options": [
+                "Numerator",
+                "Denominator",
+                "Divisor",
+                "Decimal"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "The top number is the numerator. It tells how many parts you have."
+            },
+            {
+              "id": "QM1-2",
+              "question": "In the fraction 3/8, what is the denominator?",
+              "options": [
+                "3",
+                "8",
+                "5",
+                "11"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The denominator is the bottom number, which is 8. It shows the total equal parts."
+            },
+            {
+              "id": "QM1-3",
+              "question": "Which of these is a proper fraction?",
+              "options": [
+                "7/4",
+                "3/5",
+                "9/9",
+                "6/2"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A proper fraction has a numerator smaller than the denominator. 3 is less than 5, so 3/5 is proper."
+            },
+            {
+              "id": "QM1-4",
+              "question": "Which fraction is equivalent to 1/2?",
+              "options": [
+                "2/3",
+                "3/6",
+                "1/4",
+                "4/5"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "3/6 simplifies to 1/2 because 3 divided by 3 is 1 and 6 divided by 3 is 2."
+            },
+            {
+              "id": "QM1-5",
+              "question": "Which of these is an improper fraction?",
+              "options": [
+                "2/5",
+                "4/7",
+                "9/4",
+                "1/3"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "An improper fraction has a numerator equal to or larger than the denominator. 9 is larger than 4."
+            },
+            {
+              "id": "QM1-6",
+              "question": "What do we call a number like 2 1/3 that has a whole number and a fraction?",
+              "options": [
+                "Proper fraction",
+                "Mixed number",
+                "Decimal",
+                "Equivalent fraction"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A number with a whole part and a fraction part, like 2 1/3, is called a mixed number."
+            },
+            {
+              "id": "QM1-7",
+              "question": "A pizza is cut into 8 equal slices. You eat 3 slices. What fraction did you eat?",
+              "options": [
+                "8/3",
+                "3/8",
+                "5/8",
+                "3/5"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "You ate 3 out of 8 slices, so the fraction is 3/8."
+            },
+            {
+              "id": "QM1-8",
+              "question": "Which fraction is equal to 2/4?",
+              "options": [
+                "1/2",
+                "2/3",
+                "3/4",
+                "1/3"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "2/4 simplifies to 1/2 by dividing both numbers by 2."
+            },
+            {
+              "id": "QM1-9",
+              "question": "Change the improper fraction 7/3 to a mixed number.",
+              "options": [
+                "2 1/3",
+                "3 1/2",
+                "1 4/3",
+                "2 2/3"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "7 divided by 3 is 2 with a remainder of 1, so 7/3 = 2 1/3."
+            },
+            {
+              "id": "QM1-10",
+              "question": "Which group shows three equivalent fractions?",
+              "options": [
+                "1/2, 2/4, 3/6",
+                "1/2, 1/3, 1/4",
+                "2/3, 3/4, 4/5",
+                "1/2, 2/3, 3/4"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "1/2 = 2/4 = 3/6 because each one simplifies to one half."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH1-T2",
+          "name": "Working with Decimals",
+          "description": "Learn decimal place value (tenths, hundredths, thousandths) and how to change fractions like 7/10 into decimals.",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "Decimals are another way to show parts of a whole. Money uses decimals, like 5.75 pesos. The dot is called the decimal point.",
+            "sections": [
+              {
+                "title": "Decimal Place Value",
+                "body": "After the decimal point, the first place is tenths, the second is hundredths, and the third is thousandths. In 0.482, the 4 is in the tenths place, the 8 is in the hundredths place, and the 2 is in the thousandths place."
+              },
+              {
+                "title": "Changing Fractions to Decimals",
+                "body": "A fraction with a denominator of 10, 100, or 1000 is easy to write as a decimal. For example, 7/10 = 0.7 and 23/100 = 0.23. You can also divide the top by the bottom, so 3/4 = 0.75."
+              },
+              {
+                "title": "Why Decimals Matter",
+                "body": "Decimals help us write exact amounts that are smaller than one whole, like measurements and money."
+              }
+            ],
+            "definition": {
+              "term": "Decimal",
+              "meaning": "A number that uses a decimal point to show parts smaller than one whole, such as tenths and hundredths."
+            },
+            "keyTakeaway": "The places after the decimal point are tenths, hundredths, and thousandths, getting ten times smaller each step.",
+            "importantNote": "7/10 written as a decimal is 0.7, because the 7 is in the tenths place."
+          },
+          "quiz": [
+            {
+              "id": "QM2-1",
+              "question": "In the decimal 0.7, the digit 7 is in what place?",
+              "options": [
+                "Ones",
+                "Tenths",
+                "Hundredths",
+                "Thousandths"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The first digit after the decimal point is the tenths place."
+            },
+            {
+              "id": "QM2-2",
+              "question": "Write 7/10 as a decimal.",
+              "options": [
+                "0.07",
+                "7.0",
+                "0.7",
+                "0.70"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "7/10 means 7 tenths, which is written as 0.7."
+            },
+            {
+              "id": "QM2-3",
+              "question": "What is the place value of the 5 in 0.05?",
+              "options": [
+                "Tenths",
+                "Hundredths",
+                "Thousandths",
+                "Ones"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The second digit after the decimal point is the hundredths place, so 5 is in the hundredths place."
+            },
+            {
+              "id": "QM2-4",
+              "question": "Write 23/100 as a decimal.",
+              "options": [
+                "0.23",
+                "2.3",
+                "0.023",
+                "23.0"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "23/100 means 23 hundredths, which is 0.23."
+            },
+            {
+              "id": "QM2-5",
+              "question": "Which decimal is the same as 3/4?",
+              "options": [
+                "0.34",
+                "0.75",
+                "0.43",
+                "0.50"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "3/4 equals 75/100, which is 0.75."
+            },
+            {
+              "id": "QM2-6",
+              "question": "In 0.482, which digit is in the thousandths place?",
+              "options": [
+                "4",
+                "8",
+                "2",
+                "0"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "The third digit after the decimal point is the thousandths place, which is 2."
+            },
+            {
+              "id": "QM2-7",
+              "question": "Write the decimal 0.9 as a fraction.",
+              "options": [
+                "9/100",
+                "9/10",
+                "1/9",
+                "90/10"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "0.9 is 9 tenths, which is the fraction 9/10."
+            },
+            {
+              "id": "QM2-8",
+              "question": "Which fraction equals 0.5?",
+              "options": [
+                "1/5",
+                "1/2",
+                "5/10 only",
+                "2/3"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "0.5 means 5 tenths, which simplifies to 1/2."
+            },
+            {
+              "id": "QM2-9",
+              "question": "What is 0.6 written as a fraction in simplest form?",
+              "options": [
+                "6/10",
+                "3/5",
+                "6/100",
+                "1/6"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "0.6 is 6/10, and dividing both by 2 gives 3/5."
+            },
+            {
+              "id": "QM2-10",
+              "question": "Which decimal shows three hundredths?",
+              "options": [
+                "0.3",
+                "0.03",
+                "0.003",
+                "3.0"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Three hundredths is 3/100, which is written as 0.03."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH1-T3",
+          "name": "Adding and Subtracting Fractions",
+          "description": "Add and subtract fractions with the same denominator, and learn to find the least common denominator for different denominators.",
+          "readingTime": "7 mins",
+          "content": {
+            "introduction": "You can add and subtract fractions, but first you must check the denominators. The way you solve depends on whether the bottom numbers are the same or different.",
+            "sections": [
+              {
+                "title": "Same Denominator",
+                "body": "When the denominators are the same, just add or subtract the numerators and keep the denominator. For example, 1/4 + 2/4 = 3/4, and 5/8 - 2/8 = 3/8."
+              },
+              {
+                "title": "Different Denominators",
+                "body": "When the denominators are different, first find the least common denominator (LCD). Change each fraction to an equal fraction with that denominator, then add or subtract. For 1/2 + 1/3, the LCD is 6, so 3/6 + 2/6 = 5/6."
+              },
+              {
+                "title": "Simplify Your Answer",
+                "body": "After adding or subtracting, simplify if you can. For example, 3/6 simplifies to 1/2."
+              }
+            ],
+            "definition": {
+              "term": "Least Common Denominator (LCD)",
+              "meaning": "The smallest number that all the denominators can divide into evenly, used to add or subtract fractions with different denominators."
+            },
+            "keyTakeaway": "With the same denominator, add or subtract the numerators; with different denominators, find the LCD first.",
+            "importantNote": "Never add the denominators. In 1/4 + 2/4, the answer is 3/4, not 3/8."
+          },
+          "quiz": [
+            {
+              "id": "QM3-1",
+              "question": "What is 1/4 + 2/4?",
+              "options": [
+                "3/8",
+                "3/4",
+                "2/4",
+                "1/2"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "When denominators are the same, add the numerators: 1 + 2 = 3, so the answer is 3/4."
+            },
+            {
+              "id": "QM3-2",
+              "question": "What is 5/8 - 2/8?",
+              "options": [
+                "3/8",
+                "7/8",
+                "3/16",
+                "2/8"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Subtract the numerators: 5 - 2 = 3, keep the denominator 8, giving 3/8."
+            },
+            {
+              "id": "QM3-3",
+              "question": "Before adding 1/2 and 1/3, what do you need to find?",
+              "options": [
+                "The product",
+                "The least common denominator",
+                "The numerator only",
+                "The decimal"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "To add fractions with different denominators, first find the least common denominator (LCD)."
+            },
+            {
+              "id": "QM3-4",
+              "question": "What is 1/2 + 1/3?",
+              "options": [
+                "2/5",
+                "5/6",
+                "2/6",
+                "3/5"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The LCD of 2 and 3 is 6. 1/2 = 3/6 and 1/3 = 2/6, so 3/6 + 2/6 = 5/6."
+            },
+            {
+              "id": "QM3-5",
+              "question": "What is 3/4 - 1/2?",
+              "options": [
+                "2/2",
+                "1/4",
+                "1/2",
+                "2/4"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Change 1/2 to 2/4. Then 3/4 - 2/4 = 1/4."
+            },
+            {
+              "id": "QM3-6",
+              "question": "What is 2/5 + 1/5?",
+              "options": [
+                "3/10",
+                "3/5",
+                "1/5",
+                "2/25"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Same denominator: add numerators 2 + 1 = 3, giving 3/5."
+            },
+            {
+              "id": "QM3-7",
+              "question": "Maria drank 1/4 of a juice and Ben drank 2/4. How much did they drink together?",
+              "options": [
+                "1/4",
+                "3/4",
+                "2/4",
+                "3/8"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "1/4 + 2/4 = 3/4 of the juice."
+            },
+            {
+              "id": "QM3-8",
+              "question": "What is 5/6 - 1/3?",
+              "options": [
+                "4/3",
+                "1/2",
+                "2/3",
+                "4/6 only"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Change 1/3 to 2/6. Then 5/6 - 2/6 = 3/6, which simplifies to 1/2."
+            },
+            {
+              "id": "QM3-9",
+              "question": "What is the LCD of 1/4 and 1/6?",
+              "options": [
+                "10",
+                "24",
+                "12",
+                "6"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "The least common denominator of 4 and 6 is 12."
+            },
+            {
+              "id": "QM3-10",
+              "question": "What is 7/10 - 3/10?",
+              "options": [
+                "4/10",
+                "10/10",
+                "4/20",
+                "2/5 only"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Subtract numerators: 7 - 3 = 4, keep 10, giving 4/10 (which equals 2/5)."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH1-T4",
+          "name": "Multiplying and Dividing Fractions",
+          "description": "Multiply fractions by multiplying across, and divide fractions by flipping the second fraction and multiplying.",
+          "readingTime": "7 mins",
+          "content": {
+            "introduction": "Multiplying and dividing fractions is often easier than adding them because you do not need a common denominator.",
+            "sections": [
+              {
+                "title": "Multiplying Fractions",
+                "body": "To multiply fractions, multiply the numerators together and the denominators together. For example, 2/3 x 3/4 = 6/12, which simplifies to 1/2."
+              },
+              {
+                "title": "Dividing Fractions",
+                "body": "To divide fractions, flip the second fraction (the divisor) upside down, then multiply. For example, 1/2 divided by 1/4 becomes 1/2 x 4/1 = 4/2 = 2."
+              },
+              {
+                "title": "Simplifying",
+                "body": "Always simplify your answer to lowest terms. For example, 6/12 becomes 1/2."
+              }
+            ],
+            "definition": {
+              "term": "Reciprocal",
+              "meaning": "A fraction flipped upside down, such as 4/1 being the reciprocal of 1/4, used when dividing fractions."
+            },
+            "keyTakeaway": "Multiply fractions straight across; to divide, flip the second fraction and multiply.",
+            "importantNote": "When dividing, only the second fraction is flipped, not the first one."
+          },
+          "quiz": [
+            {
+              "id": "QM4-1",
+              "question": "What is 2/3 x 3/4?",
+              "options": [
+                "6/12",
+                "5/7",
+                "6/7",
+                "1/3"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Multiply across: 2x3=6 on top, 3x4=12 on bottom, giving 6/12 (which simplifies to 1/2)."
+            },
+            {
+              "id": "QM4-2",
+              "question": "When you divide fractions, what do you do to the second fraction?",
+              "options": [
+                "Add it",
+                "Flip it and multiply",
+                "Subtract it",
+                "Leave it"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "To divide fractions, flip the second fraction (the divisor) and then multiply."
+            },
+            {
+              "id": "QM4-3",
+              "question": "What is 1/2 x 1/2?",
+              "options": [
+                "1/2",
+                "2/4",
+                "1/4",
+                "1"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Multiply across: 1x1=1 on top, 2x2=4 on bottom, giving 1/4."
+            },
+            {
+              "id": "QM4-4",
+              "question": "What is 1/2 divided by 1/4?",
+              "options": [
+                "1/8",
+                "2",
+                "1/2",
+                "8"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Flip 1/4 to 4/1 and multiply: 1/2 x 4/1 = 4/2 = 2."
+            },
+            {
+              "id": "QM4-5",
+              "question": "What is 3/5 x 2/3?",
+              "options": [
+                "6/15",
+                "5/8",
+                "6/8",
+                "1/5"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Multiply across: 3x2=6 on top, 5x3=15 on bottom, giving 6/15 (which equals 2/5)."
+            },
+            {
+              "id": "QM4-6",
+              "question": "What is 2/3 divided by 1/3?",
+              "options": [
+                "2",
+                "1/9",
+                "2/9",
+                "6"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Flip 1/3 to 3/1 and multiply: 2/3 x 3/1 = 6/3 = 2."
+            },
+            {
+              "id": "QM4-7",
+              "question": "A recipe uses 3/4 cup of sugar. You make half the recipe. How much sugar do you need?",
+              "options": [
+                "3/4 cup",
+                "3/8 cup",
+                "1 1/2 cup",
+                "1/4 cup"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Half of 3/4 means 1/2 x 3/4 = 3/8 cup."
+            },
+            {
+              "id": "QM4-8",
+              "question": "What is 4/5 x 1/2?",
+              "options": [
+                "4/10",
+                "5/7",
+                "4/7",
+                "2/5 wrong form"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Multiply across: 4x1=4 on top, 5x2=10 on bottom, giving 4/10 (which equals 2/5)."
+            },
+            {
+              "id": "QM4-9",
+              "question": "What is 3/4 divided by 1/2?",
+              "options": [
+                "3/8",
+                "6/4",
+                "1/2",
+                "3/2"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Flip 1/2 to 2/1 and multiply: 3/4 x 2/1 = 6/4 = 3/2."
+            },
+            {
+              "id": "QM4-10",
+              "question": "Simplify the product 2/3 x 3/4 = 6/12 to its simplest form.",
+              "options": [
+                "1/2",
+                "6/12",
+                "2/3",
+                "3/4"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "6/12 simplifies to 1/2 by dividing both numbers by 6."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH1-T5",
+          "name": "Comparing and Ordering Fractions and Decimals",
+          "description": "Compare fractions and decimals using less than and greater than, and order them on a number line.",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "Sometimes you need to know which number is bigger or smaller. We use the symbols less than and greater than to compare fractions and decimals.",
+            "sections": [
+              {
+                "title": "Comparing Symbols",
+                "body": "The symbol < means less than and the symbol > means greater than. The open side always faces the bigger number. For example, 2/5 < 3/5."
+              },
+              {
+                "title": "Comparing Decimals",
+                "body": "To compare decimals, look at the place values. 0.5 is greater than 0.05 because 5 tenths is more than 5 hundredths."
+              },
+              {
+                "title": "Ordering on a Number Line",
+                "body": "You can place fractions and decimals on a number line to put them in order from smallest to largest, such as 0.1, 0.3, 0.7."
+              }
+            ],
+            "definition": {
+              "term": "Number Line",
+              "meaning": "A straight line with numbers placed in order, used to compare and order fractions and decimals."
+            },
+            "keyTakeaway": "Compare numbers by their value: with the same denominator, the bigger numerator wins; with decimals, check place value.",
+            "importantNote": "More digits after the decimal point does not always mean a bigger number; 0.5 is greater than 0.05."
+          },
+          "quiz": [
+            {
+              "id": "QM5-1",
+              "question": "Which symbol means 'greater than'?",
+              "options": [
+                "<",
+                ">",
+                "=",
+                "+"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The symbol > means greater than. The open side points to the bigger number."
+            },
+            {
+              "id": "QM5-2",
+              "question": "Which is greater, 0.5 or 0.05?",
+              "options": [
+                "0.05",
+                "They are equal",
+                "0.5",
+                "Cannot tell"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "0.5 is 5 tenths and 0.05 is 5 hundredths. Tenths are bigger, so 0.5 is greater."
+            },
+            {
+              "id": "QM5-3",
+              "question": "Which fraction is larger, 3/4 or 1/2?",
+              "options": [
+                "1/2",
+                "3/4",
+                "They are equal",
+                "Neither"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "3/4 equals 0.75 and 1/2 equals 0.5, so 3/4 is larger."
+            },
+            {
+              "id": "QM5-4",
+              "question": "Order these from smallest to largest: 0.3, 0.7, 0.1",
+              "options": [
+                "0.7, 0.3, 0.1",
+                "0.1, 0.3, 0.7",
+                "0.3, 0.1, 0.7",
+                "0.1, 0.7, 0.3"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Comparing tenths, the order from smallest to largest is 0.1, 0.3, 0.7."
+            },
+            {
+              "id": "QM5-5",
+              "question": "Which decimal is between 0.2 and 0.4?",
+              "options": [
+                "0.1",
+                "0.5",
+                "0.3",
+                "0.6"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "0.3 is between 0.2 and 0.4 on the number line."
+            },
+            {
+              "id": "QM5-6",
+              "question": "Compare: 2/5 ___ 3/5",
+              "options": [
+                ">",
+                "<",
+                "=",
+                "none"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "With the same denominator, compare numerators. 2 is less than 3, so 2/5 < 3/5."
+            },
+            {
+              "id": "QM5-7",
+              "question": "Which is the smallest? 1/2, 1/3, 1/4",
+              "options": [
+                "1/2",
+                "1/3",
+                "1/4",
+                "All equal"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "With the same numerator, a bigger denominator means a smaller fraction, so 1/4 is smallest."
+            },
+            {
+              "id": "QM5-8",
+              "question": "Which decimal is greater, 0.65 or 0.6?",
+              "options": [
+                "0.6",
+                "0.65",
+                "They are equal",
+                "Cannot tell"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "0.65 is the same as 0.65 and 0.6 is 0.60. Since 65 hundredths is more than 60 hundredths, 0.65 is greater."
+            },
+            {
+              "id": "QM5-9",
+              "question": "On a number line, which fraction is closest to 1?",
+              "options": [
+                "1/4",
+                "1/2",
+                "3/4",
+                "1/3"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "3/4 is 0.75, which is closest to 1 among the choices."
+            },
+            {
+              "id": "QM5-10",
+              "question": "Which list is in order from largest to smallest?",
+              "options": [
+                "1/4, 1/2, 3/4",
+                "3/4, 1/2, 1/4",
+                "1/2, 1/4, 3/4",
+                "1/4, 3/4, 1/2"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "From largest to smallest: 3/4, then 1/2, then 1/4."
+            }
+          ]
+        }
+      ],
+      "summative": [
+        {
+          "id": "SM1-1",
+          "question": "What is the top number of a fraction called?",
+          "options": [
+            "Numerator",
+            "Denominator",
+            "Divisor",
+            "Decimal"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "The top number is the numerator. It tells how many parts you have."
+        },
+        {
+          "id": "SM1-2",
+          "question": "In the fraction 3/8, what is the denominator?",
+          "options": [
+            "3",
+            "8",
+            "5",
+            "11"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The denominator is the bottom number, which is 8. It shows the total equal parts."
+        },
+        {
+          "id": "SM1-3",
+          "question": "Which of these is a proper fraction?",
+          "options": [
+            "7/4",
+            "3/5",
+            "9/9",
+            "6/2"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A proper fraction has a numerator smaller than the denominator. 3 is less than 5, so 3/5 is proper."
+        },
+        {
+          "id": "SM1-4",
+          "question": "Which fraction is equivalent to 1/2?",
+          "options": [
+            "2/3",
+            "3/6",
+            "1/4",
+            "4/5"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "3/6 simplifies to 1/2 because 3 divided by 3 is 1 and 6 divided by 3 is 2."
+        },
+        {
+          "id": "SM1-5",
+          "question": "Which of these is an improper fraction?",
+          "options": [
+            "2/5",
+            "4/7",
+            "9/4",
+            "1/3"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "An improper fraction has a numerator equal to or larger than the denominator. 9 is larger than 4."
+        },
+        {
+          "id": "SM1-6",
+          "question": "What do we call a number like 2 1/3 that has a whole number and a fraction?",
+          "options": [
+            "Proper fraction",
+            "Mixed number",
+            "Decimal",
+            "Equivalent fraction"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A number with a whole part and a fraction part, like 2 1/3, is called a mixed number."
+        },
+        {
+          "id": "SM1-7",
+          "question": "A pizza is cut into 8 equal slices. You eat 3 slices. What fraction did you eat?",
+          "options": [
+            "8/3",
+            "3/8",
+            "5/8",
+            "3/5"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "You ate 3 out of 8 slices, so the fraction is 3/8."
+        },
+        {
+          "id": "SM1-8",
+          "question": "Which fraction is equal to 2/4?",
+          "options": [
+            "1/2",
+            "2/3",
+            "3/4",
+            "1/3"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "2/4 simplifies to 1/2 by dividing both numbers by 2."
+        },
+        {
+          "id": "SM1-9",
+          "question": "In the decimal 0.7, the digit 7 is in what place?",
+          "options": [
+            "Ones",
+            "Tenths",
+            "Hundredths",
+            "Thousandths"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The first digit after the decimal point is the tenths place."
+        },
+        {
+          "id": "SM1-10",
+          "question": "Write 7/10 as a decimal.",
+          "options": [
+            "0.07",
+            "7.0",
+            "0.7",
+            "0.70"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "7/10 means 7 tenths, which is written as 0.7."
+        },
+        {
+          "id": "SM1-11",
+          "question": "What is the place value of the 5 in 0.05?",
+          "options": [
+            "Tenths",
+            "Hundredths",
+            "Thousandths",
+            "Ones"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The second digit after the decimal point is the hundredths place, so 5 is in the hundredths place."
+        },
+        {
+          "id": "SM1-12",
+          "question": "Write 23/100 as a decimal.",
+          "options": [
+            "0.23",
+            "2.3",
+            "0.023",
+            "23.0"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "23/100 means 23 hundredths, which is 0.23."
+        },
+        {
+          "id": "SM1-13",
+          "question": "Which decimal is the same as 3/4?",
+          "options": [
+            "0.34",
+            "0.75",
+            "0.43",
+            "0.50"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "3/4 equals 75/100, which is 0.75."
+        },
+        {
+          "id": "SM1-14",
+          "question": "In 0.482, which digit is in the thousandths place?",
+          "options": [
+            "4",
+            "8",
+            "2",
+            "0"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "The third digit after the decimal point is the thousandths place, which is 2."
+        },
+        {
+          "id": "SM1-15",
+          "question": "Write the decimal 0.9 as a fraction.",
+          "options": [
+            "9/100",
+            "9/10",
+            "1/9",
+            "90/10"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "0.9 is 9 tenths, which is the fraction 9/10."
+        },
+        {
+          "id": "SM1-16",
+          "question": "Which fraction equals 0.5?",
+          "options": [
+            "1/5",
+            "1/2",
+            "5/10 only",
+            "2/3"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "0.5 means 5 tenths, which simplifies to 1/2."
+        },
+        {
+          "id": "SM1-17",
+          "question": "What is 1/4 + 2/4?",
+          "options": [
+            "3/8",
+            "3/4",
+            "2/4",
+            "1/2"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "When denominators are the same, add the numerators: 1 + 2 = 3, so the answer is 3/4."
+        },
+        {
+          "id": "SM1-18",
+          "question": "What is 5/8 - 2/8?",
+          "options": [
+            "3/8",
+            "7/8",
+            "3/16",
+            "2/8"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Subtract the numerators: 5 - 2 = 3, keep the denominator 8, giving 3/8."
+        },
+        {
+          "id": "SM1-19",
+          "question": "Before adding 1/2 and 1/3, what do you need to find?",
+          "options": [
+            "The product",
+            "The least common denominator",
+            "The numerator only",
+            "The decimal"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "To add fractions with different denominators, first find the least common denominator (LCD)."
+        },
+        {
+          "id": "SM1-20",
+          "question": "What is 1/2 + 1/3?",
+          "options": [
+            "2/5",
+            "5/6",
+            "2/6",
+            "3/5"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The LCD of 2 and 3 is 6. 1/2 = 3/6 and 1/3 = 2/6, so 3/6 + 2/6 = 5/6."
+        },
+        {
+          "id": "SM1-21",
+          "question": "What is 3/4 - 1/2?",
+          "options": [
+            "2/2",
+            "1/4",
+            "1/2",
+            "2/4"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Change 1/2 to 2/4. Then 3/4 - 2/4 = 1/4."
+        },
+        {
+          "id": "SM1-22",
+          "question": "What is 2/5 + 1/5?",
+          "options": [
+            "3/10",
+            "3/5",
+            "1/5",
+            "2/25"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Same denominator: add numerators 2 + 1 = 3, giving 3/5."
+        },
+        {
+          "id": "SM1-23",
+          "question": "Maria drank 1/4 of a juice and Ben drank 2/4. How much did they drink together?",
+          "options": [
+            "1/4",
+            "3/4",
+            "2/4",
+            "3/8"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "1/4 + 2/4 = 3/4 of the juice."
+        },
+        {
+          "id": "SM1-24",
+          "question": "What is 5/6 - 1/3?",
+          "options": [
+            "4/3",
+            "1/2",
+            "2/3",
+            "4/6 only"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Change 1/3 to 2/6. Then 5/6 - 2/6 = 3/6, which simplifies to 1/2."
+        },
+        {
+          "id": "SM1-25",
+          "question": "What is 2/3 x 3/4?",
+          "options": [
+            "6/12",
+            "5/7",
+            "6/7",
+            "1/3"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Multiply across: 2x3=6 on top, 3x4=12 on bottom, giving 6/12 (which simplifies to 1/2)."
+        },
+        {
+          "id": "SM1-26",
+          "question": "When you divide fractions, what do you do to the second fraction?",
+          "options": [
+            "Add it",
+            "Flip it and multiply",
+            "Subtract it",
+            "Leave it"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "To divide fractions, flip the second fraction (the divisor) and then multiply."
+        },
+        {
+          "id": "SM1-27",
+          "question": "What is 1/2 x 1/2?",
+          "options": [
+            "1/2",
+            "2/4",
+            "1/4",
+            "1"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Multiply across: 1x1=1 on top, 2x2=4 on bottom, giving 1/4."
+        },
+        {
+          "id": "SM1-28",
+          "question": "What is 1/2 divided by 1/4?",
+          "options": [
+            "1/8",
+            "2",
+            "1/2",
+            "8"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Flip 1/4 to 4/1 and multiply: 1/2 x 4/1 = 4/2 = 2."
+        },
+        {
+          "id": "SM1-29",
+          "question": "What is 3/5 x 2/3?",
+          "options": [
+            "6/15",
+            "5/8",
+            "6/8",
+            "1/5"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Multiply across: 3x2=6 on top, 5x3=15 on bottom, giving 6/15 (which equals 2/5)."
+        },
+        {
+          "id": "SM1-30",
+          "question": "What is 2/3 divided by 1/3?",
+          "options": [
+            "2",
+            "1/9",
+            "2/9",
+            "6"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Flip 1/3 to 3/1 and multiply: 2/3 x 3/1 = 6/3 = 2."
+        },
+        {
+          "id": "SM1-31",
+          "question": "A recipe uses 3/4 cup of sugar. You make half the recipe. How much sugar do you need?",
+          "options": [
+            "3/4 cup",
+            "3/8 cup",
+            "1 1/2 cup",
+            "1/4 cup"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Half of 3/4 means 1/2 x 3/4 = 3/8 cup."
+        },
+        {
+          "id": "SM1-32",
+          "question": "What is 4/5 x 1/2?",
+          "options": [
+            "4/10",
+            "5/7",
+            "4/7",
+            "2/5 wrong form"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Multiply across: 4x1=4 on top, 5x2=10 on bottom, giving 4/10 (which equals 2/5)."
+        },
+        {
+          "id": "SM1-33",
+          "question": "Which symbol means 'greater than'?",
+          "options": [
+            "<",
+            ">",
+            "=",
+            "+"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The symbol > means greater than. The open side points to the bigger number."
+        },
+        {
+          "id": "SM1-34",
+          "question": "Which is greater, 0.5 or 0.05?",
+          "options": [
+            "0.05",
+            "They are equal",
+            "0.5",
+            "Cannot tell"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "0.5 is 5 tenths and 0.05 is 5 hundredths. Tenths are bigger, so 0.5 is greater."
+        },
+        {
+          "id": "SM1-35",
+          "question": "Which fraction is larger, 3/4 or 1/2?",
+          "options": [
+            "1/2",
+            "3/4",
+            "They are equal",
+            "Neither"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "3/4 equals 0.75 and 1/2 equals 0.5, so 3/4 is larger."
+        },
+        {
+          "id": "SM1-36",
+          "question": "Order these from smallest to largest: 0.3, 0.7, 0.1",
+          "options": [
+            "0.7, 0.3, 0.1",
+            "0.1, 0.3, 0.7",
+            "0.3, 0.1, 0.7",
+            "0.1, 0.7, 0.3"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Comparing tenths, the order from smallest to largest is 0.1, 0.3, 0.7."
+        },
+        {
+          "id": "SM1-37",
+          "question": "Which decimal is between 0.2 and 0.4?",
+          "options": [
+            "0.1",
+            "0.5",
+            "0.3",
+            "0.6"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "0.3 is between 0.2 and 0.4 on the number line."
+        },
+        {
+          "id": "SM1-38",
+          "question": "Compare: 2/5 ___ 3/5",
+          "options": [
+            ">",
+            "<",
+            "=",
+            "none"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "With the same denominator, compare numerators. 2 is less than 3, so 2/5 < 3/5."
+        },
+        {
+          "id": "SM1-39",
+          "question": "Which is the smallest? 1/2, 1/3, 1/4",
+          "options": [
+            "1/2",
+            "1/3",
+            "1/4",
+            "All equal"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "With the same numerator, a bigger denominator means a smaller fraction, so 1/4 is smallest."
+        },
+        {
+          "id": "SM1-40",
+          "question": "Which decimal is greater, 0.65 or 0.6?",
+          "options": [
+            "0.6",
+            "0.65",
+            "They are equal",
+            "Cannot tell"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "0.65 is the same as 0.65 and 0.6 is 0.60. Since 65 hundredths is more than 60 hundredths, 0.65 is greater."
+        }
+      ]
+    },
+    {
+      "id": "L-MATH2",
+      "title": "Lesson 2: Geometry and Shapes",
+      "description": "Discover 2D and 3D shapes, area, perimeter, angles, symmetry, and patterns.",
+      "topics": [
+        {
+          "id": "L-MATH2-T1",
+          "name": "2D Shapes",
+          "description": "Learn about triangles, quadrilaterals, and polygons, including their sides, vertices, and angles, and how to find perimeter.",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "Two-dimensional shapes are flat shapes you can draw on paper. They have sides and corners, and we can measure the distance around them.",
+            "sections": [
+              {
+                "title": "Sides and Vertices",
+                "body": "A side is a straight line of a shape, and a vertex is a corner where two sides meet. A triangle has 3 sides and 3 vertices, while a quadrilateral has 4 sides and 4 vertices."
+              },
+              {
+                "title": "Polygons",
+                "body": "A polygon is a closed shape made of straight sides. Triangles, squares, pentagons (5 sides), and hexagons (6 sides) are all polygons. Circles are not polygons because they have no straight sides."
+              },
+              {
+                "title": "Perimeter",
+                "body": "Perimeter is the total distance around a shape. To find it, add the lengths of all the sides. For a square with side 5 cm, the perimeter is 4 x 5 = 20 cm."
+              }
+            ],
+            "definition": {
+              "term": "Polygon",
+              "meaning": "A closed flat shape made up of straight sides, such as a triangle, square, or hexagon."
+            },
+            "keyTakeaway": "Perimeter is the distance around a shape, found by adding all the side lengths.",
+            "importantNote": "A circle is not a polygon because it has no straight sides or vertices."
+          },
+          "quiz": [
+            {
+              "id": "QM6-1",
+              "question": "How many sides does a triangle have?",
+              "options": [
+                "2",
+                "3",
+                "4",
+                "5"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A triangle has 3 sides and 3 vertices."
+            },
+            {
+              "id": "QM6-2",
+              "question": "What do we call a shape with 4 sides?",
+              "options": [
+                "Triangle",
+                "Pentagon",
+                "Quadrilateral",
+                "Hexagon"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "A four-sided shape is called a quadrilateral. A square and rectangle are examples."
+            },
+            {
+              "id": "QM6-3",
+              "question": "What is a corner of a shape where two sides meet called?",
+              "options": [
+                "Edge",
+                "Vertex",
+                "Face",
+                "Angle line"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The point where two sides meet is called a vertex (plural: vertices)."
+            },
+            {
+              "id": "QM6-4",
+              "question": "A square has sides of 5 cm each. What is its perimeter?",
+              "options": [
+                "10 cm",
+                "15 cm",
+                "20 cm",
+                "25 cm"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Perimeter of a square is 4 times one side: 4 x 5 = 20 cm."
+            },
+            {
+              "id": "QM6-5",
+              "question": "What is the perimeter of a rectangle that is 6 cm long and 3 cm wide?",
+              "options": [
+                "9 cm",
+                "18 cm",
+                "12 cm",
+                "24 cm"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Perimeter = 2 x (length + width) = 2 x (6 + 3) = 2 x 9 = 18 cm."
+            },
+            {
+              "id": "QM6-6",
+              "question": "How many sides does a pentagon have?",
+              "options": [
+                "4",
+                "5",
+                "6",
+                "8"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A pentagon has 5 sides."
+            },
+            {
+              "id": "QM6-7",
+              "question": "A triangle has sides 4 cm, 5 cm, and 6 cm. What is its perimeter?",
+              "options": [
+                "12 cm",
+                "14 cm",
+                "15 cm",
+                "20 cm"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Add all sides: 4 + 5 + 6 = 15 cm."
+            },
+            {
+              "id": "QM6-8",
+              "question": "Which shape is a polygon?",
+              "options": [
+                "Circle",
+                "Hexagon",
+                "Sphere",
+                "Oval"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A polygon is a closed shape with straight sides. A hexagon has straight sides, but a circle does not."
+            },
+            {
+              "id": "QM6-9",
+              "question": "How many vertices does a triangle have?",
+              "options": [
+                "2",
+                "3",
+                "4",
+                "6"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A triangle has 3 vertices, one at each corner."
+            },
+            {
+              "id": "QM6-10",
+              "question": "A regular hexagon has each side equal to 3 cm. What is its perimeter?",
+              "options": [
+                "12 cm",
+                "15 cm",
+                "18 cm",
+                "21 cm"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "A hexagon has 6 sides: 6 x 3 = 18 cm."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH2-T2",
+          "name": "3D Shapes",
+          "description": "Learn about cubes, rectangular prisms, spheres, cones, and cylinders, including faces, edges, and vertices.",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "Three-dimensional shapes are solid shapes you can hold. Unlike flat shapes, they take up space and have faces, edges, and vertices.",
+            "sections": [
+              {
+                "title": "Faces, Edges, and Vertices",
+                "body": "A face is a flat surface, an edge is where two faces meet, and a vertex is a corner point. A cube has 6 faces, 12 edges, and 8 vertices."
+              },
+              {
+                "title": "Common 3D Shapes",
+                "body": "A cube has 6 square faces. A rectangular prism is like a box. A sphere is round like a ball. A cone has a point on top, and a cylinder is shaped like a can."
+              },
+              {
+                "title": "Round Shapes",
+                "body": "A sphere has no edges or vertices. A cylinder has 2 circular faces and no vertices. A cone has 1 circular face and 1 point."
+              }
+            ],
+            "definition": {
+              "term": "Face",
+              "meaning": "A flat surface on a 3D shape, such as one of the six square sides of a cube."
+            },
+            "keyTakeaway": "A cube has 6 faces, 12 edges, and 8 vertices, while a sphere has none of these.",
+            "importantNote": "A cylinder and a cone have curved surfaces, so they are different from shapes with only flat faces."
+          },
+          "quiz": [
+            {
+              "id": "QM7-1",
+              "question": "How many faces does a cube have?",
+              "options": [
+                "4",
+                "6",
+                "8",
+                "12"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A cube has 6 square faces."
+            },
+            {
+              "id": "QM7-2",
+              "question": "Which 3D shape is round like a ball?",
+              "options": [
+                "Cube",
+                "Cone",
+                "Sphere",
+                "Cylinder"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "A sphere is perfectly round like a ball."
+            },
+            {
+              "id": "QM7-3",
+              "question": "How many edges does a cube have?",
+              "options": [
+                "6",
+                "8",
+                "12",
+                "16"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "A cube has 12 edges."
+            },
+            {
+              "id": "QM7-4",
+              "question": "How many vertices does a cube have?",
+              "options": [
+                "6",
+                "8",
+                "12",
+                "4"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A cube has 8 vertices (corners)."
+            },
+            {
+              "id": "QM7-5",
+              "question": "Which 3D shape has one flat circle face and one point at the top?",
+              "options": [
+                "Cylinder",
+                "Cone",
+                "Cube",
+                "Sphere"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A cone has one circular base and comes to a point at the top."
+            },
+            {
+              "id": "QM7-6",
+              "question": "A can of soup is shaped like which 3D shape?",
+              "options": [
+                "Cube",
+                "Sphere",
+                "Cylinder",
+                "Cone"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "A soup can is a cylinder, with two circular faces."
+            },
+            {
+              "id": "QM7-7",
+              "question": "How many faces does a rectangular prism have?",
+              "options": [
+                "4",
+                "6",
+                "8",
+                "12"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A rectangular prism has 6 faces, just like a cube but with rectangle faces."
+            },
+            {
+              "id": "QM7-8",
+              "question": "Which 3D shape has 2 flat circle faces and no vertices?",
+              "options": [
+                "Cone",
+                "Cylinder",
+                "Cube",
+                "Sphere"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A cylinder has 2 circular faces and no vertices."
+            },
+            {
+              "id": "QM7-9",
+              "question": "How many edges does a rectangular prism have?",
+              "options": [
+                "8",
+                "10",
+                "12",
+                "6"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "A rectangular prism has 12 edges, like a cube."
+            },
+            {
+              "id": "QM7-10",
+              "question": "Which shape has no edges and no vertices?",
+              "options": [
+                "Cube",
+                "Cone",
+                "Sphere",
+                "Cylinder"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "A sphere is smooth all around, with no edges and no vertices."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH2-T3",
+          "name": "Area and Perimeter",
+          "description": "Find the area of rectangles and triangles, and calculate the perimeter of shapes by adding their sides.",
+          "readingTime": "7 mins",
+          "content": {
+            "introduction": "Area tells you how much space is inside a shape, and perimeter tells you the distance around it. Both are useful in real life, like measuring a room or a garden.",
+            "sections": [
+              {
+                "title": "Area of a Rectangle",
+                "body": "To find the area of a rectangle, multiply the length by the width. For a rectangle 5 cm by 4 cm, the area is 5 x 4 = 20 square cm."
+              },
+              {
+                "title": "Area of a Triangle",
+                "body": "To find the area of a triangle, use the formula 1/2 x base x height. For a triangle with base 6 cm and height 4 cm, the area is 1/2 x 6 x 4 = 12 square cm."
+              },
+              {
+                "title": "Perimeter",
+                "body": "Perimeter is the sum of all the sides. For a square with side 7 cm, the perimeter is 4 x 7 = 28 cm."
+              }
+            ],
+            "definition": {
+              "term": "Area",
+              "meaning": "The amount of flat space inside a shape, measured in square units like square centimeters."
+            },
+            "keyTakeaway": "Area of a rectangle is length times width, and area of a triangle is half the base times the height.",
+            "importantNote": "Area is measured in square units, while perimeter is measured in regular units of length."
+          },
+          "quiz": [
+            {
+              "id": "QM8-1",
+              "question": "What is the area of a rectangle that is 5 cm long and 4 cm wide?",
+              "options": [
+                "9 cm2",
+                "18 cm2",
+                "20 cm2",
+                "25 cm2"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Area of a rectangle = length x width = 5 x 4 = 20 square cm."
+            },
+            {
+              "id": "QM8-2",
+              "question": "What is the formula for the area of a triangle?",
+              "options": [
+                "base x height",
+                "1/2 x base x height",
+                "side x side",
+                "2 x base"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The area of a triangle is 1/2 x base x height."
+            },
+            {
+              "id": "QM8-3",
+              "question": "A triangle has a base of 6 cm and a height of 4 cm. What is its area?",
+              "options": [
+                "10 cm2",
+                "12 cm2",
+                "24 cm2",
+                "20 cm2"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Area = 1/2 x base x height = 1/2 x 6 x 4 = 12 square cm."
+            },
+            {
+              "id": "QM8-4",
+              "question": "What is the perimeter of a square with side 7 cm?",
+              "options": [
+                "14 cm",
+                "21 cm",
+                "28 cm",
+                "49 cm"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Perimeter = 4 x side = 4 x 7 = 28 cm."
+            },
+            {
+              "id": "QM8-5",
+              "question": "What is the area of a square with side 6 cm?",
+              "options": [
+                "12 cm2",
+                "24 cm2",
+                "36 cm2",
+                "18 cm2"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Area of a square = side x side = 6 x 6 = 36 square cm."
+            },
+            {
+              "id": "QM8-6",
+              "question": "A rectangle is 8 m long and 2 m wide. What is its area?",
+              "options": [
+                "10 m2",
+                "16 m2",
+                "20 m2",
+                "32 m2"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Area = length x width = 8 x 2 = 16 square m."
+            },
+            {
+              "id": "QM8-7",
+              "question": "What is the difference between area and perimeter?",
+              "options": [
+                "They are the same",
+                "Area is the space inside; perimeter is the distance around",
+                "Perimeter is inside",
+                "Area uses only one side"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Area measures the space inside a shape, while perimeter measures the distance around it."
+            },
+            {
+              "id": "QM8-8",
+              "question": "A triangle has a base of 10 cm and height of 8 cm. What is its area?",
+              "options": [
+                "40 cm2",
+                "80 cm2",
+                "18 cm2",
+                "20 cm2"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Area = 1/2 x 10 x 8 = 1/2 x 80 = 40 square cm."
+            },
+            {
+              "id": "QM8-9",
+              "question": "A garden is a rectangle 12 m long and 5 m wide. What is its perimeter?",
+              "options": [
+                "17 m",
+                "34 m",
+                "60 m",
+                "24 m"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Perimeter = 2 x (12 + 5) = 2 x 17 = 34 m."
+            },
+            {
+              "id": "QM8-10",
+              "question": "A square tile has an area of 9 cm2. What is the length of one side?",
+              "options": [
+                "2 cm",
+                "3 cm",
+                "4 cm",
+                "9 cm"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Side x side = 9, so side = 3 cm because 3 x 3 = 9."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH2-T4",
+          "name": "Angles",
+          "description": "Learn about right angles, acute angles, obtuse angles, and straight angles, and their measures in degrees.",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "An angle is formed when two lines meet at a point. We measure angles in degrees to describe how open they are.",
+            "sections": [
+              {
+                "title": "Right and Straight Angles",
+                "body": "A right angle measures exactly 90 degrees, like the corner of a square. A straight angle measures 180 degrees and looks like a straight line."
+              },
+              {
+                "title": "Acute and Obtuse Angles",
+                "body": "An acute angle is smaller than 90 degrees, like 45 degrees. An obtuse angle is bigger than 90 degrees but smaller than 180 degrees, like 120 degrees."
+              },
+              {
+                "title": "Adding Angles",
+                "body": "Angles can be added together. If two angles make a straight line, they add up to 180 degrees. So if one is 110 degrees, the other is 70 degrees."
+              }
+            ],
+            "definition": {
+              "term": "Angle",
+              "meaning": "The amount of turn between two lines that meet at a point, measured in degrees."
+            },
+            "keyTakeaway": "A right angle is 90 degrees, acute is less than 90, obtuse is more than 90, and straight is 180 degrees.",
+            "importantNote": "The corner of a square or a sheet of paper is a perfect right angle of 90 degrees."
+          },
+          "quiz": [
+            {
+              "id": "QM9-1",
+              "question": "How many degrees is a right angle?",
+              "options": [
+                "45 degrees",
+                "90 degrees",
+                "120 degrees",
+                "180 degrees"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A right angle measures exactly 90 degrees."
+            },
+            {
+              "id": "QM9-2",
+              "question": "An angle that is less than 90 degrees is called what?",
+              "options": [
+                "Obtuse",
+                "Right",
+                "Acute",
+                "Straight"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "An acute angle is smaller than 90 degrees."
+            },
+            {
+              "id": "QM9-3",
+              "question": "An angle of 120 degrees is what kind of angle?",
+              "options": [
+                "Acute",
+                "Right",
+                "Obtuse",
+                "Straight"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "An obtuse angle is greater than 90 degrees but less than 180 degrees, so 120 degrees is obtuse."
+            },
+            {
+              "id": "QM9-4",
+              "question": "How many degrees is a straight angle?",
+              "options": [
+                "90 degrees",
+                "180 degrees",
+                "360 degrees",
+                "45 degrees"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A straight angle is a straight line measuring 180 degrees."
+            },
+            {
+              "id": "QM9-5",
+              "question": "An angle measures 45 degrees. What kind is it?",
+              "options": [
+                "Acute",
+                "Right",
+                "Obtuse",
+                "Straight"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "45 degrees is less than 90 degrees, so it is an acute angle."
+            },
+            {
+              "id": "QM9-6",
+              "question": "Two angles add up to 180 degrees. One is 110 degrees. What is the other?",
+              "options": [
+                "60 degrees",
+                "70 degrees",
+                "80 degrees",
+                "90 degrees"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "180 - 110 = 70 degrees."
+            },
+            {
+              "id": "QM9-7",
+              "question": "Which angle is bigger, an acute angle or an obtuse angle?",
+              "options": [
+                "Acute",
+                "Obtuse",
+                "They are equal",
+                "Neither has size"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "An obtuse angle (more than 90 degrees) is bigger than an acute angle (less than 90 degrees)."
+            },
+            {
+              "id": "QM9-8",
+              "question": "Two angles add up to 90 degrees. One is 30 degrees. What is the other?",
+              "options": [
+                "50 degrees",
+                "60 degrees",
+                "70 degrees",
+                "40 degrees"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "90 - 30 = 60 degrees."
+            },
+            {
+              "id": "QM9-9",
+              "question": "The corner of a square is what kind of angle?",
+              "options": [
+                "Acute",
+                "Obtuse",
+                "Right",
+                "Straight"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Each corner of a square is a right angle of 90 degrees."
+            },
+            {
+              "id": "QM9-10",
+              "question": "An angle of exactly 90 degrees is called a what?",
+              "options": [
+                "Acute angle",
+                "Right angle",
+                "Obtuse angle",
+                "Straight angle"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "An angle of 90 degrees is called a right angle."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH2-T5",
+          "name": "Symmetry and Patterns",
+          "description": "Explore lines of symmetry, rotational symmetry, repeating patterns, and tessellation.",
+          "readingTime": "5 mins",
+          "content": {
+            "introduction": "Symmetry and patterns are all around us, from butterfly wings to floor tiles. They help us see balance and order in shapes.",
+            "sections": [
+              {
+                "title": "Line of Symmetry",
+                "body": "A line of symmetry divides a shape into two matching halves that are mirror images. A square has 4 lines of symmetry, and a circle has countless lines of symmetry."
+              },
+              {
+                "title": "Rotational Symmetry",
+                "body": "A shape has rotational symmetry if it looks the same after being turned around its center. A square looks the same when turned a quarter turn."
+              },
+              {
+                "title": "Patterns and Tessellation",
+                "body": "A pattern repeats in a regular way, like 2, 4, 6, 8. Tessellation is when shapes fit together with no gaps, like tiles on a floor."
+              }
+            ],
+            "definition": {
+              "term": "Line of Symmetry",
+              "meaning": "A line that divides a shape into two halves that are mirror images of each other."
+            },
+            "keyTakeaway": "A line of symmetry splits a shape into matching halves, and patterns repeat in a regular order.",
+            "importantNote": "Tessellation means shapes fit together perfectly with no gaps or overlaps."
+          },
+          "quiz": [
+            {
+              "id": "QM10-1",
+              "question": "What is a line of symmetry?",
+              "options": [
+                "A line that makes a shape bigger",
+                "A line that divides a shape into two matching halves",
+                "A line that adds an angle",
+                "A curved edge"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A line of symmetry divides a shape into two halves that are mirror images of each other."
+            },
+            {
+              "id": "QM10-2",
+              "question": "How many lines of symmetry does a square have?",
+              "options": [
+                "1",
+                "2",
+                "4",
+                "0"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "A square has 4 lines of symmetry."
+            },
+            {
+              "id": "QM10-3",
+              "question": "What is it called when a shape looks the same after being turned?",
+              "options": [
+                "Line symmetry",
+                "Rotational symmetry",
+                "Tessellation",
+                "A pattern break"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Rotational symmetry means a shape looks the same after being rotated around a center point."
+            },
+            {
+              "id": "QM10-4",
+              "question": "In the pattern A, B, A, B, A, ___, what comes next?",
+              "options": [
+                "A",
+                "B",
+                "C",
+                "D"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The pattern repeats A, B, so after A comes B."
+            },
+            {
+              "id": "QM10-5",
+              "question": "What is tessellation?",
+              "options": [
+                "A single shape with one side",
+                "Shapes that fit together with no gaps",
+                "A curved line",
+                "A type of angle"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Tessellation is when shapes fit together perfectly with no gaps or overlaps, like floor tiles."
+            },
+            {
+              "id": "QM10-6",
+              "question": "In the pattern 2, 4, 6, 8, ___, what comes next?",
+              "options": [
+                "9",
+                "10",
+                "12",
+                "11"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The pattern adds 2 each time, so 8 + 2 = 10."
+            },
+            {
+              "id": "QM10-7",
+              "question": "How many lines of symmetry does a circle have?",
+              "options": [
+                "1",
+                "2",
+                "4",
+                "Many (countless)"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "A circle has countless lines of symmetry because any line through its center divides it into matching halves."
+            },
+            {
+              "id": "QM10-8",
+              "question": "In the pattern 5, 10, 15, 20, ___, what comes next?",
+              "options": [
+                "22",
+                "25",
+                "30",
+                "24"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The pattern adds 5 each time, so 20 + 5 = 25."
+            },
+            {
+              "id": "QM10-9",
+              "question": "Which letter has a line of symmetry?",
+              "options": [
+                "F",
+                "G",
+                "A",
+                "J"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "The letter A can be folded down the middle into two matching halves, so it has a line of symmetry."
+            },
+            {
+              "id": "QM10-10",
+              "question": "In the pattern circle, square, circle, square, ___, what comes next?",
+              "options": [
+                "Triangle",
+                "Circle",
+                "Square",
+                "Star"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The pattern alternates circle, square, so after square comes circle."
+            }
+          ]
+        }
+      ],
+      "summative": [
+        {
+          "id": "SM2-1",
+          "question": "How many sides does a triangle have?",
+          "options": [
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A triangle has 3 sides and 3 vertices."
+        },
+        {
+          "id": "SM2-2",
+          "question": "What do we call a shape with 4 sides?",
+          "options": [
+            "Triangle",
+            "Pentagon",
+            "Quadrilateral",
+            "Hexagon"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "A four-sided shape is called a quadrilateral. A square and rectangle are examples."
+        },
+        {
+          "id": "SM2-3",
+          "question": "What is a corner of a shape where two sides meet called?",
+          "options": [
+            "Edge",
+            "Vertex",
+            "Face",
+            "Angle line"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The point where two sides meet is called a vertex (plural: vertices)."
+        },
+        {
+          "id": "SM2-4",
+          "question": "A square has sides of 5 cm each. What is its perimeter?",
+          "options": [
+            "10 cm",
+            "15 cm",
+            "20 cm",
+            "25 cm"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Perimeter of a square is 4 times one side: 4 x 5 = 20 cm."
+        },
+        {
+          "id": "SM2-5",
+          "question": "What is the perimeter of a rectangle that is 6 cm long and 3 cm wide?",
+          "options": [
+            "9 cm",
+            "18 cm",
+            "12 cm",
+            "24 cm"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Perimeter = 2 x (length + width) = 2 x (6 + 3) = 2 x 9 = 18 cm."
+        },
+        {
+          "id": "SM2-6",
+          "question": "How many sides does a pentagon have?",
+          "options": [
+            "4",
+            "5",
+            "6",
+            "8"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A pentagon has 5 sides."
+        },
+        {
+          "id": "SM2-7",
+          "question": "A triangle has sides 4 cm, 5 cm, and 6 cm. What is its perimeter?",
+          "options": [
+            "12 cm",
+            "14 cm",
+            "15 cm",
+            "20 cm"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Add all sides: 4 + 5 + 6 = 15 cm."
+        },
+        {
+          "id": "SM2-8",
+          "question": "Which shape is a polygon?",
+          "options": [
+            "Circle",
+            "Hexagon",
+            "Sphere",
+            "Oval"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A polygon is a closed shape with straight sides. A hexagon has straight sides, but a circle does not."
+        },
+        {
+          "id": "SM2-9",
+          "question": "How many faces does a cube have?",
+          "options": [
+            "4",
+            "6",
+            "8",
+            "12"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A cube has 6 square faces."
+        },
+        {
+          "id": "SM2-10",
+          "question": "Which 3D shape is round like a ball?",
+          "options": [
+            "Cube",
+            "Cone",
+            "Sphere",
+            "Cylinder"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "A sphere is perfectly round like a ball."
+        },
+        {
+          "id": "SM2-11",
+          "question": "How many edges does a cube have?",
+          "options": [
+            "6",
+            "8",
+            "12",
+            "16"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "A cube has 12 edges."
+        },
+        {
+          "id": "SM2-12",
+          "question": "How many vertices does a cube have?",
+          "options": [
+            "6",
+            "8",
+            "12",
+            "4"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A cube has 8 vertices (corners)."
+        },
+        {
+          "id": "SM2-13",
+          "question": "Which 3D shape has one flat circle face and one point at the top?",
+          "options": [
+            "Cylinder",
+            "Cone",
+            "Cube",
+            "Sphere"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A cone has one circular base and comes to a point at the top."
+        },
+        {
+          "id": "SM2-14",
+          "question": "A can of soup is shaped like which 3D shape?",
+          "options": [
+            "Cube",
+            "Sphere",
+            "Cylinder",
+            "Cone"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "A soup can is a cylinder, with two circular faces."
+        },
+        {
+          "id": "SM2-15",
+          "question": "How many faces does a rectangular prism have?",
+          "options": [
+            "4",
+            "6",
+            "8",
+            "12"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A rectangular prism has 6 faces, just like a cube but with rectangle faces."
+        },
+        {
+          "id": "SM2-16",
+          "question": "Which 3D shape has 2 flat circle faces and no vertices?",
+          "options": [
+            "Cone",
+            "Cylinder",
+            "Cube",
+            "Sphere"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A cylinder has 2 circular faces and no vertices."
+        },
+        {
+          "id": "SM2-17",
+          "question": "What is the area of a rectangle that is 5 cm long and 4 cm wide?",
+          "options": [
+            "9 cm2",
+            "18 cm2",
+            "20 cm2",
+            "25 cm2"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Area of a rectangle = length x width = 5 x 4 = 20 square cm."
+        },
+        {
+          "id": "SM2-18",
+          "question": "What is the formula for the area of a triangle?",
+          "options": [
+            "base x height",
+            "1/2 x base x height",
+            "side x side",
+            "2 x base"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The area of a triangle is 1/2 x base x height."
+        },
+        {
+          "id": "SM2-19",
+          "question": "A triangle has a base of 6 cm and a height of 4 cm. What is its area?",
+          "options": [
+            "10 cm2",
+            "12 cm2",
+            "24 cm2",
+            "20 cm2"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Area = 1/2 x base x height = 1/2 x 6 x 4 = 12 square cm."
+        },
+        {
+          "id": "SM2-20",
+          "question": "What is the perimeter of a square with side 7 cm?",
+          "options": [
+            "14 cm",
+            "21 cm",
+            "28 cm",
+            "49 cm"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Perimeter = 4 x side = 4 x 7 = 28 cm."
+        },
+        {
+          "id": "SM2-21",
+          "question": "What is the area of a square with side 6 cm?",
+          "options": [
+            "12 cm2",
+            "24 cm2",
+            "36 cm2",
+            "18 cm2"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Area of a square = side x side = 6 x 6 = 36 square cm."
+        },
+        {
+          "id": "SM2-22",
+          "question": "A rectangle is 8 m long and 2 m wide. What is its area?",
+          "options": [
+            "10 m2",
+            "16 m2",
+            "20 m2",
+            "32 m2"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Area = length x width = 8 x 2 = 16 square m."
+        },
+        {
+          "id": "SM2-23",
+          "question": "What is the difference between area and perimeter?",
+          "options": [
+            "They are the same",
+            "Area is the space inside; perimeter is the distance around",
+            "Perimeter is inside",
+            "Area uses only one side"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Area measures the space inside a shape, while perimeter measures the distance around it."
+        },
+        {
+          "id": "SM2-24",
+          "question": "A triangle has a base of 10 cm and height of 8 cm. What is its area?",
+          "options": [
+            "40 cm2",
+            "80 cm2",
+            "18 cm2",
+            "20 cm2"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Area = 1/2 x 10 x 8 = 1/2 x 80 = 40 square cm."
+        },
+        {
+          "id": "SM2-25",
+          "question": "How many degrees is a right angle?",
+          "options": [
+            "45 degrees",
+            "90 degrees",
+            "120 degrees",
+            "180 degrees"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A right angle measures exactly 90 degrees."
+        },
+        {
+          "id": "SM2-26",
+          "question": "An angle that is less than 90 degrees is called what?",
+          "options": [
+            "Obtuse",
+            "Right",
+            "Acute",
+            "Straight"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "An acute angle is smaller than 90 degrees."
+        },
+        {
+          "id": "SM2-27",
+          "question": "An angle of 120 degrees is what kind of angle?",
+          "options": [
+            "Acute",
+            "Right",
+            "Obtuse",
+            "Straight"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "An obtuse angle is greater than 90 degrees but less than 180 degrees, so 120 degrees is obtuse."
+        },
+        {
+          "id": "SM2-28",
+          "question": "How many degrees is a straight angle?",
+          "options": [
+            "90 degrees",
+            "180 degrees",
+            "360 degrees",
+            "45 degrees"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A straight angle is a straight line measuring 180 degrees."
+        },
+        {
+          "id": "SM2-29",
+          "question": "An angle measures 45 degrees. What kind is it?",
+          "options": [
+            "Acute",
+            "Right",
+            "Obtuse",
+            "Straight"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "45 degrees is less than 90 degrees, so it is an acute angle."
+        },
+        {
+          "id": "SM2-30",
+          "question": "Two angles add up to 180 degrees. One is 110 degrees. What is the other?",
+          "options": [
+            "60 degrees",
+            "70 degrees",
+            "80 degrees",
+            "90 degrees"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "180 - 110 = 70 degrees."
+        },
+        {
+          "id": "SM2-31",
+          "question": "Which angle is bigger, an acute angle or an obtuse angle?",
+          "options": [
+            "Acute",
+            "Obtuse",
+            "They are equal",
+            "Neither has size"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "An obtuse angle (more than 90 degrees) is bigger than an acute angle (less than 90 degrees)."
+        },
+        {
+          "id": "SM2-32",
+          "question": "Two angles add up to 90 degrees. One is 30 degrees. What is the other?",
+          "options": [
+            "50 degrees",
+            "60 degrees",
+            "70 degrees",
+            "40 degrees"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "90 - 30 = 60 degrees."
+        },
+        {
+          "id": "SM2-33",
+          "question": "What is a line of symmetry?",
+          "options": [
+            "A line that makes a shape bigger",
+            "A line that divides a shape into two matching halves",
+            "A line that adds an angle",
+            "A curved edge"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A line of symmetry divides a shape into two halves that are mirror images of each other."
+        },
+        {
+          "id": "SM2-34",
+          "question": "How many lines of symmetry does a square have?",
+          "options": [
+            "1",
+            "2",
+            "4",
+            "0"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "A square has 4 lines of symmetry."
+        },
+        {
+          "id": "SM2-35",
+          "question": "What is it called when a shape looks the same after being turned?",
+          "options": [
+            "Line symmetry",
+            "Rotational symmetry",
+            "Tessellation",
+            "A pattern break"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Rotational symmetry means a shape looks the same after being rotated around a center point."
+        },
+        {
+          "id": "SM2-36",
+          "question": "In the pattern A, B, A, B, A, ___, what comes next?",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The pattern repeats A, B, so after A comes B."
+        },
+        {
+          "id": "SM2-37",
+          "question": "What is tessellation?",
+          "options": [
+            "A single shape with one side",
+            "Shapes that fit together with no gaps",
+            "A curved line",
+            "A type of angle"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Tessellation is when shapes fit together perfectly with no gaps or overlaps, like floor tiles."
+        },
+        {
+          "id": "SM2-38",
+          "question": "In the pattern 2, 4, 6, 8, ___, what comes next?",
+          "options": [
+            "9",
+            "10",
+            "12",
+            "11"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The pattern adds 2 each time, so 8 + 2 = 10."
+        },
+        {
+          "id": "SM2-39",
+          "question": "How many lines of symmetry does a circle have?",
+          "options": [
+            "1",
+            "2",
+            "4",
+            "Many (countless)"
+          ],
+          "correctAnswerIndex": 3,
+          "explanation": "A circle has countless lines of symmetry because any line through its center divides it into matching halves."
+        },
+        {
+          "id": "SM2-40",
+          "question": "In the pattern 5, 10, 15, 20, ___, what comes next?",
+          "options": [
+            "22",
+            "25",
+            "30",
+            "24"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The pattern adds 5 each time, so 20 + 5 = 25."
+        }
+      ]
+    },
+    {
+      "id": "L-MATH3",
+      "title": "Lesson 3: Ratios, Percentages, and Proportions",
+      "description": "Learn to compare amounts using ratios, percentages, proportions, and rates, and solve real-life problems.",
+      "topics": [
+        {
+          "id": "L-MATH3-T1",
+          "name": "Understanding Ratios",
+          "description": "Learn how ratios compare two amounts, how to write ratios as fractions, and how to find equivalent ratios.",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "A ratio is a way to compare two amounts. For example, if there are 3 boys and 5 girls, the ratio of boys to girls is 3 to 5.",
+            "sections": [
+              {
+                "title": "Writing Ratios",
+                "body": "A ratio compares two numbers and is written with a colon, like 3:5. It can also be read as '3 to 5'. The order matters, so 3:5 is different from 5:3."
+              },
+              {
+                "title": "Ratios as Fractions",
+                "body": "A ratio can be written as a fraction. The ratio 3:5 is the fraction 3/5. This helps when you want to simplify."
+              },
+              {
+                "title": "Equivalent Ratios",
+                "body": "Equivalent ratios show the same comparison using different numbers. For example, 1:2 is equal to 3:6. You can find them by multiplying or dividing both parts by the same number."
+              }
+            ],
+            "definition": {
+              "term": "Ratio",
+              "meaning": "A comparison of two amounts, written with a colon like 3:5, showing how much of one thing there is compared to another."
+            },
+            "keyTakeaway": "A ratio compares two amounts, and equivalent ratios like 1:2 and 3:6 show the same comparison.",
+            "importantNote": "The order of a ratio matters; 3:5 is not the same as 5:3."
+          },
+          "quiz": [
+            {
+              "id": "QM11-1",
+              "question": "What does a ratio compare?",
+              "options": [
+                "Only one number",
+                "Two amounts or quantities",
+                "A shape's area",
+                "An angle"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A ratio compares two amounts, such as 3 boys to 5 girls, written 3:5."
+            },
+            {
+              "id": "QM11-2",
+              "question": "There are 3 apples and 5 oranges. What is the ratio of apples to oranges?",
+              "options": [
+                "5:3",
+                "3:5",
+                "3:8",
+                "8:3"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The ratio of apples to oranges is 3 to 5, written 3:5."
+            },
+            {
+              "id": "QM11-3",
+              "question": "Write the ratio 2:4 in simplest form.",
+              "options": [
+                "1:2",
+                "2:4",
+                "4:2",
+                "1:4"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Divide both numbers by 2: 2:4 becomes 1:2."
+            },
+            {
+              "id": "QM11-4",
+              "question": "The ratio 3:5 can be written as which fraction?",
+              "options": [
+                "5/3",
+                "3/8",
+                "3/5",
+                "8/3"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "A ratio of 3:5 is the fraction 3/5."
+            },
+            {
+              "id": "QM11-5",
+              "question": "Which ratio is equivalent to 1:2?",
+              "options": [
+                "2:3",
+                "3:6",
+                "2:5",
+                "3:4"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "3:6 simplifies to 1:2 by dividing both numbers by 3."
+            },
+            {
+              "id": "QM11-6",
+              "question": "In a class, the ratio of boys to girls is 4:6. Simplify this ratio.",
+              "options": [
+                "2:3",
+                "4:6",
+                "6:4",
+                "1:2"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Divide both by 2: 4:6 becomes 2:3."
+            },
+            {
+              "id": "QM11-7",
+              "question": "A recipe uses 2 cups flour to 1 cup sugar. What is the ratio of flour to sugar?",
+              "options": [
+                "1:2",
+                "2:1",
+                "2:3",
+                "3:1"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Flour to sugar is 2 cups to 1 cup, written 2:1."
+            },
+            {
+              "id": "QM11-8",
+              "question": "Which ratio is equivalent to 3:4?",
+              "options": [
+                "6:8",
+                "4:3",
+                "3:8",
+                "6:7"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Multiply both numbers by 2: 3:4 becomes 6:8."
+            },
+            {
+              "id": "QM11-9",
+              "question": "There are 10 red and 15 blue marbles. What is the ratio of red to blue in simplest form?",
+              "options": [
+                "10:15",
+                "3:2",
+                "2:3",
+                "15:10"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "10:15 divides by 5 to give 2:3."
+            },
+            {
+              "id": "QM11-10",
+              "question": "The ratio 6:9 in simplest form is what?",
+              "options": [
+                "2:3",
+                "3:2",
+                "6:9",
+                "1:3"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Divide both by 3: 6:9 becomes 2:3."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH3-T2",
+          "name": "Understanding Percentages",
+          "description": "Learn that percent means per hundred, and how to convert between percents, fractions, and decimals.",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "Percent is a special way to show parts out of 100. We see percentages everywhere, like in discounts and test scores.",
+            "sections": [
+              {
+                "title": "What Percent Means",
+                "body": "Percent means 'per hundred'. So 50% means 50 out of 100. The percent sign is %."
+              },
+              {
+                "title": "Percent to Fraction and Decimal",
+                "body": "50% equals the fraction 1/2 and the decimal 0.5. Also, 25% equals 1/4 and 0.25. To change a percent to a decimal, divide by 100."
+              },
+              {
+                "title": "Decimal to Percent",
+                "body": "To change a decimal to a percent, multiply by 100. So 0.75 becomes 75% and 0.2 becomes 20%."
+              }
+            ],
+            "definition": {
+              "term": "Percent",
+              "meaning": "A number out of 100, shown with the % sign, such as 50% meaning 50 out of 100."
+            },
+            "keyTakeaway": "Percent means per hundred, so 50% = 1/2 = 0.5 all show the same amount.",
+            "importantNote": "To change a decimal to a percent, multiply by 100; to change a percent to a decimal, divide by 100."
+          },
+          "quiz": [
+            {
+              "id": "QM12-1",
+              "question": "What does 'percent' mean?",
+              "options": [
+                "Per ten",
+                "Per hundred",
+                "Per fifty",
+                "Per thousand"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Percent means 'per hundred'. So 50% means 50 out of 100."
+            },
+            {
+              "id": "QM12-2",
+              "question": "What is 50% as a fraction?",
+              "options": [
+                "1/4",
+                "1/2",
+                "1/3",
+                "3/4"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "50% means 50 out of 100, which simplifies to 1/2."
+            },
+            {
+              "id": "QM12-3",
+              "question": "What is 50% as a decimal?",
+              "options": [
+                "0.05",
+                "5.0",
+                "0.5",
+                "0.50 only"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "50% means 50/100, which equals 0.5."
+            },
+            {
+              "id": "QM12-4",
+              "question": "What is 25% as a fraction?",
+              "options": [
+                "1/2",
+                "1/4",
+                "1/3",
+                "3/4"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "25% means 25 out of 100, which simplifies to 1/4."
+            },
+            {
+              "id": "QM12-5",
+              "question": "Write 0.75 as a percent.",
+              "options": [
+                "7.5%",
+                "75%",
+                "0.75%",
+                "750%"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "To change a decimal to a percent, multiply by 100: 0.75 becomes 75%."
+            },
+            {
+              "id": "QM12-6",
+              "question": "What is 1/4 as a percent?",
+              "options": [
+                "14%",
+                "25%",
+                "40%",
+                "4%"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "1/4 equals 25/100, which is 25%."
+            },
+            {
+              "id": "QM12-7",
+              "question": "What is 100% as a fraction?",
+              "options": [
+                "1/2",
+                "1",
+                "10",
+                "1/100"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "100% means the whole thing, which equals 1 (or 100/100)."
+            },
+            {
+              "id": "QM12-8",
+              "question": "Write 0.2 as a percent.",
+              "options": [
+                "2%",
+                "20%",
+                "0.2%",
+                "200%"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Multiply by 100: 0.2 becomes 20%."
+            },
+            {
+              "id": "QM12-9",
+              "question": "What is 10% as a decimal?",
+              "options": [
+                "1.0",
+                "0.1",
+                "0.01",
+                "10.0"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "10% means 10/100, which equals 0.1."
+            },
+            {
+              "id": "QM12-10",
+              "question": "What is 3/4 as a percent?",
+              "options": [
+                "34%",
+                "43%",
+                "75%",
+                "70%"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "3/4 equals 75/100, which is 75%."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH3-T3",
+          "name": "Finding Percentages of Numbers",
+          "description": "Find percentages of numbers, such as 25% of 80, and use the trick of finding 10% first.",
+          "readingTime": "7 mins",
+          "content": {
+            "introduction": "Often we need to find a percentage of a number, like a discount on a price. There are easy ways to do this.",
+            "sections": [
+              {
+                "title": "Using Fractions",
+                "body": "Some percents are easy fractions. 25% is 1/4, so 25% of 80 is 80 divided by 4 = 20. And 50% is 1/2, so 50% of 60 is 30."
+              },
+              {
+                "title": "Finding 10% First",
+                "body": "To find 10% of a number, divide by 10. So 10% of 50 is 5. Then you can scale up: 20% is double 10%, and 30% is three times 10%."
+              },
+              {
+                "title": "Real Examples",
+                "body": "If a shirt costs 200 pesos with a 25% discount, the discount is 25% of 200 = 50 pesos."
+              }
+            ],
+            "definition": {
+              "term": "Percentage of a Number",
+              "meaning": "A part of a number found by changing the percent to a fraction or decimal and multiplying."
+            },
+            "keyTakeaway": "Find 10% by dividing by 10, then scale up; or use fractions like 25% = 1/4.",
+            "importantNote": "25% of a number is the same as dividing that number by 4."
+          },
+          "quiz": [
+            {
+              "id": "QM13-1",
+              "question": "What is 25% of 80?",
+              "options": [
+                "15",
+                "20",
+                "25",
+                "40"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "25% is 1/4, and 1/4 of 80 is 80 divided by 4 = 20."
+            },
+            {
+              "id": "QM13-2",
+              "question": "What is 10% of 50?",
+              "options": [
+                "1",
+                "5",
+                "10",
+                "15"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "10% of 50 is 50 divided by 10 = 5."
+            },
+            {
+              "id": "QM13-3",
+              "question": "What is 50% of 60?",
+              "options": [
+                "20",
+                "30",
+                "40",
+                "50"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "50% is half, and half of 60 is 30."
+            },
+            {
+              "id": "QM13-4",
+              "question": "What is 10% of 200?",
+              "options": [
+                "2",
+                "20",
+                "40",
+                "100"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "10% of 200 is 200 divided by 10 = 20."
+            },
+            {
+              "id": "QM13-5",
+              "question": "What is 20% of 50?",
+              "options": [
+                "5",
+                "10",
+                "15",
+                "20"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "20% is double 10%. 10% of 50 is 5, so 20% is 10."
+            },
+            {
+              "id": "QM13-6",
+              "question": "What is 100% of 45?",
+              "options": [
+                "0",
+                "45",
+                "90",
+                "4.5"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "100% means the whole amount, so 100% of 45 is 45."
+            },
+            {
+              "id": "QM13-7",
+              "question": "A shirt costs 200 pesos. There is a 25% discount. How much is the discount?",
+              "options": [
+                "25 pesos",
+                "50 pesos",
+                "75 pesos",
+                "100 pesos"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "25% of 200 is 200 divided by 4 = 50 pesos."
+            },
+            {
+              "id": "QM13-8",
+              "question": "What is 5% of 100?",
+              "options": [
+                "1",
+                "5",
+                "10",
+                "50"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "5% of 100 is simply 5, because percent means out of 100."
+            },
+            {
+              "id": "QM13-9",
+              "question": "What is 75% of 40?",
+              "options": [
+                "10",
+                "20",
+                "30",
+                "35"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "75% is 3/4. 3/4 of 40 is 30 (40 divided by 4 = 10, times 3 = 30)."
+            },
+            {
+              "id": "QM13-10",
+              "question": "A test has 20 questions. You got 90% correct. How many did you get right?",
+              "options": [
+                "16",
+                "18",
+                "19",
+                "20"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "90% of 20 is 18 (10% of 20 is 2, times 9 = 18)."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH3-T4",
+          "name": "Proportions and Rates",
+          "description": "Understand proportions as equal ratios, unit rates like price per item, and speed as distance divided by time.",
+          "readingTime": "7 mins",
+          "content": {
+            "introduction": "Proportions and rates help us compare and solve everyday problems, like finding the price of one item or how fast something moves.",
+            "sections": [
+              {
+                "title": "Proportions",
+                "body": "A proportion says that two ratios are equal. For example, 2/4 = 4/8 because both equal 1/2. Proportions help us find missing values."
+              },
+              {
+                "title": "Unit Rate",
+                "body": "A unit rate tells the amount for just one. If 3 pencils cost 12 pesos, then 1 pencil costs 12 divided by 3 = 4 pesos."
+              },
+              {
+                "title": "Speed",
+                "body": "Speed is a rate that tells how far something travels in a certain time. Speed = distance divided by time. A car going 100 km in 2 hours travels at 50 km per hour."
+              }
+            ],
+            "definition": {
+              "term": "Unit Rate",
+              "meaning": "A rate that tells the amount for one unit, such as the price of one item or the distance traveled in one hour."
+            },
+            "keyTakeaway": "A proportion shows two equal ratios, and a unit rate gives the amount for just one unit.",
+            "importantNote": "To find speed, divide the distance by the time."
+          },
+          "quiz": [
+            {
+              "id": "QM14-1",
+              "question": "What is a proportion?",
+              "options": [
+                "A single number",
+                "Two equal ratios",
+                "A type of angle",
+                "A percent sign"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A proportion is a statement that two ratios are equal, like 1/2 = 2/4."
+            },
+            {
+              "id": "QM14-2",
+              "question": "What is a unit rate?",
+              "options": [
+                "The price for many items",
+                "The cost or amount for just one item",
+                "A type of shape",
+                "An angle measure"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A unit rate tells the amount for one unit, like the price of one apple."
+            },
+            {
+              "id": "QM14-3",
+              "question": "If 3 pencils cost 12 pesos, how much does 1 pencil cost?",
+              "options": [
+                "3 pesos",
+                "4 pesos",
+                "6 pesos",
+                "12 pesos"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Unit rate = 12 divided by 3 = 4 pesos per pencil."
+            },
+            {
+              "id": "QM14-4",
+              "question": "A car travels 100 km in 2 hours. What is its speed?",
+              "options": [
+                "20 km/h",
+                "50 km/h",
+                "100 km/h",
+                "200 km/h"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Speed = distance divided by time = 100 divided by 2 = 50 km/h."
+            },
+            {
+              "id": "QM14-5",
+              "question": "If 2/4 = 4/?, what number completes the proportion?",
+              "options": [
+                "6",
+                "8",
+                "4",
+                "2"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "2/4 = 4/8 because both equal 1/2."
+            },
+            {
+              "id": "QM14-6",
+              "question": "If 5 apples cost 25 pesos, what is the price of 1 apple?",
+              "options": [
+                "3 pesos",
+                "5 pesos",
+                "10 pesos",
+                "25 pesos"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Unit rate = 25 divided by 5 = 5 pesos per apple."
+            },
+            {
+              "id": "QM14-7",
+              "question": "A runner goes 30 meters in 6 seconds. What is the speed?",
+              "options": [
+                "3 m/s",
+                "5 m/s",
+                "6 m/s",
+                "10 m/s"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Speed = distance divided by time = 30 divided by 6 = 5 meters per second."
+            },
+            {
+              "id": "QM14-8",
+              "question": "Which pair forms a proportion (equal ratios)?",
+              "options": [
+                "1/2 and 2/3",
+                "2/3 and 4/6",
+                "1/2 and 1/3",
+                "3/4 and 2/3"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "2/3 and 4/6 are equal because 4/6 simplifies to 2/3."
+            },
+            {
+              "id": "QM14-9",
+              "question": "If 4 notebooks cost 40 pesos, how much do 6 notebooks cost?",
+              "options": [
+                "50 pesos",
+                "60 pesos",
+                "48 pesos",
+                "44 pesos"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "One notebook costs 10 pesos (40/4), so 6 notebooks cost 6 x 10 = 60 pesos."
+            },
+            {
+              "id": "QM14-10",
+              "question": "A bus travels 240 km in 4 hours. What is its speed?",
+              "options": [
+                "40 km/h",
+                "60 km/h",
+                "80 km/h",
+                "120 km/h"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Speed = 240 divided by 4 = 60 km/h."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH3-T5",
+          "name": "Solving Word Problems with Ratios and Percentages",
+          "description": "Solve real-life problems involving discounts, taxes, and sharing using ratios and percentages.",
+          "readingTime": "7 mins",
+          "content": {
+            "introduction": "Ratios and percentages are useful in real life. We use them when shopping, paying taxes, and sharing things fairly.",
+            "sections": [
+              {
+                "title": "Discounts",
+                "body": "A discount lowers a price. If a bag costs 300 pesos with a 10% discount, the discount is 30 pesos, so you pay 270 pesos."
+              },
+              {
+                "title": "Taxes",
+                "body": "A tax adds to a price. If a meal costs 400 pesos with 12% tax, the tax is 48 pesos, so the total is 448 pesos."
+              },
+              {
+                "title": "Sharing",
+                "body": "We can share amounts using ratios. To share 50 pesos in the ratio 2:3, there are 5 parts. Each part is 10 pesos, so the shares are 20 and 30 pesos."
+              }
+            ],
+            "definition": {
+              "term": "Discount",
+              "meaning": "An amount taken off the original price, often given as a percentage."
+            },
+            "keyTakeaway": "For a discount, subtract the percent amount from the price; for a tax, add it on.",
+            "importantNote": "Always find the percent amount first, then add it for tax or subtract it for a discount."
+          },
+          "quiz": [
+            {
+              "id": "QM15-1",
+              "question": "A toy costs 500 pesos with a 20% discount. How much is the discount?",
+              "options": [
+                "50 pesos",
+                "100 pesos",
+                "150 pesos",
+                "200 pesos"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "20% of 500 is 100 pesos (10% is 50, times 2 = 100)."
+            },
+            {
+              "id": "QM15-2",
+              "question": "A bag costs 300 pesos. After a 10% discount, what is the new price?",
+              "options": [
+                "270 pesos",
+                "290 pesos",
+                "250 pesos",
+                "280 pesos"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "10% of 300 is 30. New price = 300 - 30 = 270 pesos."
+            },
+            {
+              "id": "QM15-3",
+              "question": "3 friends share 60 candies equally. How many does each get?",
+              "options": [
+                "15",
+                "20",
+                "30",
+                "60"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "60 divided by 3 = 20 candies each."
+            },
+            {
+              "id": "QM15-4",
+              "question": "A meal costs 400 pesos plus 12% tax. How much is the tax?",
+              "options": [
+                "40 pesos",
+                "48 pesos",
+                "52 pesos",
+                "60 pesos"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "12% of 400 is 48 pesos (1% of 400 is 4, times 12 = 48)."
+            },
+            {
+              "id": "QM15-5",
+              "question": "Two children share 50 pesos in the ratio 2:3. How much is the larger share?",
+              "options": [
+                "20 pesos",
+                "25 pesos",
+                "30 pesos",
+                "35 pesos"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Total parts = 2 + 3 = 5. Each part = 50/5 = 10. The larger share is 3 x 10 = 30 pesos."
+            },
+            {
+              "id": "QM15-6",
+              "question": "A jacket is 800 pesos with a 25% discount. How much do you save?",
+              "options": [
+                "100 pesos",
+                "150 pesos",
+                "200 pesos",
+                "250 pesos"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "25% of 800 is 200 pesos (800 divided by 4)."
+            },
+            {
+              "id": "QM15-7",
+              "question": "A book is 250 pesos. After a 20% discount, how much do you pay?",
+              "options": [
+                "180 pesos",
+                "200 pesos",
+                "220 pesos",
+                "230 pesos"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "20% of 250 is 50. New price = 250 - 50 = 200 pesos."
+            },
+            {
+              "id": "QM15-8",
+              "question": "Out of 40 students, 75% passed. How many passed?",
+              "options": [
+                "25",
+                "30",
+                "35",
+                "40"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "75% of 40 is 30 (40 divided by 4 = 10, times 3 = 30)."
+            },
+            {
+              "id": "QM15-9",
+              "question": "A 600-peso bill is shared by 4 people equally. How much does each pay?",
+              "options": [
+                "100 pesos",
+                "150 pesos",
+                "200 pesos",
+                "300 pesos"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "600 divided by 4 = 150 pesos each."
+            },
+            {
+              "id": "QM15-10",
+              "question": "A phone costs 1000 pesos with a 30% discount. What is the sale price?",
+              "options": [
+                "600 pesos",
+                "700 pesos",
+                "750 pesos",
+                "800 pesos"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "30% of 1000 is 300. Sale price = 1000 - 300 = 700 pesos."
+            }
+          ]
+        }
+      ],
+      "summative": [
+        {
+          "id": "SM3-1",
+          "question": "What does a ratio compare?",
+          "options": [
+            "Only one number",
+            "Two amounts or quantities",
+            "A shape's area",
+            "An angle"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A ratio compares two amounts, such as 3 boys to 5 girls, written 3:5."
+        },
+        {
+          "id": "SM3-2",
+          "question": "There are 3 apples and 5 oranges. What is the ratio of apples to oranges?",
+          "options": [
+            "5:3",
+            "3:5",
+            "3:8",
+            "8:3"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The ratio of apples to oranges is 3 to 5, written 3:5."
+        },
+        {
+          "id": "SM3-3",
+          "question": "Write the ratio 2:4 in simplest form.",
+          "options": [
+            "1:2",
+            "2:4",
+            "4:2",
+            "1:4"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Divide both numbers by 2: 2:4 becomes 1:2."
+        },
+        {
+          "id": "SM3-4",
+          "question": "The ratio 3:5 can be written as which fraction?",
+          "options": [
+            "5/3",
+            "3/8",
+            "3/5",
+            "8/3"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "A ratio of 3:5 is the fraction 3/5."
+        },
+        {
+          "id": "SM3-5",
+          "question": "Which ratio is equivalent to 1:2?",
+          "options": [
+            "2:3",
+            "3:6",
+            "2:5",
+            "3:4"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "3:6 simplifies to 1:2 by dividing both numbers by 3."
+        },
+        {
+          "id": "SM3-6",
+          "question": "In a class, the ratio of boys to girls is 4:6. Simplify this ratio.",
+          "options": [
+            "2:3",
+            "4:6",
+            "6:4",
+            "1:2"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Divide both by 2: 4:6 becomes 2:3."
+        },
+        {
+          "id": "SM3-7",
+          "question": "A recipe uses 2 cups flour to 1 cup sugar. What is the ratio of flour to sugar?",
+          "options": [
+            "1:2",
+            "2:1",
+            "2:3",
+            "3:1"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Flour to sugar is 2 cups to 1 cup, written 2:1."
+        },
+        {
+          "id": "SM3-8",
+          "question": "Which ratio is equivalent to 3:4?",
+          "options": [
+            "6:8",
+            "4:3",
+            "3:8",
+            "6:7"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Multiply both numbers by 2: 3:4 becomes 6:8."
+        },
+        {
+          "id": "SM3-9",
+          "question": "What does 'percent' mean?",
+          "options": [
+            "Per ten",
+            "Per hundred",
+            "Per fifty",
+            "Per thousand"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Percent means 'per hundred'. So 50% means 50 out of 100."
+        },
+        {
+          "id": "SM3-10",
+          "question": "What is 50% as a fraction?",
+          "options": [
+            "1/4",
+            "1/2",
+            "1/3",
+            "3/4"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "50% means 50 out of 100, which simplifies to 1/2."
+        },
+        {
+          "id": "SM3-11",
+          "question": "What is 50% as a decimal?",
+          "options": [
+            "0.05",
+            "5.0",
+            "0.5",
+            "0.50 only"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "50% means 50/100, which equals 0.5."
+        },
+        {
+          "id": "SM3-12",
+          "question": "What is 25% as a fraction?",
+          "options": [
+            "1/2",
+            "1/4",
+            "1/3",
+            "3/4"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "25% means 25 out of 100, which simplifies to 1/4."
+        },
+        {
+          "id": "SM3-13",
+          "question": "Write 0.75 as a percent.",
+          "options": [
+            "7.5%",
+            "75%",
+            "0.75%",
+            "750%"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "To change a decimal to a percent, multiply by 100: 0.75 becomes 75%."
+        },
+        {
+          "id": "SM3-14",
+          "question": "What is 1/4 as a percent?",
+          "options": [
+            "14%",
+            "25%",
+            "40%",
+            "4%"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "1/4 equals 25/100, which is 25%."
+        },
+        {
+          "id": "SM3-15",
+          "question": "What is 100% as a fraction?",
+          "options": [
+            "1/2",
+            "1",
+            "10",
+            "1/100"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "100% means the whole thing, which equals 1 (or 100/100)."
+        },
+        {
+          "id": "SM3-16",
+          "question": "Write 0.2 as a percent.",
+          "options": [
+            "2%",
+            "20%",
+            "0.2%",
+            "200%"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Multiply by 100: 0.2 becomes 20%."
+        },
+        {
+          "id": "SM3-17",
+          "question": "What is 25% of 80?",
+          "options": [
+            "15",
+            "20",
+            "25",
+            "40"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "25% is 1/4, and 1/4 of 80 is 80 divided by 4 = 20."
+        },
+        {
+          "id": "SM3-18",
+          "question": "What is 10% of 50?",
+          "options": [
+            "1",
+            "5",
+            "10",
+            "15"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "10% of 50 is 50 divided by 10 = 5."
+        },
+        {
+          "id": "SM3-19",
+          "question": "What is 50% of 60?",
+          "options": [
+            "20",
+            "30",
+            "40",
+            "50"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "50% is half, and half of 60 is 30."
+        },
+        {
+          "id": "SM3-20",
+          "question": "What is 10% of 200?",
+          "options": [
+            "2",
+            "20",
+            "40",
+            "100"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "10% of 200 is 200 divided by 10 = 20."
+        },
+        {
+          "id": "SM3-21",
+          "question": "What is 20% of 50?",
+          "options": [
+            "5",
+            "10",
+            "15",
+            "20"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "20% is double 10%. 10% of 50 is 5, so 20% is 10."
+        },
+        {
+          "id": "SM3-22",
+          "question": "What is 100% of 45?",
+          "options": [
+            "0",
+            "45",
+            "90",
+            "4.5"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "100% means the whole amount, so 100% of 45 is 45."
+        },
+        {
+          "id": "SM3-23",
+          "question": "A shirt costs 200 pesos. There is a 25% discount. How much is the discount?",
+          "options": [
+            "25 pesos",
+            "50 pesos",
+            "75 pesos",
+            "100 pesos"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "25% of 200 is 200 divided by 4 = 50 pesos."
+        },
+        {
+          "id": "SM3-24",
+          "question": "What is 5% of 100?",
+          "options": [
+            "1",
+            "5",
+            "10",
+            "50"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "5% of 100 is simply 5, because percent means out of 100."
+        },
+        {
+          "id": "SM3-25",
+          "question": "What is a proportion?",
+          "options": [
+            "A single number",
+            "Two equal ratios",
+            "A type of angle",
+            "A percent sign"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A proportion is a statement that two ratios are equal, like 1/2 = 2/4."
+        },
+        {
+          "id": "SM3-26",
+          "question": "What is a unit rate?",
+          "options": [
+            "The price for many items",
+            "The cost or amount for just one item",
+            "A type of shape",
+            "An angle measure"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A unit rate tells the amount for one unit, like the price of one apple."
+        },
+        {
+          "id": "SM3-27",
+          "question": "If 3 pencils cost 12 pesos, how much does 1 pencil cost?",
+          "options": [
+            "3 pesos",
+            "4 pesos",
+            "6 pesos",
+            "12 pesos"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Unit rate = 12 divided by 3 = 4 pesos per pencil."
+        },
+        {
+          "id": "SM3-28",
+          "question": "A car travels 100 km in 2 hours. What is its speed?",
+          "options": [
+            "20 km/h",
+            "50 km/h",
+            "100 km/h",
+            "200 km/h"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Speed = distance divided by time = 100 divided by 2 = 50 km/h."
+        },
+        {
+          "id": "SM3-29",
+          "question": "If 2/4 = 4/?, what number completes the proportion?",
+          "options": [
+            "6",
+            "8",
+            "4",
+            "2"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "2/4 = 4/8 because both equal 1/2."
+        },
+        {
+          "id": "SM3-30",
+          "question": "If 5 apples cost 25 pesos, what is the price of 1 apple?",
+          "options": [
+            "3 pesos",
+            "5 pesos",
+            "10 pesos",
+            "25 pesos"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Unit rate = 25 divided by 5 = 5 pesos per apple."
+        },
+        {
+          "id": "SM3-31",
+          "question": "A runner goes 30 meters in 6 seconds. What is the speed?",
+          "options": [
+            "3 m/s",
+            "5 m/s",
+            "6 m/s",
+            "10 m/s"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Speed = distance divided by time = 30 divided by 6 = 5 meters per second."
+        },
+        {
+          "id": "SM3-32",
+          "question": "Which pair forms a proportion (equal ratios)?",
+          "options": [
+            "1/2 and 2/3",
+            "2/3 and 4/6",
+            "1/2 and 1/3",
+            "3/4 and 2/3"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "2/3 and 4/6 are equal because 4/6 simplifies to 2/3."
+        },
+        {
+          "id": "SM3-33",
+          "question": "A toy costs 500 pesos with a 20% discount. How much is the discount?",
+          "options": [
+            "50 pesos",
+            "100 pesos",
+            "150 pesos",
+            "200 pesos"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "20% of 500 is 100 pesos (10% is 50, times 2 = 100)."
+        },
+        {
+          "id": "SM3-34",
+          "question": "A bag costs 300 pesos. After a 10% discount, what is the new price?",
+          "options": [
+            "270 pesos",
+            "290 pesos",
+            "250 pesos",
+            "280 pesos"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "10% of 300 is 30. New price = 300 - 30 = 270 pesos."
+        },
+        {
+          "id": "SM3-35",
+          "question": "3 friends share 60 candies equally. How many does each get?",
+          "options": [
+            "15",
+            "20",
+            "30",
+            "60"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "60 divided by 3 = 20 candies each."
+        },
+        {
+          "id": "SM3-36",
+          "question": "A meal costs 400 pesos plus 12% tax. How much is the tax?",
+          "options": [
+            "40 pesos",
+            "48 pesos",
+            "52 pesos",
+            "60 pesos"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "12% of 400 is 48 pesos (1% of 400 is 4, times 12 = 48)."
+        },
+        {
+          "id": "SM3-37",
+          "question": "Two children share 50 pesos in the ratio 2:3. How much is the larger share?",
+          "options": [
+            "20 pesos",
+            "25 pesos",
+            "30 pesos",
+            "35 pesos"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Total parts = 2 + 3 = 5. Each part = 50/5 = 10. The larger share is 3 x 10 = 30 pesos."
+        },
+        {
+          "id": "SM3-38",
+          "question": "A jacket is 800 pesos with a 25% discount. How much do you save?",
+          "options": [
+            "100 pesos",
+            "150 pesos",
+            "200 pesos",
+            "250 pesos"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "25% of 800 is 200 pesos (800 divided by 4)."
+        },
+        {
+          "id": "SM3-39",
+          "question": "A book is 250 pesos. After a 20% discount, how much do you pay?",
+          "options": [
+            "180 pesos",
+            "200 pesos",
+            "220 pesos",
+            "230 pesos"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "20% of 250 is 50. New price = 250 - 50 = 200 pesos."
+        },
+        {
+          "id": "SM3-40",
+          "question": "Out of 40 students, 75% passed. How many passed?",
+          "options": [
+            "25",
+            "30",
+            "35",
+            "40"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "75% of 40 is 30 (40 divided by 4 = 10, times 3 = 30)."
+        }
+      ]
+    },
+    {
+      "id": "L-MATH4",
+      "title": "Lesson 4: Measurement and Data",
+      "description": "Measure length, weight, and volume, read graphs, find mean, median, and mode, and explore probability.",
+      "topics": [
+        {
+          "id": "L-MATH4-T1",
+          "name": "Units of Length",
+          "description": "Learn millimeters, centimeters, meters, and kilometers, and how to convert between them.",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "Length tells us how long something is. We use different units depending on whether the thing is tiny or very large.",
+            "sections": [
+              {
+                "title": "Units of Length",
+                "body": "From smallest to largest, the common units are millimeter (mm), centimeter (cm), meter (m), and kilometer (km). A pencil is measured in centimeters, while the distance between cities is measured in kilometers."
+              },
+              {
+                "title": "Converting Units",
+                "body": "There are 10 mm in 1 cm, 100 cm in 1 m, and 1000 m in 1 km. To change meters to centimeters, multiply by 100. To change centimeters to meters, divide by 100."
+              },
+              {
+                "title": "Examples",
+                "body": "2 meters equals 200 centimeters. 3 kilometers equals 3000 meters."
+              }
+            ],
+            "definition": {
+              "term": "Kilometer",
+              "meaning": "A unit of length equal to 1000 meters, used to measure long distances."
+            },
+            "keyTakeaway": "Remember: 10 mm = 1 cm, 100 cm = 1 m, and 1000 m = 1 km.",
+            "importantNote": "To go from a larger unit to a smaller one, you multiply; to go from smaller to larger, you divide."
+          },
+          "quiz": [
+            {
+              "id": "QM16-1",
+              "question": "How many centimeters are in 1 meter?",
+              "options": [
+                "10",
+                "100",
+                "1000",
+                "50"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "There are 100 centimeters in 1 meter."
+            },
+            {
+              "id": "QM16-2",
+              "question": "How many meters are in 1 kilometer?",
+              "options": [
+                "100",
+                "500",
+                "1000",
+                "10000"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "There are 1000 meters in 1 kilometer."
+            },
+            {
+              "id": "QM16-3",
+              "question": "Convert 2 meters to centimeters.",
+              "options": [
+                "20 cm",
+                "200 cm",
+                "2000 cm",
+                "2 cm"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Since 1 m = 100 cm, 2 m = 2 x 100 = 200 cm."
+            },
+            {
+              "id": "QM16-4",
+              "question": "Which unit is best for measuring the length of a pencil?",
+              "options": [
+                "Kilometer",
+                "Meter",
+                "Centimeter",
+                "Liter"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "A pencil is small, so centimeters are the best unit."
+            },
+            {
+              "id": "QM16-5",
+              "question": "How many millimeters are in 1 centimeter?",
+              "options": [
+                "5",
+                "10",
+                "100",
+                "1000"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "There are 10 millimeters in 1 centimeter."
+            },
+            {
+              "id": "QM16-6",
+              "question": "Convert 3 kilometers to meters.",
+              "options": [
+                "300 m",
+                "3000 m",
+                "30 m",
+                "30000 m"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Since 1 km = 1000 m, 3 km = 3 x 1000 = 3000 m."
+            },
+            {
+              "id": "QM16-7",
+              "question": "Convert 500 cm to meters.",
+              "options": [
+                "5 m",
+                "50 m",
+                "0.5 m",
+                "500 m"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Since 100 cm = 1 m, 500 cm = 500 divided by 100 = 5 m."
+            },
+            {
+              "id": "QM16-8",
+              "question": "Which unit is best for measuring the distance between two cities?",
+              "options": [
+                "Millimeter",
+                "Centimeter",
+                "Meter",
+                "Kilometer"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Distances between cities are large, so kilometers are best."
+            },
+            {
+              "id": "QM16-9",
+              "question": "Convert 4 cm to millimeters.",
+              "options": [
+                "4 mm",
+                "40 mm",
+                "400 mm",
+                "14 mm"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Since 1 cm = 10 mm, 4 cm = 4 x 10 = 40 mm."
+            },
+            {
+              "id": "QM16-10",
+              "question": "A rope is 250 cm long. How many meters is that?",
+              "options": [
+                "2.5 m",
+                "25 m",
+                "0.25 m",
+                "250 m"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "250 cm divided by 100 = 2.5 m."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH4-T2",
+          "name": "Units of Weight and Volume",
+          "description": "Learn grams, kilograms, milliliters, and liters, and how to convert between them.",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "Weight tells how heavy something is, and volume tells how much space a liquid takes up. Each has its own units.",
+            "sections": [
+              {
+                "title": "Units of Weight",
+                "body": "Weight is measured in grams (g) and kilograms (kg). There are 1000 grams in 1 kilogram. A small apple is measured in grams, while a bag of rice is measured in kilograms."
+              },
+              {
+                "title": "Units of Volume",
+                "body": "Volume of liquid is measured in milliliters (ml) and liters (L). There are 1000 milliliters in 1 liter. A spoonful is measured in milliliters, and a bottle of water in liters."
+              },
+              {
+                "title": "Converting Units",
+                "body": "To change kilograms to grams, multiply by 1000. To change liters to milliliters, also multiply by 1000. So 2 kg = 2000 g and 3 L = 3000 ml."
+              }
+            ],
+            "definition": {
+              "term": "Liter",
+              "meaning": "A unit of volume equal to 1000 milliliters, used to measure liquids."
+            },
+            "keyTakeaway": "Remember: 1000 grams = 1 kilogram, and 1000 milliliters = 1 liter.",
+            "importantNote": "Both weight and volume use 1000 as the conversion number between their main units."
+          },
+          "quiz": [
+            {
+              "id": "QM17-1",
+              "question": "How many grams are in 1 kilogram?",
+              "options": [
+                "100",
+                "500",
+                "1000",
+                "10"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "There are 1000 grams in 1 kilogram."
+            },
+            {
+              "id": "QM17-2",
+              "question": "How many milliliters are in 1 liter?",
+              "options": [
+                "10",
+                "100",
+                "1000",
+                "500"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "There are 1000 milliliters in 1 liter."
+            },
+            {
+              "id": "QM17-3",
+              "question": "Convert 2 kilograms to grams.",
+              "options": [
+                "200 g",
+                "2000 g",
+                "20 g",
+                "20000 g"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Since 1 kg = 1000 g, 2 kg = 2 x 1000 = 2000 g."
+            },
+            {
+              "id": "QM17-4",
+              "question": "Which unit is best for measuring the weight of an apple?",
+              "options": [
+                "Kilometer",
+                "Gram",
+                "Liter",
+                "Meter"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "An apple is light, so grams are the best unit."
+            },
+            {
+              "id": "QM17-5",
+              "question": "Convert 3 liters to milliliters.",
+              "options": [
+                "300 ml",
+                "3000 ml",
+                "30 ml",
+                "30000 ml"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Since 1 L = 1000 ml, 3 L = 3 x 1000 = 3000 ml."
+            },
+            {
+              "id": "QM17-6",
+              "question": "Convert 5000 grams to kilograms.",
+              "options": [
+                "5 kg",
+                "50 kg",
+                "0.5 kg",
+                "500 kg"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "5000 g divided by 1000 = 5 kg."
+            },
+            {
+              "id": "QM17-7",
+              "question": "Which unit is best for measuring water in a bottle?",
+              "options": [
+                "Gram",
+                "Kilometer",
+                "Milliliter",
+                "Meter"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Liquid like water is measured in milliliters or liters."
+            },
+            {
+              "id": "QM17-8",
+              "question": "Convert 2500 ml to liters.",
+              "options": [
+                "2.5 L",
+                "25 L",
+                "0.25 L",
+                "250 L"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "2500 ml divided by 1000 = 2.5 L."
+            },
+            {
+              "id": "QM17-9",
+              "question": "A bag of rice weighs 5 kg. How many grams is that?",
+              "options": [
+                "500 g",
+                "5000 g",
+                "50 g",
+                "50000 g"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "5 kg x 1000 = 5000 g."
+            },
+            {
+              "id": "QM17-10",
+              "question": "A jug holds 4 liters of juice. How many milliliters is that?",
+              "options": [
+                "400 ml",
+                "4000 ml",
+                "40 ml",
+                "40000 ml"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "4 L x 1000 = 4000 ml."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH4-T3",
+          "name": "Reading Graphs and Charts",
+          "description": "Read bar graphs, line graphs, and pie charts, and find totals and averages from data.",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "Graphs and charts show information in pictures so it is easy to understand. Different graphs are good for different kinds of data.",
+            "sections": [
+              {
+                "title": "Types of Graphs",
+                "body": "A bar graph uses bars to compare amounts. A line graph shows how something changes over time. A pie chart is a circle that shows parts of a whole."
+              },
+              {
+                "title": "Reading Data",
+                "body": "To read a graph, look at the labels and values. You can find totals by adding the values, or find differences by subtracting."
+              },
+              {
+                "title": "Finding the Average",
+                "body": "The average, or mean, is found by adding all the values and dividing by how many there are. For 4, 6, and 8, the average is 18 divided by 3 = 6."
+              }
+            ],
+            "definition": {
+              "term": "Bar Graph",
+              "meaning": "A graph that uses rectangular bars to show and compare amounts of data."
+            },
+            "keyTakeaway": "Bar graphs compare amounts, line graphs show change over time, and pie charts show parts of a whole.",
+            "importantNote": "To find the average, add all the values and divide by how many values there are."
+          },
+          "quiz": [
+            {
+              "id": "QM18-1",
+              "question": "What kind of graph uses bars to show data?",
+              "options": [
+                "Line graph",
+                "Bar graph",
+                "Pie chart",
+                "Number line"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A bar graph uses rectangular bars to show and compare data."
+            },
+            {
+              "id": "QM18-2",
+              "question": "What graph is shaped like a circle divided into slices?",
+              "options": [
+                "Bar graph",
+                "Line graph",
+                "Pie chart",
+                "Table"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "A pie chart is a circle divided into slices showing parts of a whole."
+            },
+            {
+              "id": "QM18-3",
+              "question": "What kind of graph is best for showing change over time?",
+              "options": [
+                "Pie chart",
+                "Line graph",
+                "Bar graph",
+                "Picture"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "A line graph is best for showing how something changes over time."
+            },
+            {
+              "id": "QM18-4",
+              "question": "A bar graph shows: Mon 5, Tue 8, Wed 7. What is the total?",
+              "options": [
+                "18",
+                "20",
+                "15",
+                "21"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "5 + 8 + 7 = 20."
+            },
+            {
+              "id": "QM18-5",
+              "question": "From the data 4, 6, 8, what is the average (mean)?",
+              "options": [
+                "5",
+                "6",
+                "7",
+                "8"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Average = (4 + 6 + 8) divided by 3 = 18 divided by 3 = 6."
+            },
+            {
+              "id": "QM18-6",
+              "question": "A pie chart shows 50% for blue. What fraction is that?",
+              "options": [
+                "1/4",
+                "1/2",
+                "3/4",
+                "1/3"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "50% equals 1/2 of the whole pie chart."
+            },
+            {
+              "id": "QM18-7",
+              "question": "A bar graph shows apples: 10, bananas: 6. How many more apples than bananas?",
+              "options": [
+                "2",
+                "4",
+                "6",
+                "16"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "10 - 6 = 4 more apples."
+            },
+            {
+              "id": "QM18-8",
+              "question": "What is the average of 10, 20, and 30?",
+              "options": [
+                "15",
+                "20",
+                "25",
+                "30"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Average = (10 + 20 + 30) divided by 3 = 60 divided by 3 = 20."
+            },
+            {
+              "id": "QM18-9",
+              "question": "On a line graph, sales were 5 in week 1 and 9 in week 2. The line goes which way?",
+              "options": [
+                "Down",
+                "Up",
+                "Flat",
+                "Backwards"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Since 9 is greater than 5, the line goes up, showing an increase."
+            },
+            {
+              "id": "QM18-10",
+              "question": "A graph shows 3 cats, 5 dogs, and 2 birds. How many pets in total?",
+              "options": [
+                "8",
+                "10",
+                "12",
+                "15"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "3 + 5 + 2 = 10 pets."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH4-T4",
+          "name": "Mean, Median, and Mode",
+          "description": "Learn how to find the mean (average), the median (middle value), and the mode (most frequent value).",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "Mean, median, and mode are three ways to describe a group of numbers. Each tells us something different about the data.",
+            "sections": [
+              {
+                "title": "Mean",
+                "body": "The mean is the average. Add all the numbers, then divide by how many there are. For 2, 4, and 6, the mean is 12 divided by 3 = 4."
+              },
+              {
+                "title": "Median",
+                "body": "The median is the middle value when the numbers are put in order. For 3, 5, 7, the median is 5."
+              },
+              {
+                "title": "Mode",
+                "body": "The mode is the number that appears most often. In 2, 3, 3, 5, 7, the mode is 3 because it appears twice."
+              }
+            ],
+            "definition": {
+              "term": "Mean",
+              "meaning": "The average of a group of numbers, found by adding them all and dividing by how many there are."
+            },
+            "keyTakeaway": "Mean is the average, median is the middle value, and mode is the most frequent value.",
+            "importantNote": "To find the median, always put the numbers in order from smallest to largest first."
+          },
+          "quiz": [
+            {
+              "id": "QM19-1",
+              "question": "What is the mean (average) of 2, 4, and 6?",
+              "options": [
+                "3",
+                "4",
+                "5",
+                "6"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Mean = (2 + 4 + 6) divided by 3 = 12 divided by 3 = 4."
+            },
+            {
+              "id": "QM19-2",
+              "question": "What is the median (middle value) of 3, 7, 5?",
+              "options": [
+                "3",
+                "5",
+                "7",
+                "15"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Order them: 3, 5, 7. The middle value is 5."
+            },
+            {
+              "id": "QM19-3",
+              "question": "What is the mode of 2, 3, 3, 5, 7?",
+              "options": [
+                "2",
+                "3",
+                "5",
+                "7"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The mode is the number that appears most often, which is 3."
+            },
+            {
+              "id": "QM19-4",
+              "question": "What is the mean of 10, 20, 30, 40?",
+              "options": [
+                "20",
+                "25",
+                "30",
+                "100"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Mean = (10 + 20 + 30 + 40) divided by 4 = 100 divided by 4 = 25."
+            },
+            {
+              "id": "QM19-5",
+              "question": "What is the median of 1, 2, 3, 4, 5?",
+              "options": [
+                "2",
+                "3",
+                "4",
+                "5"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The middle value of 1, 2, 3, 4, 5 is 3."
+            },
+            {
+              "id": "QM19-6",
+              "question": "What is the mode of 4, 4, 4, 6, 8?",
+              "options": [
+                "4",
+                "6",
+                "8",
+                "22"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "The number 4 appears most often, so the mode is 4."
+            },
+            {
+              "id": "QM19-7",
+              "question": "What does 'mean' tell us about a set of numbers?",
+              "options": [
+                "The biggest number",
+                "The average",
+                "The smallest number",
+                "The middle"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The mean is the average, found by adding all numbers and dividing by how many there are."
+            },
+            {
+              "id": "QM19-8",
+              "question": "What is the mean of 5 and 15?",
+              "options": [
+                "5",
+                "10",
+                "15",
+                "20"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Mean = (5 + 15) divided by 2 = 20 divided by 2 = 10."
+            },
+            {
+              "id": "QM19-9",
+              "question": "Find the median of 8, 2, 6, 4, 10.",
+              "options": [
+                "4",
+                "6",
+                "8",
+                "10"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Order them: 2, 4, 6, 8, 10. The middle value is 6."
+            },
+            {
+              "id": "QM19-10",
+              "question": "In the set 7, 9, 7, 3, 7, what is the mode?",
+              "options": [
+                "3",
+                "7",
+                "9",
+                "33"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "The number 7 appears three times, more than any other, so the mode is 7."
+            }
+          ]
+        },
+        {
+          "id": "L-MATH4-T5",
+          "name": "Probability and Chance",
+          "description": "Learn the words certain, likely, unlikely, and impossible, and find simple probability as favorable over total outcomes.",
+          "readingTime": "6 mins",
+          "content": {
+            "introduction": "Probability is the chance that something will happen. Some events are sure to happen, and some can never happen.",
+            "sections": [
+              {
+                "title": "Describing Chance",
+                "body": "We use words to describe chance. A certain event will definitely happen. A likely event will probably happen. An unlikely event probably will not happen. An impossible event can never happen."
+              },
+              {
+                "title": "Simple Probability",
+                "body": "Probability can be written as a fraction: favorable outcomes over total outcomes. For a coin, the chance of heads is 1 out of 2, or 1/2."
+              },
+              {
+                "title": "Examples",
+                "body": "A bag with 3 red and 1 blue marble gives a 3/4 chance of red. Rolling a 7 on a normal die is impossible."
+              }
+            ],
+            "definition": {
+              "term": "Probability",
+              "meaning": "A measure of how likely an event is to happen, often written as a fraction of favorable outcomes over total outcomes."
+            },
+            "keyTakeaway": "Probability is the number of favorable outcomes divided by the total number of outcomes.",
+            "importantNote": "A certain event has a probability of 1, and an impossible event has a probability of 0."
+          },
+          "quiz": [
+            {
+              "id": "QM20-1",
+              "question": "If something will definitely happen, we say it is what?",
+              "options": [
+                "Impossible",
+                "Unlikely",
+                "Certain",
+                "Likely"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "An event that will definitely happen is certain."
+            },
+            {
+              "id": "QM20-2",
+              "question": "If something can never happen, we say it is what?",
+              "options": [
+                "Certain",
+                "Likely",
+                "Impossible",
+                "Unlikely"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "An event that can never happen is impossible."
+            },
+            {
+              "id": "QM20-3",
+              "question": "A coin has 2 sides. What is the probability of getting heads?",
+              "options": [
+                "1/4",
+                "1/2",
+                "1/3",
+                "1"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "There is 1 head out of 2 sides, so the probability is 1/2."
+            },
+            {
+              "id": "QM20-4",
+              "question": "A bag has 3 red and 1 blue marble. What is the chance of picking red?",
+              "options": [
+                "1/4",
+                "2/4",
+                "3/4",
+                "1"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "There are 3 red out of 4 total marbles, so the probability is 3/4."
+            },
+            {
+              "id": "QM20-5",
+              "question": "Rolling a 7 on a normal 6-sided die is what?",
+              "options": [
+                "Certain",
+                "Likely",
+                "Impossible",
+                "Unlikely"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "A normal die only goes up to 6, so rolling a 7 is impossible."
+            },
+            {
+              "id": "QM20-6",
+              "question": "A die has 6 sides. What is the probability of rolling a 3?",
+              "options": [
+                "1/3",
+                "1/6",
+                "3/6",
+                "1/2"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "There is 1 way to roll a 3 out of 6 sides, so the probability is 1/6."
+            },
+            {
+              "id": "QM20-7",
+              "question": "A bag has 5 green and 5 yellow balls. Picking green is how likely?",
+              "options": [
+                "Impossible",
+                "Equally likely as yellow",
+                "Certain",
+                "Unlikely"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "With equal numbers of each color, green and yellow are equally likely."
+            },
+            {
+              "id": "QM20-8",
+              "question": "A spinner has 4 equal parts: 1 red, 3 blue. What is the chance of red?",
+              "options": [
+                "1/4",
+                "2/4",
+                "3/4",
+                "1"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "There is 1 red out of 4 parts, so the probability is 1/4."
+            },
+            {
+              "id": "QM20-9",
+              "question": "The sun rising tomorrow is what kind of event?",
+              "options": [
+                "Impossible",
+                "Unlikely",
+                "Certain",
+                "Equally likely"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "The sun always rises, so it is a certain event."
+            },
+            {
+              "id": "QM20-10",
+              "question": "A bag has 2 red and 8 blue marbles. Picking red is what?",
+              "options": [
+                "Certain",
+                "Likely",
+                "Unlikely",
+                "Impossible"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "There are only 2 red out of 10, so picking red is unlikely."
+            }
+          ]
+        }
+      ],
+      "summative": [
+        {
+          "id": "SM4-1",
+          "question": "How many centimeters are in 1 meter?",
+          "options": [
+            "10",
+            "100",
+            "1000",
+            "50"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "There are 100 centimeters in 1 meter."
+        },
+        {
+          "id": "SM4-2",
+          "question": "How many meters are in 1 kilometer?",
+          "options": [
+            "100",
+            "500",
+            "1000",
+            "10000"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "There are 1000 meters in 1 kilometer."
+        },
+        {
+          "id": "SM4-3",
+          "question": "Convert 2 meters to centimeters.",
+          "options": [
+            "20 cm",
+            "200 cm",
+            "2000 cm",
+            "2 cm"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Since 1 m = 100 cm, 2 m = 2 x 100 = 200 cm."
+        },
+        {
+          "id": "SM4-4",
+          "question": "Which unit is best for measuring the length of a pencil?",
+          "options": [
+            "Kilometer",
+            "Meter",
+            "Centimeter",
+            "Liter"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "A pencil is small, so centimeters are the best unit."
+        },
+        {
+          "id": "SM4-5",
+          "question": "How many millimeters are in 1 centimeter?",
+          "options": [
+            "5",
+            "10",
+            "100",
+            "1000"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "There are 10 millimeters in 1 centimeter."
+        },
+        {
+          "id": "SM4-6",
+          "question": "Convert 3 kilometers to meters.",
+          "options": [
+            "300 m",
+            "3000 m",
+            "30 m",
+            "30000 m"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Since 1 km = 1000 m, 3 km = 3 x 1000 = 3000 m."
+        },
+        {
+          "id": "SM4-7",
+          "question": "Convert 500 cm to meters.",
+          "options": [
+            "5 m",
+            "50 m",
+            "0.5 m",
+            "500 m"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "Since 100 cm = 1 m, 500 cm = 500 divided by 100 = 5 m."
+        },
+        {
+          "id": "SM4-8",
+          "question": "Which unit is best for measuring the distance between two cities?",
+          "options": [
+            "Millimeter",
+            "Centimeter",
+            "Meter",
+            "Kilometer"
+          ],
+          "correctAnswerIndex": 3,
+          "explanation": "Distances between cities are large, so kilometers are best."
+        },
+        {
+          "id": "SM4-9",
+          "question": "How many grams are in 1 kilogram?",
+          "options": [
+            "100",
+            "500",
+            "1000",
+            "10"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "There are 1000 grams in 1 kilogram."
+        },
+        {
+          "id": "SM4-10",
+          "question": "How many milliliters are in 1 liter?",
+          "options": [
+            "10",
+            "100",
+            "1000",
+            "500"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "There are 1000 milliliters in 1 liter."
+        },
+        {
+          "id": "SM4-11",
+          "question": "Convert 2 kilograms to grams.",
+          "options": [
+            "200 g",
+            "2000 g",
+            "20 g",
+            "20000 g"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Since 1 kg = 1000 g, 2 kg = 2 x 1000 = 2000 g."
+        },
+        {
+          "id": "SM4-12",
+          "question": "Which unit is best for measuring the weight of an apple?",
+          "options": [
+            "Kilometer",
+            "Gram",
+            "Liter",
+            "Meter"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "An apple is light, so grams are the best unit."
+        },
+        {
+          "id": "SM4-13",
+          "question": "Convert 3 liters to milliliters.",
+          "options": [
+            "300 ml",
+            "3000 ml",
+            "30 ml",
+            "30000 ml"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Since 1 L = 1000 ml, 3 L = 3 x 1000 = 3000 ml."
+        },
+        {
+          "id": "SM4-14",
+          "question": "Convert 5000 grams to kilograms.",
+          "options": [
+            "5 kg",
+            "50 kg",
+            "0.5 kg",
+            "500 kg"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "5000 g divided by 1000 = 5 kg."
+        },
+        {
+          "id": "SM4-15",
+          "question": "Which unit is best for measuring water in a bottle?",
+          "options": [
+            "Gram",
+            "Kilometer",
+            "Milliliter",
+            "Meter"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "Liquid like water is measured in milliliters or liters."
+        },
+        {
+          "id": "SM4-16",
+          "question": "Convert 2500 ml to liters.",
+          "options": [
+            "2.5 L",
+            "25 L",
+            "0.25 L",
+            "250 L"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "2500 ml divided by 1000 = 2.5 L."
+        },
+        {
+          "id": "SM4-17",
+          "question": "What kind of graph uses bars to show data?",
+          "options": [
+            "Line graph",
+            "Bar graph",
+            "Pie chart",
+            "Number line"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A bar graph uses rectangular bars to show and compare data."
+        },
+        {
+          "id": "SM4-18",
+          "question": "What graph is shaped like a circle divided into slices?",
+          "options": [
+            "Bar graph",
+            "Line graph",
+            "Pie chart",
+            "Table"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "A pie chart is a circle divided into slices showing parts of a whole."
+        },
+        {
+          "id": "SM4-19",
+          "question": "What kind of graph is best for showing change over time?",
+          "options": [
+            "Pie chart",
+            "Line graph",
+            "Bar graph",
+            "Picture"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "A line graph is best for showing how something changes over time."
+        },
+        {
+          "id": "SM4-20",
+          "question": "A bar graph shows: Mon 5, Tue 8, Wed 7. What is the total?",
+          "options": [
+            "18",
+            "20",
+            "15",
+            "21"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "5 + 8 + 7 = 20."
+        },
+        {
+          "id": "SM4-21",
+          "question": "From the data 4, 6, 8, what is the average (mean)?",
+          "options": [
+            "5",
+            "6",
+            "7",
+            "8"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Average = (4 + 6 + 8) divided by 3 = 18 divided by 3 = 6."
+        },
+        {
+          "id": "SM4-22",
+          "question": "A pie chart shows 50% for blue. What fraction is that?",
+          "options": [
+            "1/4",
+            "1/2",
+            "3/4",
+            "1/3"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "50% equals 1/2 of the whole pie chart."
+        },
+        {
+          "id": "SM4-23",
+          "question": "A bar graph shows apples: 10, bananas: 6. How many more apples than bananas?",
+          "options": [
+            "2",
+            "4",
+            "6",
+            "16"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "10 - 6 = 4 more apples."
+        },
+        {
+          "id": "SM4-24",
+          "question": "What is the average of 10, 20, and 30?",
+          "options": [
+            "15",
+            "20",
+            "25",
+            "30"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Average = (10 + 20 + 30) divided by 3 = 60 divided by 3 = 20."
+        },
+        {
+          "id": "SM4-25",
+          "question": "What is the mean (average) of 2, 4, and 6?",
+          "options": [
+            "3",
+            "4",
+            "5",
+            "6"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Mean = (2 + 4 + 6) divided by 3 = 12 divided by 3 = 4."
+        },
+        {
+          "id": "SM4-26",
+          "question": "What is the median (middle value) of 3, 7, 5?",
+          "options": [
+            "3",
+            "5",
+            "7",
+            "15"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Order them: 3, 5, 7. The middle value is 5."
+        },
+        {
+          "id": "SM4-27",
+          "question": "What is the mode of 2, 3, 3, 5, 7?",
+          "options": [
+            "2",
+            "3",
+            "5",
+            "7"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The mode is the number that appears most often, which is 3."
+        },
+        {
+          "id": "SM4-28",
+          "question": "What is the mean of 10, 20, 30, 40?",
+          "options": [
+            "20",
+            "25",
+            "30",
+            "100"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Mean = (10 + 20 + 30 + 40) divided by 4 = 100 divided by 4 = 25."
+        },
+        {
+          "id": "SM4-29",
+          "question": "What is the median of 1, 2, 3, 4, 5?",
+          "options": [
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The middle value of 1, 2, 3, 4, 5 is 3."
+        },
+        {
+          "id": "SM4-30",
+          "question": "What is the mode of 4, 4, 4, 6, 8?",
+          "options": [
+            "4",
+            "6",
+            "8",
+            "22"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "The number 4 appears most often, so the mode is 4."
+        },
+        {
+          "id": "SM4-31",
+          "question": "What does 'mean' tell us about a set of numbers?",
+          "options": [
+            "The biggest number",
+            "The average",
+            "The smallest number",
+            "The middle"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "The mean is the average, found by adding all numbers and dividing by how many there are."
+        },
+        {
+          "id": "SM4-32",
+          "question": "What is the mean of 5 and 15?",
+          "options": [
+            "5",
+            "10",
+            "15",
+            "20"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "Mean = (5 + 15) divided by 2 = 20 divided by 2 = 10."
+        },
+        {
+          "id": "SM4-33",
+          "question": "If something will definitely happen, we say it is what?",
+          "options": [
+            "Impossible",
+            "Unlikely",
+            "Certain",
+            "Likely"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "An event that will definitely happen is certain."
+        },
+        {
+          "id": "SM4-34",
+          "question": "If something can never happen, we say it is what?",
+          "options": [
+            "Certain",
+            "Likely",
+            "Impossible",
+            "Unlikely"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "An event that can never happen is impossible."
+        },
+        {
+          "id": "SM4-35",
+          "question": "A coin has 2 sides. What is the probability of getting heads?",
+          "options": [
+            "1/4",
+            "1/2",
+            "1/3",
+            "1"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "There is 1 head out of 2 sides, so the probability is 1/2."
+        },
+        {
+          "id": "SM4-36",
+          "question": "A bag has 3 red and 1 blue marble. What is the chance of picking red?",
+          "options": [
+            "1/4",
+            "2/4",
+            "3/4",
+            "1"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "There are 3 red out of 4 total marbles, so the probability is 3/4."
+        },
+        {
+          "id": "SM4-37",
+          "question": "Rolling a 7 on a normal 6-sided die is what?",
+          "options": [
+            "Certain",
+            "Likely",
+            "Impossible",
+            "Unlikely"
+          ],
+          "correctAnswerIndex": 2,
+          "explanation": "A normal die only goes up to 6, so rolling a 7 is impossible."
+        },
+        {
+          "id": "SM4-38",
+          "question": "A die has 6 sides. What is the probability of rolling a 3?",
+          "options": [
+            "1/3",
+            "1/6",
+            "3/6",
+            "1/2"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "There is 1 way to roll a 3 out of 6 sides, so the probability is 1/6."
+        },
+        {
+          "id": "SM4-39",
+          "question": "A bag has 5 green and 5 yellow balls. Picking green is how likely?",
+          "options": [
+            "Impossible",
+            "Equally likely as yellow",
+            "Certain",
+            "Unlikely"
+          ],
+          "correctAnswerIndex": 1,
+          "explanation": "With equal numbers of each color, green and yellow are equally likely."
+        },
+        {
+          "id": "SM4-40",
+          "question": "A spinner has 4 equal parts: 1 red, 3 blue. What is the chance of red?",
+          "options": [
+            "1/4",
+            "2/4",
+            "3/4",
+            "1"
+          ],
+          "correctAnswerIndex": 0,
+          "explanation": "There is 1 red out of 4 parts, so the probability is 1/4."
+        }
+      ]
+    }
+  ]
+}

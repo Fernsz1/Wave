@@ -54,7 +54,7 @@ class QuizAttempt(models.Model):
     topic_id = models.CharField(max_length=40)
     lesson_id = models.CharField(max_length=40, blank=True, default="")
     score = models.IntegerField()
-    perfect_score = models.IntegerField(default=3)
+    perfect_score = models.IntegerField(default=10)
     answers = models.JSONField(default=list)
     completed_at = models.CharField(max_length=20)  # YYYY-MM-DD, matches app
 
@@ -71,6 +71,7 @@ class SummativeResult(models.Model):
     passed = models.BooleanField(default=False)
     feedback = models.TextField(blank=True, default="")
     failed_items = models.JSONField(default=list)  # FailedItem[]
+    attempts = models.IntegerField(default=0)
 
     class Meta:
         unique_together = ("student", "lesson_id")
@@ -84,6 +85,7 @@ class RemediationMaterial(models.Model):
     content = models.TextField()
     teacher_notes = models.TextField(blank=True, default="")
     created_quiz = models.JSONField(default=list)  # QuizQuestion[]
+    created_summative = models.JSONField(default=list)  # QuizQuestion[] — custom summative from AI wizard
     publish_date = models.CharField(max_length=20)
     target_section = models.CharField(max_length=80)  # whole-section recipient
     is_published = models.BooleanField(default=True)

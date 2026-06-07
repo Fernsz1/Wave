@@ -5,8 +5,8 @@
 
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { 
-  Search, Eye, Wand2, X, Sparkles, BookOpen, GraduationCap, 
+import {
+  Search, Eye, X,
   Award, TrendingUp, AlertCircle, FileBarChart, CheckCircle2, UserCircle
 } from 'lucide-react';
 import { StudentUser, StudentProgress } from '../types';
@@ -14,7 +14,6 @@ import { MOCK_LESSONS, MOCK_LESSONS_BY_SUBJECT } from '../data';
 
 interface TeacherStudentsProps {
   progressRecords: Record<string, StudentProgress>;
-  onLaunchWizardForStudent: (student: StudentUser, topicId: string) => void;
   activeSubject: string;
   setActiveSubject: (sbj: string) => void;
   activeSection: string;
@@ -23,15 +22,14 @@ interface TeacherStudentsProps {
   onEnrollStudent: (student: StudentUser) => void;
 }
 
-export default function TeacherStudents({ 
-  progressRecords, 
-  onLaunchWizardForStudent,
+export default function TeacherStudents({
+  progressRecords,
   activeSubject,
-  setActiveSubject,
+  setActiveSubject: _setActiveSubject,
   activeSection,
-  setActiveSection,
+  setActiveSection: _setActiveSection,
   students,
-  onEnrollStudent,
+  onEnrollStudent: _onEnrollStudent,
 }: TeacherStudentsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStudent, setSelectedStudent] = useState<StudentUser | null>(null);
@@ -41,47 +39,38 @@ export default function TeacherStudents({
   const activeTopicIds = new Set(currentLessons.flatMap(l => l.topics.map(t => t.id)));
   const activeLessonIds = new Set(currentLessons.map(l => l.id));
 
-  // Consistent section filtering
+  // Consistent section filtering — match against section field, fall back to gradeLevel
   const sectionStudents = activeSection === 'All Sections'
     ? students
-    : students.filter(student => student.gradeLevel === activeSection);
+    : students.filter(student => (student.section || student.gradeLevel) === activeSection);
 
   // Compile detailed table rows for enrollees
   const studentsCompiled = sectionStudents.map(student => {
     const prog = progressRecords[student.lrn];
     
-    // Default simulated parameters for those who haven't completed anything yet to maintain consistency
-    // However, if the progress record exists, we read from it!
     let completedTopics = 0;
-    let quizAvg = 85; 
-    let summativeScore = 17;
-    let overallGrade = 84;
-    let hasRealProgress = false;
+    let quizAvg = 0;
+    let summativeScore = 0;
+    let overallGrade = 0;
+    const hasRealProgress = !!prog;
 
-    // Calculate progress per lesson
+    // Calculate progress per lesson — only from real data
     const activeLessonsProgress = currentLessons.map(lesson => {
       const totalCount = lesson.topics.length;
-      let completedCount = 0;
-      if (prog) {
-        completedCount = lesson.topics.filter(t => prog.completedTopicIds.includes(t.id)).length;
-      } else {
-        // Deterministic mock progress for visual consistency
-        const lrnId = parseInt(student.lrn.slice(-4)) || 0;
-        completedCount = totalCount > 0 ? (2 + (lrnId % (totalCount + 1))) % (totalCount + 1) : 0;
-        if (completedCount > totalCount) completedCount = totalCount;
-      }
+      const completedCount = prog
+        ? lesson.topics.filter(t => prog.completedTopicIds.includes(t.id)).length
+        : 0;
       return {
         lessonId: lesson.id,
-        lessonTitle: lesson.title.split(':')[0], // e.g. "Lesson 1"
+        lessonTitle: lesson.title.split(':')[0],
         completedCount,
         totalCount
       };
     });
 
     if (prog) {
-      hasRealProgress = true;
       completedTopics = prog.completedTopicIds.filter(id => activeTopicIds.has(id)).length;
-      
+
       let scoreSum = 0;
       let perfectSum = 0;
       Object.values(prog.quizAttempts).forEach(att => {
@@ -90,44 +79,28 @@ export default function TeacherStudents({
           perfectSum += att.perfectScore;
         }
       });
-
       if (perfectSum > 0) {
         quizAvg = Math.round((scoreSum / perfectSum) * 100);
-      } else {
-        quizAvg = 0;
       }
 
-      // Check summatives
       const sumList = Object.entries(prog.summativeScores)
         .filter(([lessonId]) => activeLessonIds.has(lessonId))
         .map(([_, v]) => v);
 
       if (sumList.length > 0) {
-        summativeScore = sumList[0].score; // e.g. out of 20
-        const sumPct = Math.round((summativeScore / 20) * 105);
-        overallGrade = Math.round(quizAvg * 0.4 + sumPct * 0.6);
-      } else {
-        // Fallback for visual data
-        const fallbackIndex = parseInt(student.lrn.slice(-2)) % 10;
-        summativeScore = 14 + (fallbackIndex % 5);
+        summativeScore = sumList[0].score;
         const sumPct = Math.round((summativeScore / 20) * 100);
         overallGrade = Math.round(quizAvg * 0.4 + sumPct * 0.6);
+      } else if (perfectSum > 0) {
+        overallGrade = quizAvg;
       }
-    } else {
-      // Seed nice values for other classmates to populate a realistic class table
-      const fallbackIndex = parseInt(student.lrn.slice(-2)) % 10;
-      completedTopics = activeLessonsProgress.reduce((sum, item) => sum + item.completedCount, 0);
-      quizAvg = 75 + (fallbackIndex % 5) * 5;
-      summativeScore = 14 + (fallbackIndex % 4);
-      const sumPct = Math.round((summativeScore / 20) * 100);
-      overallGrade = Math.round(quizAvg * 0.4 + sumPct * 0.6);
     }
 
     // Determine Status
-    let status: 'Passing' | 'Needs Remediation' | 'Needs Assessment' = 'Passing';
-    if (overallGrade === 0) {
-      status = 'Needs Assessment';
-    } else if (overallGrade < 70) {
+    let status: 'Passing' | 'Needs Remediation' | 'Needs Assessment' = 'Needs Assessment';
+    if (overallGrade >= 70) {
+      status = 'Passing';
+    } else if (overallGrade > 0) {
       status = 'Needs Remediation';
     }
 
@@ -141,7 +114,7 @@ export default function TeacherStudents({
     const currentLessonTopicsDone = !!currentLesson && currentLesson.completedCount === currentLesson.totalCount;
     const currentSummativeTaken = prog
       ? Object.keys(prog.summativeScores).includes(currentLesson?.lessonId ?? '')
-      : true;
+      : false;
 
     return {
       student,
@@ -212,9 +185,6 @@ export default function TeacherStudents({
             </thead>
             <tbody className="divide-y divide-slate-100/75">
               {filteredStudents.map((row) => {
-                const totalTopicsCount = currentLessons.reduce((sum, l) => sum + l.topics.length, 0);
-                const completionPercentage = totalTopicsCount > 0 ? Math.round((row.completedTopics / totalTopicsCount) * 100) : 0;
-                
                 const statusColors = {
                   Passing: 'bg-emerald-50 text-emerald-700 border border-emerald-100 shadow-[0_2px_8px_rgba(16,185,129,0.04)]',
                   'Needs Remediation': 'bg-amber-50 text-amber-700 border border-amber-100 shadow-[0_2px_8px_rgba(245,158,11,0.04)] animate-pulse',
@@ -283,16 +253,6 @@ export default function TeacherStudents({
                           <Eye className="h-3.5 w-3.5" /> View Record
                         </button>
                         
-                        {row.status === 'Needs Remediation' && (
-                          <button
-                            type="button"
-                            onClick={() => onLaunchWizardForStudent(row.student, "L1-T2")}
-                            className="px-2.5 py-1.5 text-amber-700 bg-amber-50 hover:bg-amber-100 active:bg-amber-200/50 rounded-lg border border-amber-200/80 transition-all font-bold text-[10px] inline-flex items-center gap-1 cursor-pointer"
-                            title="Launch educational remediation worksheet generator"
-                          >
-                            <Wand2 className="h-3.5 w-3.5" /> Remedial
-                          </button>
-                        )}
                       </div>
                     </td>
                   </tr>

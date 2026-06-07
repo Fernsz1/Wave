@@ -7,15 +7,15 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { GraduationCap, LogIn, Sparkles, User, ShieldAlert } from 'lucide-react';
 import { StudentUser, TeacherUser, UserRole } from '../types';
-import { MOCK_TEACHERS } from '../data';
 import WaveLogo from './WaveLogo';
 
 interface LoginScreenProps {
   onLoginSuccess: (role: UserRole, user: StudentUser | TeacherUser, presetSubject?: string, presetSection?: string) => void;
   students: StudentUser[];
+  teachers: TeacherUser[];
 }
 
-export default function LoginScreen({ onLoginSuccess, students }: LoginScreenProps) {
+export default function LoginScreen({ onLoginSuccess, students, teachers }: LoginScreenProps) {
   const [role, setRole] = useState<UserRole>('student');
   
   // Student inputs
@@ -61,35 +61,20 @@ export default function LoginScreen({ onLoginSuccess, students }: LoginScreenPro
         setError('Please enter both your Teacher ID and Name.');
         return;
       }
-      
-      const found = MOCK_TEACHERS.find(t => t.teacherId === teacherId.trim());
-      if (found) {
-        onLoginSuccess('teacher', found);
-      } else {
-        const newTeacher: TeacherUser = {
-          teacherId: teacherId.trim(),
-          name: teacherName.trim(),
-          department: 'General Academics'
-        };
-        onLoginSuccess('teacher', newTeacher);
+
+      const match = teachers.find(t => t.teacherId === teacherId.trim());
+      if (!match) {
+        setError('Teacher ID not recognized. Please contact your administrator.');
+        return;
       }
+      if (match.name.toLowerCase() !== teacherName.trim().toLowerCase()) {
+        setError('Incorrect name for this Teacher ID. Please try again.');
+        return;
+      }
+      onLoginSuccess('teacher', match);
     }
   };
 
-  const handleShortcutLogin = (selectedRole: UserRole, identifier: string, presetSubject?: string, presetSection?: string) => {
-    setError('');
-    if (selectedRole === 'student') {
-      const found = students.find(s => s.lrn === identifier);
-      if (found) {
-        onLoginSuccess('student', found);
-      }
-    } else {
-      const found = MOCK_TEACHERS.find(t => t.teacherId === identifier);
-      if (found) {
-        onLoginSuccess('teacher', found, presetSubject, presetSection);
-      }
-    }
-  };
 
   return (
     <div id="login-container" className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-4">
@@ -235,55 +220,16 @@ export default function LoginScreen({ onLoginSuccess, students }: LoginScreenPro
             </button>
           </form>
 
-          {/* Quick Demo Shortcuts */}
-          <div className="mt-8 pt-6 border-t border-slate-100">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3.5 text-center">
-              Quick Demo shortcuts
-            </h3>
-            <div className="space-y-2">
-              <button
-                type="button"
-                id="dev-login-juan"
-                onClick={() => handleShortcutLogin('student', '101234567891')}
-                className="w-full bg-slate-50 hover:bg-emerald-50 border border-slate-100 hover:border-emerald-200 p-2.5 rounded-xl text-left text-xs text-slate-600 hover:text-emerald-800 transition-all flex items-center justify-between"
-              >
-                <span><strong>Student Profile</strong>: Sophia Cruz (Active User / Top Academic Rank)</span>
-                <span className="text-[10px] bg-emerald-100/70 text-emerald-700 px-1.5 py-0.5 rounded font-bold uppercase">Pass</span>
-              </button>
-
-              <button
-                type="button"
-                id="dev-login-jasmine"
-                onClick={() => handleShortcutLogin('student', '101234567900')}
-                className="w-full bg-slate-50 hover:bg-amber-50 border border-slate-100 hover:border-amber-200 p-2.5 rounded-xl text-left text-xs text-slate-600 hover:text-amber-800 transition-all flex items-center justify-between"
-              >
-                <span><strong>Student Profile</strong>: Jacob Flores (Flagged for Remedial Material)</span>
-                <span className="text-[10px] bg-amber-100 border border-amber-200 text-amber-700 px-1.5 py-0.5 rounded font-bold uppercase">Alert</span>
-              </button>
-
-              <button
-                type="button"
-                id="dev-login-teacher"
-                onClick={() => handleShortcutLogin('teacher', 'T-2026-001')}
-                className="w-full bg-slate-50 hover:bg-blue-50 border border-slate-100 hover:border-blue-200 p-2.5 rounded-xl text-left text-xs text-slate-600 hover:text-blue-800 transition-all flex items-center justify-between font-sans"
-              >
-                <span><strong>Teacher Portal</strong>: Mrs. Elena Santos (Coordinator & Assessor)</span>
-                <span className="text-[10px] bg-blue-100 border border-blue-200 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase shrink-0">Admin</span>
-              </button>
-
-              <button
-                type="button"
-                id="dev-login-teacher-warning"
-                onClick={() => handleShortcutLogin('teacher', 'T-2026-001', 'science', 'Grade 6 - Section Newton')}
-                className="w-full bg-slate-50 hover:bg-rose-50 border border-slate-100 hover:border-rose-200 p-2.5 rounded-xl text-left text-xs text-slate-600 hover:text-rose-800 transition-all flex items-center justify-between font-sans animate-pulse border-dashed"
-              >
-                <span><strong>Teacher Warning Demo</strong>: Mrs. Elena Santos (Grade 6 Newton: 28% Failing Alert)</span>
-                <span className="text-[10px] bg-rose-150 border border-rose-250 text-rose-700 px-1.5 py-0.5 rounded font-bold uppercase shrink-0">28% Fail Alert</span>
-              </button>
-            </div>
-          </div>
         </div>
       </motion.div>
+
+      <button
+        type="button"
+        onClick={() => { localStorage.clear(); window.location.reload(); }}
+        className="mt-4 text-[11px] text-slate-400 hover:text-red-400 transition-colors underline underline-offset-2"
+      >
+        Reset App Data
+      </button>
     </div>
   );
 }

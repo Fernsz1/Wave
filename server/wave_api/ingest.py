@@ -31,7 +31,7 @@ def _save_progress(p: dict) -> None:
             topic_id=topic_id,
             defaults={
                 "score": att["score"],
-                "perfect_score": att.get("perfectScore", 3),
+                "perfect_score": att.get("perfectScore", 10),
                 "answers": att.get("answers", []),
                 "completed_at": att.get("completedAt", ""),
             },
@@ -51,16 +51,24 @@ def _save_summative_results(p: dict) -> None:
     student = Student.objects.filter(lrn=p["studentLrn"]).first()
     if not student:
         return
-    student.summatives.update_or_create(
+    passed = p.get("passed", False)
+    feedback = p.get("feedback") or (
+        "Good job! You passed the summative assessment." if passed
+        else "Keep reviewing the topics and ask your teacher for help."
+    )
+    obj, _ = student.summatives.update_or_create(
         lesson_id=p["lessonId"],
         defaults={
             "score": p["score"],
             "total": p.get("total", 20),
             "percent": p.get("percent", 0),
-            "passed": p.get("passed", False),
+            "passed": passed,
+            "feedback": feedback,
             "failed_items": p.get("failedItems", []),
         },
     )
+    obj.attempts = min(obj.attempts + 1, 3)
+    obj.save(update_fields=["attempts"])
 
 
 def _save_remediation(p: dict, subject: str) -> None:
@@ -73,6 +81,7 @@ def _save_remediation(p: dict, subject: str) -> None:
             "content": p["content"],
             "teacher_notes": p.get("teacherNotes", ""),
             "created_quiz": p.get("createdQuiz", []),
+            "created_summative": p.get("createdSummative", []),
             "publish_date": p.get("publishDate", ""),
             "target_section": p["targetSection"],
             "is_published": p.get("isPublished", True),

@@ -5,9 +5,9 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Home, BookOpen, Trophy, BrainCircuit, User, 
-  Users, BarChart, LogOut, GraduationCap, Clock, Sparkles,
+import {
+  Home, BookOpen, Trophy, BrainCircuit,
+  Users, BarChart, GraduationCap, Sparkles,
   Lock, ArrowRight
 } from 'lucide-react';
 
@@ -17,15 +17,8 @@ import { UserRole, StudentUser, TeacherUser, StudentProgress, TeacherRemediation
 // Data-access seam (Mock by default; Http+MQTT when VITE_API_BASE is set)
 import { createRepository, RepoUpdate } from './repo';
 
-// Seed Mock Data
-import { 
-  MOCK_STUDENTS, 
-  MOCK_TEACHERS, 
-  MOCK_LESSONS, 
-  MOCK_LESSONS_BY_SUBJECT,
-  INITIAL_PROGRESS_RECORDS, 
-  INITIAL_REMEDIATION_MATERIALS 
-} from './data';
+// Lesson catalog from JSON content files
+import { MOCK_LESSONS, MOCK_LESSONS_BY_SUBJECT } from './data';
 
 // Custom Child Components
 import LoginScreen from './components/LoginScreen';
@@ -66,26 +59,26 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<StudentUser | TeacherUser | null>(null);
   const [role, setRole] = useState<UserRole | null>(null);
   
-  // Dynamic list of enrolled students (with local storage backing)
+  // Dynamic list of enrolled students — seeded with one demo account on first launch
   const [students, setStudents] = useState<StudentUser[]>(() => {
     const stored = localStorage.getItem('wave_enrolled_students');
     if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        const hasNewGrades = parsed.some((s: any) => s.gradeLevel?.includes('Grade 4') || s.gradeLevel?.includes('Grade 6'));
-        if (hasNewGrades) {
-          return parsed;
-        }
-      } catch (e) {
-        // Fallback
-      }
+      try { return JSON.parse(stored); } catch { /* fall through */ }
     }
-    const initial = MOCK_STUDENTS.map(s => ({
-      ...s,
-      pin: s.pin || '123456'
-    }));
-    localStorage.setItem('wave_enrolled_students', JSON.stringify(initial));
-    return initial;
+    const seed: StudentUser[] = [{ lrn: '101234567891', name: 'Maria Santos', gradeLevel: 'Grade 6', section: 'Grade 6 - Section Einstein', pin: '123456' }];
+    localStorage.setItem('wave_enrolled_students', JSON.stringify(seed));
+    return seed;
+  });
+
+  // Registered teachers — seeded with one demo account on first launch
+  const [teachers, setTeachers] = useState<TeacherUser[]>(() => {
+    const stored = localStorage.getItem('wave_enrolled_teachers');
+    if (stored) {
+      try { return JSON.parse(stored); } catch { /* fall through */ }
+    }
+    const seed: TeacherUser[] = [{ teacherId: 'T-2026-001', name: 'Mrs. Elena Santos', department: 'General Academics' }];
+    localStorage.setItem('wave_enrolled_teachers', JSON.stringify(seed));
+    return seed;
   });
 
   const handleEnrollStudent = (newStudent: StudentUser) => {
@@ -104,14 +97,24 @@ export default function App() {
   // Tab states: 学生 default -> 'dashboard', 教师 default -> 'dashboard'
   const [activeTab, setActiveTab] = useState<string>('dashboard');
 
-  // Dynamic system stores
-  const [progressRecords, setProgressRecords] = useState<Record<string, StudentProgress>>(INITIAL_PROGRESS_RECORDS);
-  const [remediationMaterials, setRemediationMaterials] = useState<TeacherRemediationMaterial[]>(INITIAL_REMEDIATION_MATERIALS);
+  // Dynamic system stores — persisted to localStorage in mock mode so attempt counts survive page reloads
+  const [progressRecords, setProgressRecords] = useState<Record<string, StudentProgress>>(() => {
+    const stored = localStorage.getItem('wave_progress_records');
+    if (stored) { try { return JSON.parse(stored); } catch { /* fall through */ } }
+    return {};
+  });
+  const [remediationMaterials, setRemediationMaterials] = useState<TeacherRemediationMaterial[]>([]);
 
   // Repository seam + catalog store. Mock keeps the in-memory defaults above;
   // the Http repo replaces them from the server on mount.
   const repo = useMemo(() => createRepository(), []);
   const [lessonsBySubject, setLessonsBySubject] = useState<Record<string, Lesson[]>>(MOCK_LESSONS_BY_SUBJECT);
+
+  // Persist progress to localStorage on every change so progress survives refreshes
+  // even if the server push hasn't completed yet (live mode writes to server too).
+  useEffect(() => {
+    localStorage.setItem('wave_progress_records', JSON.stringify(progressRecords));
+  }, [progressRecords]);
 
   // Apply a live "down" update arriving over MQTT (Http mode only).
   const applyRepoUpdate = (u: RepoUpdate) => {
@@ -129,8 +132,11 @@ export default function App() {
     repo.bootstrap()
       .then(b => {
         setStudents(b.students);
+        setTeachers(b.teachers);
         setLessonsBySubject(b.lessonsBySubject);
-        setProgressRecords(b.progressRecords);
+        // Merge: server wins per-student, but keep any locally-cached records the
+        // server doesn't know about yet (e.g. a push that hasn't flushed).
+        setProgressRecords(prev => ({ ...prev, ...b.progressRecords }));
         setRemediationMaterials(b.remediationMaterials);
       })
       .catch(e => console.error('[wave] bootstrap failed', e));
@@ -140,7 +146,7 @@ export default function App() {
   const [activeSubject, setActiveSubject] = useState<string>('science');
   // Default to a section that has seeded, active student data so the dashboard
   // opens onto meaningful records (and live updates have somewhere to land).
-  const [activeSection, setActiveSection] = useState<string>('Grade 4 - Section Newton');
+  const [activeSection, setActiveSection] = useState<string>('All Sections');
   const [hasSelectedSubject, setHasSelectedSubject] = useState<boolean>(false);
 
   // Live "down" subscription. Re-runs when the viewed section/subject changes so
@@ -171,18 +177,6 @@ export default function App() {
   const [wizardPreSelectedStudent, setWizardPreSelectedStudent] = useState<StudentUser | null>(null);
   const [wizardPreSelectedTopicId, setWizardPreSelectedTopicId] = useState<string>("");
 
-  // Simulated system time sync
-  const [currentTime, setCurrentTime] = useState("");
-
-  useEffect(() => {
-    // Initial sync
-    setCurrentTime(new Date("2026-06-05T06:31:34Z").toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-    
-    const interval = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Handle Logouts
   const handleLogout = () => {
@@ -190,7 +184,7 @@ export default function App() {
     setRole(null);
     setActiveTab('dashboard');
     setActiveSubject('science');
-    setActiveSection('Grade 4 - Section Newton');
+    setActiveSection('All Sections');
     setHasSelectedSubject(false);
   };
 
@@ -209,11 +203,14 @@ export default function App() {
       }
     }
 
-    // Establish a write token when backed by the server. The live subscription
-    // itself is (re)created by the effect below so it follows section changes.
+    // Establish a write token when backed by the server. After the token is
+    // ready, flush any writes that were queued before it arrived (outbox).
     if (repo.isLive) {
       const principalId = selectedRole === 'student' ? (user as StudentUser).lrn : (user as TeacherUser).teacherId;
-      repo.authenticate(selectedRole, principalId, user.name).catch(() => {});
+      const pin = selectedRole === 'student' ? (user as StudentUser).pin : undefined;
+      repo.authenticate(selectedRole, principalId, user.name, pin)
+        .then(() => repo.flushPendingWrites())
+        .catch(() => {});
     }
   };
 
@@ -229,15 +226,19 @@ export default function App() {
       summativeScores: {}
     };
 
-    // Update attempts
+    // Update attempts (cap tracking at 3)
     const updatedAttempts = { ...originalProgress.quizAttempts };
-    updatedAttempts[topicId] = {
-      topicId,
-      score,
-      perfectScore: 3, // Each topic quiz is standard 3 points size
-      answers,
-      completedAt: new Date().toISOString().split('T')[0]
-    };
+    const prevAttempts = originalProgress.quizAttempts[topicId]?.attempts ?? 0;
+    if (prevAttempts < 3) {
+      updatedAttempts[topicId] = {
+        topicId,
+        score,
+        perfectScore: 10,
+        answers,
+        completedAt: new Date().toISOString().split('T')[0],
+        attempts: prevAttempts + 1
+      };
+    }
 
     // Add completion identifier
     const updatedCompletions = [...originalProgress.completedTopicIds];
@@ -270,10 +271,13 @@ export default function App() {
     if (!originalProgress) return;
 
     const updatedSummatives = { ...originalProgress.summativeScores };
+    const prevSummativeAttempts = originalProgress.summativeScores[lessonId]?.attempts ?? 0;
+    if (prevSummativeAttempts >= 3) return; // already at max attempts
     updatedSummatives[lessonId] = {
       score,
       perfectScore: 20,
-      feedback: score >= 15 ? "Outstanding grasp of linear lists characteristics." : "Acceptable attempt, slight review recommended."
+      feedback: score >= 12 ? "Good job! You passed the summative assessment." : "Keep reviewing the topics and ask your teacher for help.",
+      attempts: prevSummativeAttempts + 1
     };
 
     const updatedProgress: StudentProgress = {
@@ -311,15 +315,8 @@ export default function App() {
     }
   };
 
-  // Hotkey triggers from tables to load wizard
-  const handleHotLaunchWizard = (student: StudentUser, topicId: string) => {
-    setWizardPreSelectedStudent(student);
-    setWizardPreSelectedTopicId(topicId);
-    setShowWizard(true);
-  };
-
   // Trigger remedial from Student screen
-  const handleStudentJumpToRemedial = (material: TeacherRemediationMaterial) => {
+  const handleStudentJumpToRemedial = (_material: TeacherRemediationMaterial) => {
     setActiveTab('lessons');
     // Open reading with remedial parameters in StudentLessons components
     // We can simulate an active tutorial load.
@@ -332,7 +329,7 @@ export default function App() {
       {/* AUTHENTICATION OVERLAY */}
       {/* ────────────────────────────────────────────────────────── */}
       {!currentUser && (
-        <LoginScreen onLoginSuccess={handleLoginSuccess} students={students} />
+        <LoginScreen onLoginSuccess={handleLoginSuccess} students={students} teachers={teachers} />
       )}
 
       {currentUser && (
@@ -570,7 +567,7 @@ export default function App() {
                               progress={progressRecords[(currentUser as StudentUser).lrn] || { studentLrn: (currentUser as StudentUser).lrn, completedTopicIds: [], quizAttempts: {}, summativeScores: {} }}
                               lessons={currentLessons}
                               remediationMaterials={remediationMaterials}
-                              onViewTopic={(topicId, lessonId) => {
+                              onViewTopic={(topicId, _lessonId) => {
                                 // Find subject key having this topic ID across all subjects
                                 let foundSubject = 'science';
                                 for (const [subKey, subLessons] of Object.entries(MOCK_LESSONS_BY_SUBJECT)) {
@@ -585,7 +582,7 @@ export default function App() {
                                 setHasSelectedSubject(true);
                                 setActiveTab('lessons');
                               }}
-                              onTakeQuiz={(topicId, lessonId) => {
+                              onTakeQuiz={(topicId, _lessonId) => {
                                 // Find subject key having this topic ID across all subjects
                                 let foundSubject = 'science';
                                 for (const [subKey, subLessons] of Object.entries(MOCK_LESSONS_BY_SUBJECT)) {
@@ -665,7 +662,9 @@ export default function App() {
                                 setWizardPreSelectedTopicId("");
                                 setShowWizard(true);
                               }}
-                              onLaunchWizardForStudent={handleHotLaunchWizard}
+                              onPublishRemedial={(material) => {
+                                setRemediationMaterials(prev => [material, ...prev]);
+                              }}
                               setActiveTab={setActiveTab}
                               activeSubject={activeSubject}
                               setActiveSubject={setActiveSubject}
@@ -678,7 +677,6 @@ export default function App() {
                           {activeTab === 'students' && (
                             <TeacherStudents
                               progressRecords={progressRecords}
-                              onLaunchWizardForStudent={handleHotLaunchWizard}
                               activeSubject={activeSubject}
                               setActiveSubject={setActiveSubject}
                               activeSection={activeSection}

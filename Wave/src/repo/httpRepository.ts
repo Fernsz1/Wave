@@ -9,14 +9,14 @@
  * arrive over MQTT — the proven last-mile path. Writes that fail offline are
  * queued in the outbox and flushed on the next successful call.
  */
-import { decode, encode, Token } from '../protocol/codec';
+import { decode, Token } from '../protocol/codec';
 import { SCHEMA_BY_TYPE } from '../schemas';
 import { buildEnvelope, parseEnvelope } from '../sync/envelope';
 import { Outbox, LocalStorageStore } from '../sync/outbox';
 import { MqttTransport, Transport } from '../sync/transport';
 import { topicFor, slug } from '../sync/topics';
-import { Lesson, StudentProgress, StudentUser, TeacherRemediationMaterial } from '../types';
-import { RepoBootstrap, RepoUpdate, SubscribeOpts, QuizAttemptWrite, SummativeWrite, WaveRepository } from './repository';
+import { Lesson, StudentProgress, StudentUser, TeacherUser, TeacherRemediationMaterial } from '../types';
+import { RepoBootstrap, SubscribeOpts, QuizAttemptWrite, SummativeWrite, WaveRepository } from './repository';
 
 const SUBJECTS = ['science', 'mathematics', 'english'];
 
@@ -43,10 +43,10 @@ export class HttpRepository implements WaveRepository {
     return res.json();
   }
 
-  async authenticate(role: 'student' | 'teacher', principalId: string, name?: string): Promise<void> {
+  async authenticate(role: 'student' | 'teacher', principalId: string, name?: string, pin?: string): Promise<void> {
     const body =
       role === 'student'
-        ? { role, lrn: principalId, pin: '123456' }
+        ? { role, lrn: principalId, pin: pin ?? '123456' }
         : { role, teacherId: principalId, name };
     const res = await fetch(`${this.apiBase}/api/auth/login`, {
       method: 'POST',
@@ -58,7 +58,8 @@ export class HttpRepository implements WaveRepository {
 
   async bootstrap(): Promise<RepoBootstrap> {
     const roster = await this.get('/api/roster');
-    const students: StudentUser[] = roster.students;
+    const students: StudentUser[] = roster.students ?? [];
+    const teachers: TeacherUser[] = roster.teachers ?? [];
 
     const lessonsBySubject: Record<string, Lesson[]> = {};
     for (const subject of SUBJECTS) {
@@ -78,7 +79,7 @@ export class HttpRepository implements WaveRepository {
       .map((t) => this.toInternalRemediation(t))
       .filter((m): m is TeacherRemediationMaterial => m !== null);
 
-    return { students, lessonsBySubject, progressRecords, remediationMaterials };
+    return { students, teachers, lessonsBySubject, progressRecords, remediationMaterials };
   }
 
   private validatedProgress(tokens: Token[]): StudentProgress | null {
@@ -99,6 +100,7 @@ export class HttpRepository implements WaveRepository {
       content: w.content,
       teacherNotes: w.teacherNotes,
       createdQuiz: w.createdQuiz,
+      createdSummative: w.createdSummative,
       publishDate: w.publishDate,
       assignedStudentLrn: '',
       targetSection: w.targetSection,
@@ -140,7 +142,7 @@ export class HttpRepository implements WaveRepository {
         [w.topicId]: {
           topicId: w.topicId,
           score: w.score,
-          perfectScore: 3,
+          perfectScore: 10,
           answers: w.answers,
           completedAt: new Date().toISOString().split('T')[0],
         },
@@ -152,6 +154,7 @@ export class HttpRepository implements WaveRepository {
   }
 
   async saveSummativeResult(w: SummativeWrite): Promise<void> {
+    const passed = w.score >= 12;
     const results = {
       studentLrn: w.lrn,
       section: w.section,
@@ -159,8 +162,9 @@ export class HttpRepository implements WaveRepository {
       score: w.score,
       total: 20,
       percent: Math.round((w.score / 20) * 100),
-      passed: w.score >= 12,
+      passed,
       failedItems: [],
+      feedback: passed ? 'Good job! You passed the summative assessment.' : 'Keep reviewing the topics and ask your teacher for help.',
     };
     await this.push('StudentSummativeResults', results, w.subject, w.section);
   }
@@ -176,12 +180,17 @@ export class HttpRepository implements WaveRepository {
       content: material.content,
       teacherNotes: material.teacherNotes,
       createdQuiz: material.createdQuiz,
+      createdSummative: material.createdSummative ?? [],
       publishDate: material.publishDate,
       targetSection: material.targetSection || opts.section,
       chunks: [],
       isPublished: material.isPublished,
     };
     await this.push('TeacherRemediationMaterial', wire, opts.subject, wire.targetSection);
+  }
+
+  async flushPendingWrites(): Promise<void> {
+    await this.flushOutbox();
   }
 
   async enrollStudent(student: StudentUser): Promise<void> {
@@ -222,7 +231,12 @@ export class HttpRepository implements WaveRepository {
       }
     };
 
-    if (opts.section) this.transport.subscribe(`wave/${slug(opts.section)}/#`, onMsg);
+    // "All Sections" → subscribe to every section with a single wildcard
+    if (opts.section && opts.section !== 'All Sections') {
+      this.transport.subscribe(`wave/${slug(opts.section)}/#`, onMsg);
+    } else if (!opts.lrn) {
+      this.transport.subscribe('wave/#', onMsg);
+    }
     if (opts.lrn) this.transport.subscribe(`wave/${opts.lrn}/#`, onMsg);
   }
 
@@ -241,6 +255,7 @@ export class HttpRepository implements WaveRepository {
       content: w.content,
       teacherNotes: w.teacherNotes,
       createdQuiz: w.createdQuiz,
+      createdSummative: w.createdSummative,
       publishDate: w.publishDate,
       assignedStudentLrn: '',
       targetSection: w.targetSection,

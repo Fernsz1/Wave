@@ -111,6 +111,7 @@
         { "name": "content", "t": "str" },
         { "name": "teacherNotes", "t": "str" },
         { "name": "createdQuiz", "t": "array:QuizQuestion" },
+        { "name": "createdSummative", "t": "array:QuizQuestion", "optional": true },
         { "name": "publishDate", "t": "str" },
         { "name": "targetSection", "t": "str" },
         { "name": "chunks", "t": "array:Chunk" },
@@ -148,7 +149,8 @@
       "fields": [
         { "name": "score", "t": "int" },
         { "name": "perfectScore", "t": "int" },
-        { "name": "feedback", "t": "str" }
+        { "name": "feedback", "t": "str" },
+        { "name": "attempts", "t": "int", "optional": true }
       ]
     },
     "FailedItem": {
@@ -200,7 +202,8 @@
         { "name": "id", "t": "str" },
         { "name": "title", "t": "str" },
         { "name": "description", "t": "str" },
-        { "name": "topics", "t": "array:Topic" }
+        { "name": "topics", "t": "array:Topic" },
+        { "name": "summative", "t": "array:QuizQuestion" }
       ]
     },
     "Topic": {
