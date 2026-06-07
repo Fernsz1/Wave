@@ -482,7 +482,7 @@ export default function App() {
 
 
           {/* Main Layout Container */}
-          <main className="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 pb-24 sm:pb-8">
+          <main className="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 pb-28 sm:pb-28">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
@@ -653,19 +653,19 @@ export default function App() {
           </main>
 
           {/* Bottom Navigation Ribbon (Mobile & responsive) */}
-          <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-205 py-2.5 px-4 shadow-xl z-30">
-            <div className="max-w-md mx-auto flex items-center justify-around">
+          <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2.5 px-4 shadow-xl z-30">
+            <div className="max-w-5xl mx-auto flex items-center justify-around sm:justify-center sm:gap-16">
               {role === 'student' ? (
                 <>
                   {/* Student Home Link */}
                   <button
                     type="button"
                     onClick={() => setActiveTab('dashboard')}
-                    className={`flex flex-col items-center gap-1 text-[10px] font-bold ${
-                      activeTab === 'dashboard' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-650'
+                    className={`flex flex-col items-center gap-1 text-[10px] sm:text-xs font-bold px-3 sm:px-6 ${
+                      activeTab === 'dashboard' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
                     }`}
                   >
-                    <Home className="h-5 w-5" />
+                    <Home className="h-5 w-5 sm:h-6 sm:w-6" />
                     <span>Home</span>
                   </button>
 
@@ -674,11 +674,11 @@ export default function App() {
                     type="button"
                     id="nav-lessons-tab"
                     onClick={() => setActiveTab('lessons')}
-                    className={`flex flex-col items-center gap-1 text-[10px] font-bold ${
-                      activeTab === 'lessons' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-650'
+                    className={`flex flex-col items-center gap-1 text-[10px] sm:text-xs font-bold px-3 sm:px-6 ${
+                      activeTab === 'lessons' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
                     }`}
                   >
-                    <BookOpen className="h-5 w-5" />
+                    <BookOpen className="h-5 w-5 sm:h-6 sm:w-6" />
                     <span>Syllabus</span>
                   </button>
 
@@ -687,11 +687,11 @@ export default function App() {
                     type="button"
                     id="nav-rankings-tab"
                     onClick={() => setActiveTab('rankings')}
-                    className={`flex flex-col items-center gap-1 text-[10px] font-bold ${
-                      activeTab === 'rankings' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-650'
+                    className={`flex flex-col items-center gap-1 text-[10px] sm:text-xs font-bold px-3 sm:px-6 ${
+                      activeTab === 'rankings' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
                     }`}
                   >
-                    <Trophy className="h-5 w-5" />
+                    <Trophy className="h-5 w-5 sm:h-6 sm:w-6" />
                     <span>Rankings</span>
                   </button>
 
@@ -700,15 +700,13 @@ export default function App() {
                     type="button"
                     id="nav-progress-tab"
                     onClick={() => setActiveTab('progress')}
-                    className={`flex flex-col items-center gap-1 text-[10px] font-bold ${
-                      activeTab === 'progress' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-650'
+                    className={`flex flex-col items-center gap-1 text-[10px] sm:text-xs font-bold px-3 sm:px-6 ${
+                      activeTab === 'progress' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
                     }`}
                   >
-                    <BrainCircuit className="h-5 w-5" />
+                    <BrainCircuit className="h-5 w-5 sm:h-6 sm:w-6" />
                     <span>Progress</span>
                   </button>
-
-
                 </>
               ) : (
                 <>
@@ -716,11 +714,11 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setActiveTab('dashboard')}
-                    className={`flex flex-col items-center gap-1 text-[10px] font-bold ${
-                      activeTab === 'dashboard' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-650'
+                    className={`flex flex-col items-center gap-1 text-[10px] sm:text-xs font-bold px-3 sm:px-6 ${
+                      activeTab === 'dashboard' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
                     }`}
                   >
-                    <Home className="h-5 w-5" />
+                    <Home className="h-5 w-5 sm:h-6 sm:w-6" />
                     <span>Home</span>
                   </button>
 
@@ -729,11 +727,11 @@ export default function App() {
                     type="button"
                     id="nav-records-tab"
                     onClick={() => setActiveTab('students')}
-                    className={`flex flex-col items-center gap-1 text-[10px] font-bold ${
-                      activeTab === 'students' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-650'
+                    className={`flex flex-col items-center gap-1 text-[10px] sm:text-xs font-bold px-3 sm:px-6 ${
+                      activeTab === 'students' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
                     }`}
                   >
-                    <Users className="h-5 w-5" />
+                    <Users className="h-5 w-5 sm:h-6 sm:w-6" />
                     <span>Class Records</span>
                   </button>
 
@@ -742,11 +740,11 @@ export default function App() {
                     type="button"
                     id="nav-analytics-tab"
                     onClick={() => setActiveTab('analytics')}
-                    className={`flex flex-col items-center gap-1 text-[10px] font-bold ${
-                      activeTab === 'analytics' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-650'
+                    className={`flex flex-col items-center gap-1 text-[10px] sm:text-xs font-bold px-3 sm:px-6 ${
+                      activeTab === 'analytics' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
                     }`}
                   >
-                    <BarChart className="h-5 w-5" />
+                    <BarChart className="h-5 w-5 sm:h-6 sm:w-6" />
                     <span>Analytics</span>
                   </button>
                 </>
