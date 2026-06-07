@@ -402,10 +402,10 @@ export default function TeacherHome({
         <WaveLogo size={160} className="absolute right-0 bottom-0 translate-y-3.5 translate-x-3.5 opacity-15 pointer-events-none" />
         
         <div className="relative">
-          <h1 className="text-2xl sm:text-3xl font-display font-medium tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-lexend font-extrabold tracking-tight">
             Welcome Back, {teacher.name}
           </h1>
-          <p className="text-blue-100 text-xs sm:text-sm max-w-2xl mt-2 leading-relaxed">
+          <p className="text-blue-100 text-xs sm:text-sm max-w-2xl mt-2 leading-relaxed font-lexend">
             Wave's curriculum ledger is aligned. Monitor student quiz attempts, generate remedial study units, and review analysis spectra.
           </p>
         </div>

@@ -69,10 +69,40 @@ export default function App() {
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        const hasNewGrades = parsed.some((s: any) => s.gradeLevel?.includes('Grade 4') || s.gradeLevel?.includes('Grade 6'));
-        if (hasNewGrades) {
-          return parsed;
+        
+        // Ensure pre-seeded students in localStorage have up-to-date grades and names matching MOCK_STUDENTS.
+        // For example, Sophia Cruz should be Grade 4, not Grade 5 from older stale local storage.
+        let modified = false;
+        const updated = parsed.map((s: any) => {
+          const canonical = MOCK_STUDENTS.find(m => m.lrn === s.lrn);
+          if (canonical) {
+            if (s.name !== canonical.name || s.gradeLevel !== canonical.gradeLevel) {
+              modified = true;
+              return {
+                ...s,
+                name: canonical.name,
+                gradeLevel: canonical.gradeLevel
+              };
+            }
+          }
+          return s;
+        });
+
+        // Also ensure any newly added mock students in MOCK_STUDENTS are present in the enrolled list.
+        MOCK_STUDENTS.forEach(m => {
+          if (!updated.some((s: any) => s.lrn === m.lrn)) {
+            updated.push({
+              ...m,
+              pin: m.pin || '123456'
+            });
+            modified = true;
+          }
+        });
+
+        if (modified) {
+          localStorage.setItem('wave_enrolled_students', JSON.stringify(updated));
         }
+        return updated;
       } catch (e) {
         // Fallback
       }

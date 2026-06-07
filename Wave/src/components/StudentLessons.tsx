@@ -210,10 +210,10 @@ export default function StudentLessons({
             <span className="bg-blue-50 border border-blue-200 text-blue-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
               Class Choice Portal
             </span>
-            <h1 className="font-display font-black text-3xl sm:text-4xl text-slate-900 tracking-tight">
+            <h1 className="font-lexend font-black text-3xl sm:text-4xl text-slate-900 tracking-tight">
               Select Your Active Course Subject
             </h1>
-            <p className="text-sm text-slate-500 leading-relaxed">
+            <p className="text-sm text-slate-500 leading-relaxed font-lexend">
               Explore custom lesson sequences, test your recall strength in chapter quizzes, and track academic milestone achievements.
             </p>
           </div>
@@ -317,10 +317,10 @@ export default function StudentLessons({
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-1">
             <div>
-              <h1 className="font-display font-bold text-2xl text-slate-900 flex items-center gap-2">
+              <h1 className="font-lexend font-extrabold text-2xl text-slate-900 flex items-center gap-2">
                 <BookOpen className="h-6 w-6 text-blue-600" /> Syllabus Course Map
               </h1>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-500 mt-1 font-lexend">
                 Explore classes, view academic reading structures, and clear assessments to bolster your grades.
               </p>
             </div>
@@ -654,7 +654,7 @@ export default function StudentLessons({
               Wave Curated Curriculum
             </span>
             
-            <h1 className="font-display font-bold text-2xl sm:text-3xl text-slate-900 mt-2">
+            <h1 className="font-lexend font-extrabold text-2xl sm:text-3xl text-slate-900 mt-2">
               {selectedTopic.name}
             </h1>
             

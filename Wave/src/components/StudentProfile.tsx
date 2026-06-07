@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { UserCheck, ShieldCheck, Phone, Calendar, LogOut } from 'lucide-react';
+import { UserCheck, ShieldCheck, Phone, Calendar, LogOut, GraduationCap } from 'lucide-react';
 import { StudentUser } from '../types';
 
 interface StudentProfileProps {
@@ -35,6 +35,14 @@ export default function StudentProfile({ student, onLogout, activeSubject }: Stu
 
       {/* Profile details roster list */}
       <div className="bg-white rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,0.05)] divide-y divide-slate-100 overflow-hidden">
+        {/* Row */}
+        <div className="p-4 flex items-center justify-between text-xs">
+          <span className="font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+            <GraduationCap className="h-4 w-4 text-slate-400" /> Grade Level
+          </span>
+          <span className="font-bold text-slate-800">{student.gradeLevel}</span>
+        </div>
+
         {/* Row */}
         <div className="p-4 flex items-center justify-between text-xs">
           <span className="font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-2">

@@ -138,10 +138,10 @@ export default function StudentHome({
             <span className="bg-white/15 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold tracking-wider text-white border border-white/10 flex items-center gap-1.5 w-fit">
               Online Learning Portal
             </span>
-            <h1 className="text-2xl sm:text-3xl font-display font-black tracking-tight text-white">
+            <h1 className="text-2xl sm:text-3xl font-lexend font-black tracking-tight text-white">
               Mabuhay, {student.name}!
             </h1>
-            <p className="text-blue-50 text-sm max-w-md leading-relaxed font-medium">
+            <p className="text-blue-50 text-sm max-w-md leading-relaxed font-lexend font-medium">
               Ready to learn something new today? Continue your lessons, answer quizzes, and discover exciting {activeSubject} topics.
             </p>
           </div>

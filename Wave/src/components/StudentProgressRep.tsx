@@ -68,10 +68,10 @@ export default function StudentProgressRep({ progress, lessons, activeSubject }:
       {/* Title Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-display font-bold text-2xl text-slate-900 flex items-center gap-2">
+          <h1 className="font-lexend font-extrabold text-2xl text-slate-900 flex items-center gap-2">
             <span className="text-indigo-600">📊</span> Progress Metrics
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 mt-1 font-lexend">
             Take a look at your achievements! Track your lesson completion, view study insights, and discover areas to review.
           </p>
         </div>
