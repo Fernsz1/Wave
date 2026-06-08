@@ -12,7 +12,7 @@
 import { decode, encode, Token } from '../protocol/codec';
 import { SCHEMA_BY_TYPE } from '../schemas';
 import { buildEnvelope, parseEnvelope } from '../sync/envelope';
-import { Outbox, LocalStorageStore } from '../sync/outbox';
+import { Outbox, LocalStorageStore, OutboxStore } from '../sync/outbox';
 import { MqttTransport, Transport } from '../sync/transport';
 import { topicFor, slug } from '../sync/topics';
 import { Lesson, StudentProgress, StudentUser, TeacherRemediationMaterial } from '../types';
@@ -20,16 +20,27 @@ import { RepoBootstrap, RepoUpdate, SubscribeOpts, QuizAttemptWrite, SummativeWr
 
 const SUBJECTS = ['science', 'mathematics', 'english'];
 
+/** Optional injection points (used by tests; production uses the defaults). */
+export interface HttpRepositoryDeps {
+  transport?: Transport;
+  outboxStore?: OutboxStore;
+}
+
 export class HttpRepository implements WaveRepository {
   readonly isLive = true;
   private token = '';
   private transport: Transport | null = null;
-  private outbox = new Outbox(new LocalStorageStore());
+  private outbox: Outbox;
+  private injectedTransport: Transport | null;
 
   constructor(
     private apiBase: string,
     private mqttUrl: string | null,
-  ) {}
+    deps: HttpRepositoryDeps = {},
+  ) {
+    this.injectedTransport = deps.transport ?? null;
+    this.outbox = new Outbox(deps.outboxStore ?? new LocalStorageStore());
+  }
 
   private headers(): Record<string, string> {
     const h: Record<string, string> = { 'Content-Type': 'application/json' };
@@ -140,7 +151,7 @@ export class HttpRepository implements WaveRepository {
         [w.topicId]: {
           topicId: w.topicId,
           score: w.score,
-          perfectScore: 3,
+          perfectScore: w.perfectScore,
           answers: w.answers,
           completedAt: new Date().toISOString().split('T')[0],
         },
@@ -196,9 +207,9 @@ export class HttpRepository implements WaveRepository {
   }
 
   subscribeLive(opts: SubscribeOpts): void {
-    if (!this.mqttUrl) return;
+    if (!this.mqttUrl && !this.injectedTransport) return;
     if (!this.transport) {
-      this.transport = new MqttTransport(this.mqttUrl);
+      this.transport = this.injectedTransport ?? new MqttTransport(this.mqttUrl as string);
       // On every (re)connect, drain any writes that were queued while offline.
       this.transport.onReconnect(() => void this.flushOutbox());
     }

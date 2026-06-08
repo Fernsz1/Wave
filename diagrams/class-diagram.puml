@@ -1,0 +1,250 @@
+@startuml Wave_Class_Diagram
+title Wave — Class Diagram (full-stack, layered)
+skinparam linetype ortho
+skinparam packageStyle rectangle
+hide empty members
+
+' ───────────────────────── Domain (Wave/src/types.ts) ─────────────────────────
+package "Domain (frontend types)" {
+  class StudentUser {
+    +lrn: string
+    +name: string
+    +gradeLevel: string
+    +section?: string
+    +pin?: string
+  }
+  class TeacherUser {
+    +teacherId: string
+    +name: string
+    +department: string
+  }
+  class Lesson {
+    +id: string
+    +title: string
+    +description: string
+  }
+  class Topic {
+    +id: string
+    +name: string
+    +description: string
+    +readingTime: string
+    +isCustomRemedial?: bool
+  }
+  class TopicContent {
+    +introduction: string
+    +sections: Section[]
+    +definition?: Definition
+    +keyTakeaway: string
+    +importantNote?: string
+  }
+  class QuizQuestion {
+    +id: string
+    +question: string
+    +options: string[]
+    +correctAnswerIndex: int
+    +explanation: string
+  }
+  class StudentProgress {
+    +studentLrn: string
+    +completedTopicIds: string[]
+    +quizAttempts: Map<string,StudentQuizAttempt>
+    +summativeScores: Map<string,SummativeScore>
+  }
+  class StudentQuizAttempt {
+    +topicId: string
+    +score: int
+    +perfectScore: int
+    +answers: int[]
+    +completedAt: string
+  }
+  class SummativeScore {
+    +score: int
+    +perfectScore: int
+    +feedback: string
+  }
+  class TeacherRemediationMaterial {
+    +id: string
+    +originalTopicId: string
+    +title: string
+    +content: string
+    +teacherNotes: string
+    +createdQuiz: QuizQuestion[]
+    +publishDate: string
+    +assignedStudentLrn: string
+    +targetSection?: string
+    +isPublished: bool
+  }
+}
+
+Lesson "1" *-- "many" Topic : topics
+Topic "1" *-- "1" TopicContent : content
+Topic "1" *-- "many" QuizQuestion : quiz
+StudentProgress "1" *-- "many" StudentQuizAttempt
+StudentProgress "1" *-- "many" SummativeScore
+TeacherRemediationMaterial "1" o-- "many" QuizQuestion
+
+' ────────────────────── AppData / repository (Wave/src/repo) ──────────────────────
+package "AppData (repository seam)" {
+  interface WaveRepository {
+    +isLive: bool
+    +bootstrap(): RepoBootstrap
+    +authenticate(role, principalId, name?)
+    +saveQuizAttempt(QuizAttemptWrite)
+    +saveSummativeResult(SummativeWrite)
+    +publishRemediation(material, opts)
+    +enrollStudent(StudentUser)
+    +subscribeLive(SubscribeOpts)
+    +unsubscribeLive()
+  }
+  class MockRepository {
+    +isLive = false
+  }
+  class HttpRepository {
+    -apiBase: string
+    -mqttUrl: string
+    -token: string
+    -transport: Transport
+    -outbox: Outbox
+    +bootstrap(): RepoBootstrap
+    +push(type, obj, subject, section)
+  }
+  class RepoBootstrap {
+    +students: StudentUser[]
+    +lessonsBySubject: Map
+    +progressRecords: Map
+    +remediationMaterials: TeacherRemediationMaterial[]
+  }
+  class RepoUpdate <<union>> {
+    progress | rankings | remediation
+  }
+  class QuizAttemptWrite {
+    +lrn, topicId, lessonId
+    +score: int
+    +perfectScore: int
+    +answers: int[]
+    +section, subject
+  }
+  class Standing {
+    +rank: int
+    +studentLrn, name
+    +score, perfect, percent: int
+  }
+}
+
+WaveRepository <|.. MockRepository
+WaveRepository <|.. HttpRepository
+WaveRepository ..> RepoBootstrap
+WaveRepository ..> RepoUpdate
+WaveRepository ..> QuizAttemptWrite
+RepoUpdate ..> Standing
+HttpRepository ..> StudentProgress : decodes/validates
+
+' ───────────────────── Sync + Protocol (Wave/src/sync, /protocol) ─────────────────────
+package "Sync + Protocol" {
+  interface Transport {
+    +publish(topic, tokens)
+    +subscribe(glob, handler)
+    +unsubscribeAll()
+    +onReconnect(cb)
+    +close()
+  }
+  class MqttTransport {
+    connects ws://host:9001
+  }
+  class InMemoryTransport {
+    tests + retained replay
+  }
+  class Outbox {
+    +pending: int
+    +enqueue(topic, tokens)
+    +flushAsync(send): int
+  }
+  interface OutboxStore {
+    +load(): OutboxItem[]
+    +save(items)
+  }
+  class MemoryStore
+  class LocalStorageStore
+  class Codec <<module>> {
+    +encode(type, obj): Token[]
+    +decode(type, arr): obj
+    +encodeEnvelope(env)
+    +decodeEnvelope(arr)
+    reads wire_manifest.json
+  }
+  class Reassembler {
+    +add(Chunk): string?
+  }
+  class Chunk {
+    +msgId: string
+    +index, total: int
+    +data: string
+  }
+  class Envelope <<helpers>> {
+    +buildEnvelope(type, obj, opts)
+    +parseEnvelope(tokens)
+  }
+}
+
+Transport <|.. MqttTransport
+Transport <|.. InMemoryTransport
+Outbox --> OutboxStore
+OutboxStore <|.. MemoryStore
+OutboxStore <|.. LocalStorageStore
+HttpRepository --> Transport : live down-channel
+HttpRepository --> Outbox : offline writes
+HttpRepository ..> Codec
+HttpRepository ..> Envelope
+Envelope ..> Codec
+Reassembler ..> Chunk
+
+' ───────────────────────── Backend (server/wave_api) ─────────────────────────
+package "Backend (Django)" {
+  class PyCodec <<module codec.py>> {
+    Python mirror of Codec
+    same wire_manifest.json
+  }
+  class DjangoViews <<views.py / DRF>> {
+    +login()
+    +catalog() / progress() / rankings()
+    +remediation() / allprogress()
+    +sync_push()
+  }
+  class Ingest <<ingest.py>> {
+    +handle(type, payload, subject, section): downstream[]
+  }
+  class Derive <<derive.py>> {
+    +assemble_progress(student): StudentProgress
+    +compute_rankings(section, subject): Rankings
+  }
+  class MqttGlue <<mqtt.py / run_mqtt>> {
+    +build_envelope(...)
+    +publish_downstream(messages)
+    +topic_for(type, key)
+  }
+  class ApiTokenAuth <<auth.py>> {
+    ApiToken + Principal
+    ApiTokenAuthentication
+  }
+}
+
+DjangoViews ..> PyCodec
+DjangoViews ..> Ingest
+DjangoViews ..> Derive
+DjangoViews ..> ApiTokenAuth
+Ingest ..> Derive
+Ingest ..> MqttGlue : publish_downstream
+MqttGlue ..> PyCodec
+
+' ───────────────────────── Cross-layer link ─────────────────────────
+HttpRepository ..> DjangoViews : REST + MQTT (tokenized arrays)
+PyCodec ..> Codec : identical wire format
+
+note as N1
+  Codec (TS) and PyCodec (Python) read the SAME
+  protocol/wire_manifest.json, so the app and server
+  decode identical tokenized arrays over MQTT/LoRa.
+end note
+N1 .. Codec
+
+@enduml

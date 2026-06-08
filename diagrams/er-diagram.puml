@@ -1,0 +1,94 @@
+@startuml Wave_ER_Diagram
+title Wave — ER Diagram (Django relational DB)
+hide circle
+skinparam linetype ortho
+
+entity STUDENT {
+  * lrn : string <<PK>>
+  --
+  name : string
+  grade_level : string
+  section : string
+  pin : string  ' plaintext (demo only)
+}
+
+entity TEACHER {
+  * teacher_id : string <<PK>>
+  --
+  name : string
+  department : string
+}
+
+entity API_TOKEN {
+  * key : string <<PK>>
+  --
+  role : string  ' student | teacher
+  principal_id : string  ' lrn or teacher_id (soft)
+}
+
+entity CATALOG_DOCUMENT {
+  * subject : string <<PK>>  ' science | mathematics | english
+  --
+  data : json  ' Lesson[] (static catalog)
+}
+
+entity QUIZ_ATTEMPT {
+  * id : int <<PK>>
+  --
+  * student_id : string <<FK>>
+  topic_id : string  ' unique with student
+  lesson_id : string
+  score : int
+  perfect_score : int
+  answers : json
+  completed_at : string
+}
+
+entity SUMMATIVE_RESULT {
+  * id : int <<PK>>
+  --
+  * student_id : string <<FK>>
+  lesson_id : string  ' unique with student
+  score : int
+  total : int
+  percent : int
+  passed : bool
+  feedback : text
+  failed_items : json
+}
+
+entity REMEDIATION_MATERIAL {
+  * material_id : string <<PK>>
+  --
+  subject : string
+  original_topic_id : string
+  title : string
+  content : text
+  teacher_notes : text
+  created_quiz : json
+  publish_date : string
+  target_section : string
+  is_published : bool
+}
+
+' Real ForeignKeys (solid)
+STUDENT ||--o{ QUIZ_ATTEMPT
+STUDENT ||--o{ SUMMATIVE_RESULT
+
+' Soft references — no Django FK (dashed)
+STUDENT |o..o{ API_TOKEN : principal_id
+TEACHER |o..o{ API_TOKEN : principal_id
+STUDENT |o..o{ REMEDIATION_MATERIAL : target_section
+
+note bottom of CATALOG_DOCUMENT
+  Standalone: whole lessons/topics/quizzes tree
+  stored as one JSON doc per subject.
+end note
+
+note as N1
+  Derived, NOT stored (derive.py):
+  quizScores, completedTopicIds, Rankings —
+  assembled from QUIZ_ATTEMPT / SUMMATIVE_RESULT.
+end note
+
+@enduml

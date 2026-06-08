@@ -50,26 +50,12 @@ export default function TeacherStudents({
   const studentsCompiled = sectionStudents.map(student => {
     const prog = progressRecords[student.lrn];
     
-    // Default simulated parameters for those who haven't completed anything yet to maintain consistency
-    // However, if the progress record exists, we read from it!
-    let completedTopics = 0;
-    let quizAvg = 85; 
-    let summativeScore = 17;
-    let overallGrade = 84;
-    let hasRealProgress = false;
-
-    // Calculate progress per lesson
+    // Per-lesson topic completion (real data only; 0 when the student has no record).
     const activeLessonsProgress = currentLessons.map(lesson => {
       const totalCount = lesson.topics.length;
-      let completedCount = 0;
-      if (prog) {
-        completedCount = lesson.topics.filter(t => prog.completedTopicIds.includes(t.id)).length;
-      } else {
-        // Deterministic mock progress for visual consistency
-        const lrnId = parseInt(student.lrn.slice(-4)) || 0;
-        completedCount = totalCount > 0 ? (2 + (lrnId % (totalCount + 1))) % (totalCount + 1) : 0;
-        if (completedCount > totalCount) completedCount = totalCount;
-      }
+      const completedCount = prog
+        ? lesson.topics.filter(t => prog.completedTopicIds.includes(t.id)).length
+        : 0;
       return {
         lessonId: lesson.id,
         lessonTitle: lesson.title.split(':')[0], // e.g. "Lesson 1"
@@ -78,50 +64,43 @@ export default function TeacherStudents({
       };
     });
 
+    const hasRealProgress = !!prog;
+    const completedTopics = prog
+      ? prog.completedTopicIds.filter(id => activeTopicIds.has(id)).length
+      : 0;
+
+    // Quiz average across this subject's topics (0 if none attempted).
+    let scoreSum = 0;
+    let perfectSum = 0;
     if (prog) {
-      hasRealProgress = true;
-      completedTopics = prog.completedTopicIds.filter(id => activeTopicIds.has(id)).length;
-      
-      let scoreSum = 0;
-      let perfectSum = 0;
       Object.values(prog.quizAttempts).forEach(att => {
         if (activeTopicIds.has(att.topicId)) {
           scoreSum += att.score;
           perfectSum += att.perfectScore;
         }
       });
-
-      if (perfectSum > 0) {
-        quizAvg = Math.round((scoreSum / perfectSum) * 100);
-      } else {
-        quizAvg = 0;
-      }
-
-      // Check summatives
-      const sumList = Object.entries(prog.summativeScores)
-        .filter(([lessonId]) => activeLessonIds.has(lessonId))
-        .map(([_, v]) => v);
-
-      if (sumList.length > 0) {
-        summativeScore = sumList[0].score; // e.g. out of 20
-        const sumPct = Math.round((summativeScore / 20) * 105);
-        overallGrade = Math.round(quizAvg * 0.4 + sumPct * 0.6);
-      } else {
-        // Fallback for visual data
-        const fallbackIndex = parseInt(student.lrn.slice(-2)) % 10;
-        summativeScore = 14 + (fallbackIndex % 5);
-        const sumPct = Math.round((summativeScore / 20) * 100);
-        overallGrade = Math.round(quizAvg * 0.4 + sumPct * 0.6);
-      }
-    } else {
-      // Seed nice values for other classmates to populate a realistic class table
-      const fallbackIndex = parseInt(student.lrn.slice(-2)) % 10;
-      completedTopics = activeLessonsProgress.reduce((sum, item) => sum + item.completedCount, 0);
-      quizAvg = 75 + (fallbackIndex % 5) * 5;
-      summativeScore = 14 + (fallbackIndex % 4);
-      const sumPct = Math.round((summativeScore / 20) * 100);
-      overallGrade = Math.round(quizAvg * 0.4 + sumPct * 0.6);
     }
+    const quizAvg = perfectSum > 0 ? Math.round((scoreSum / perfectSum) * 100) : 0;
+
+    // Summative Milestone = AVERAGE of the summatives actually taken in this subject
+    // (out of 20). null when none taken yet -> rendered as "—" (no fabricated data).
+    const sumList = prog
+      ? Object.entries(prog.summativeScores)
+          .filter(([lessonId]) => activeLessonIds.has(lessonId))
+          .map(([, v]) => v)
+      : [];
+    const hasSummative = sumList.length > 0;
+    const summativeScore: number | null = hasSummative
+      ? Math.round(sumList.reduce((s, v) => s + v.score, 0) / sumList.length)
+      : null;
+    const summativePct = summativeScore !== null ? Math.round((summativeScore / 20) * 100) : 0;
+
+    // Overall standing: weighted (40% quiz / 60% summative) when both exist;
+    // otherwise whatever real signal we have; 0 when nothing has been done.
+    let overallGrade = 0;
+    if (perfectSum > 0 && hasSummative) overallGrade = Math.round(quizAvg * 0.4 + summativePct * 0.6);
+    else if (perfectSum > 0) overallGrade = quizAvg;
+    else if (hasSummative) overallGrade = summativePct;
 
     // Determine Status
     let status: 'Passing' | 'Needs Remediation' | 'Needs Assessment' = 'Passing';
@@ -141,7 +120,7 @@ export default function TeacherStudents({
     const currentLessonTopicsDone = !!currentLesson && currentLesson.completedCount === currentLesson.totalCount;
     const currentSummativeTaken = prog
       ? Object.keys(prog.summativeScores).includes(currentLesson?.lessonId ?? '')
-      : true;
+      : false;
 
     return {
       student,
@@ -152,6 +131,7 @@ export default function TeacherStudents({
       currentSummativeTaken,
       quizAvg,
       summativeScore,
+      hasSummative,
       overallGrade,
       status,
       hasRealProgress
@@ -254,9 +234,11 @@ export default function TeacherStudents({
                       {row.quizAvg}%
                     </td>
 
-                    {/* Summative Score */}
+                    {/* Summative Milestone — average of summatives taken, or "—" if none */}
                     <td className="p-4 text-center font-mono text-slate-600">
-                      {row.summativeScore} / 20
+                      {row.summativeScore === null
+                        ? <span className="text-slate-300" title="No summative taken yet">—</span>
+                        : <>{row.summativeScore} / 20</>}
                     </td>
 
                     {/* Overall Score */}

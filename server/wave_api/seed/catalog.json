@@ -69,6 +69,90 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "Bone marrow is the soft jelly-like material found inside larger bones that is responsible for producing blood cells."
+            },
+            {
+              "id": "L1-T1-G1",
+              "question": "In \"Skeletal System\", what does the term \"Bone Marrow\" mean?",
+              "options": [
+                "The smart, defensive guarding of natural resources and habitats to protect them from human destruction or extinction.",
+                "The soft tissue inside the center of larger bones where new blood cells are made daily.",
+                "Anything that has weight (mass) and takes up physical space.",
+                "Organisms like fungi and bacteria that rot down dead plants and animals, returning mineral nutrients back to the soil."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "\"Bone Marrow\" — The soft tissue inside the center of larger bones where new blood cells are made daily."
+            },
+            {
+              "id": "L1-T1-G2",
+              "question": "Which term is defined as: \"The soft tissue inside the center of larger bones where new blood cells are made daily.\"?",
+              "options": [
+                "Bone Marrow",
+                "Decomposer",
+                "Climate",
+                "Radiation"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is the definition of \"Bone Marrow\"."
+            },
+            {
+              "id": "L1-T1-G3",
+              "question": "Which statement best summarizes the topic \"Skeletal System\"?",
+              "options": [
+                "Moon phases morph as its lit side faces us during its monthly orbit around Earth.",
+                "Mixtures have separate parts you can pick apart; solutions are dissolved and look uniform.",
+                "Pushes and pulls include gravity pulling down, and friction resisting and slowing sliding objects.",
+                "Your skeletal system acts as a protective shield and structural framework for the body, housing 206 living bones."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Key takeaway for Skeletal System."
+            },
+            {
+              "id": "L1-T1-G4",
+              "question": "Which topic is described as: \"The hard framework of our bones that supports the body, allows movement, and protects soft internal organs.\"?",
+              "options": [
+                "Skeletal System",
+                "Synonyms and Antonyms",
+                "States of Matter",
+                "Digestive System"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That description matches \"Skeletal System\"."
+            },
+            {
+              "id": "L1-T1-G5",
+              "question": "Which is an important point to remember about \"Skeletal System\"?",
+              "options": [
+                "Verbs are the engine of sentences, defining physical actions and timelines.",
+                "Potential energy represents height or chemical storage; kinetic energy represents speed of motion.",
+                "Mixtures have separate parts you can pick apart; solutions are dissolved and look uniform.",
+                "Bones are alive! They are lightweight, grow as you grow, can heal themselves if broken, and require plenty of calcium (from milk, cheese, and green vegetables) to stay strong."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Important note for Skeletal System."
+            },
+            {
+              "id": "L1-T1-G6",
+              "question": "In \"Skeletal System\", which section covers: \"Your skeleton has five main jobs:\"?",
+              "options": [
+                "Liquids: Flowing Fluids with Definite Volume",
+                "Nouns are Names",
+                "What Bones Do (Core Functions)",
+                "What is a Mixture?"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"What Bones Do (Core Functions)\"."
+            },
+            {
+              "id": "L1-T1-G7",
+              "question": "In \"Skeletal System\", which section covers: \"• Skull: A strong, helmet-like bone structure that surrounds and protects your fragile brain\"?",
+              "options": [
+                "Chief Protective Bones",
+                "Three-Dimensional Solids",
+                "Magnetic Force",
+                "What is a Solution?"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is discussed under \"Chief Protective Bones\"."
             }
           ]
         },
@@ -136,6 +220,90 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "Tendons are very tough bands of tissue that glue skeletal muscles to bones so that pulling moves the frame."
+            },
+            {
+              "id": "L1-T2-G1",
+              "question": "In \"Muscular System\", what does the term \"Tendon\" mean?",
+              "options": [
+                "A numerical expression showing the ratio of a part to a whole, written as a numerator over a denominator.",
+                "A tough, white cord or band of fibrous tissue that connects a muscle securely to a bone.",
+                "The average weather conditions (temperature, rain, winds) in a large region over 30 years or more.",
+                "The speed of an object in a specific, chosen direction (like running 5 m/s North)."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "\"Tendon\" — A tough, white cord or band of fibrous tissue that connects a muscle securely to a bone."
+            },
+            {
+              "id": "L1-T2-G2",
+              "question": "Which term is defined as: \"A tough, white cord or band of fibrous tissue that connects a muscle securely to a bone.\"?",
+              "options": [
+                "Friction",
+                "Conservation",
+                "Bone Marrow",
+                "Tendon"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is the definition of \"Tendon\"."
+            },
+            {
+              "id": "L1-T2-G3",
+              "question": "Which statement best summarizes the topic \"Muscular System\"?",
+              "options": [
+                "Flat shapes are 2D, while solid shapes that take up physical space are 3D.",
+                "Energy loops sun to producer, to feeding consumers, and returns to soil via decomposers.",
+                "The solar system orbits 8 planets around 1 sun: four close rocky planets and four distant gas giants.",
+                "Over 600 muscles of voluntary and involuntary types contract and work in pairs to enable motion."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Key takeaway for Muscular System."
+            },
+            {
+              "id": "L1-T2-G4",
+              "question": "Which topic is described as: \"How voluntary and involuntary muscles contract and relax to allow movement throughout our body.\"?",
+              "options": [
+                "Muscular System",
+                "Digestive System",
+                "Types of Forces",
+                "Layers of the Earth"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That description matches \"Muscular System\"."
+            },
+            {
+              "id": "L1-T2-G5",
+              "question": "Which is an important point to remember about \"Muscular System\"?",
+              "options": [
+                "The solar system orbits 8 planets around 1 sun: four close rocky planets and four distant gas giants.",
+                "Skeletal muscles always work in opposing contraction pairs because a muscle can pull a bone but cannot push it back to its original position.",
+                "Every region (like wet forests, dry deserts, or oceans) has unique traits suited to its habitant species.",
+                "Potential energy represents height or chemical storage; kinetic energy represents speed of motion."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Important note for Muscular System."
+            },
+            {
+              "id": "L1-T2-G6",
+              "question": "In \"Muscular System\", which section covers: \"Muscles are connected to bones by tough strings called tendons\"?",
+              "options": [
+                "Weather: Daily Changes",
+                "Gravity: The Universal Puller",
+                "How Muscles Move Bones",
+                "The Diaphragm Muscle"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"How Muscles Move Bones\"."
+            },
+            {
+              "id": "L1-T2-G7",
+              "question": "In \"Muscular System\", which section covers: \"• Voluntary Muscles: Muscles you can control when you choose to\"?",
+              "options": [
+                "Floating and Sinking (Density Intro)",
+                "Solute vs. Solvent",
+                "Friction: The Braking Force",
+                "Voluntary vs. Involuntary Muscles"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is discussed under \"Voluntary vs. Involuntary Muscles\"."
             }
           ]
         },
@@ -203,6 +371,90 @@
               ],
               "correctAnswerIndex": 0,
               "explanation": "The large intestine soaks up most of the leftover water from undigested food and packages the remaining waste to be removed."
+            },
+            {
+              "id": "L1-T3-G1",
+              "question": "In \"Digestive System\", what does the term \"Absorption\" mean?",
+              "options": [
+                "The process where nutrients are soaked up through the walls of the small intestine into the bloodstream.",
+                "A word used to describe an action, state, or occurrence, forming the main part of the predicate of a sentence.",
+                "Organisms like fungi and bacteria that rot down dead plants and animals, returning mineral nutrients back to the soil.",
+                "The localized natural home or environment of a plant or animal that satisfies all its life support needs."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "\"Absorption\" — The process where nutrients are soaked up through the walls of the small intestine into the bloodstream."
+            },
+            {
+              "id": "L1-T3-G2",
+              "question": "Which term is defined as: \"The process where nutrients are soaked up through the walls of the small intestine into the bloodstream.\"?",
+              "options": [
+                "Abiotic",
+                "Capillary",
+                "Absorption",
+                "Bone Marrow"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is the definition of \"Absorption\"."
+            },
+            {
+              "id": "L1-T3-G3",
+              "question": "Which statement best summarizes the topic \"Digestive System\"?",
+              "options": [
+                "Energy loops sun to producer, to feeding consumers, and returns to soil via decomposers.",
+                "Nouns name what we talk about; pronouns stand in so we do not sound repetitive.",
+                "Digestion transforms food into digestible blood nutrients through mechanical crushing and chemical acid breakdowns.",
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Key takeaway for Digestive System."
+            },
+            {
+              "id": "L1-T3-G4",
+              "question": "Which topic is described as: \"Explore how your body crushes, dissolves, and absorbs energy from the food you eat.\"?",
+              "options": [
+                "Muscular System",
+                "Nouns & Pronouns",
+                "Physical Properties",
+                "Digestive System"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That description matches \"Digestive System\"."
+            },
+            {
+              "id": "L1-T3-G5",
+              "question": "Which is an important point to remember about \"Digestive System\"?",
+              "options": [
+                "Pushes and pulls include gravity pulling down, and friction resisting and slowing sliding objects.",
+                "The respiratory system absorbs oxygen and vents waste carbon dioxide via gas exchanges inside lung alveoli.",
+                "An ecosystem matches the biotic living parts directly with abiotic non-living surroundings in a delicate state of balance.",
+                "Most digestion and nutrient absorption happens in the super-long small intestine, which is about 20 feet long inside your belly!"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Important note for Digestive System."
+            },
+            {
+              "id": "L1-T3-G6",
+              "question": "In \"Digestive System\", which section covers: \"1\"?",
+              "options": [
+                "Biotic and Abiotic Assets",
+                "Solute vs. Solvent",
+                "The Mouth and Esophagus",
+                "How Muscles Move Bones"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"The Mouth and Esophagus\"."
+            },
+            {
+              "id": "L1-T3-G7",
+              "question": "In \"Digestive System\", which section covers: \"4\"?",
+              "options": [
+                "Pronouns are Replacements",
+                "The Stomach and Small Intestine",
+                "Mass and Volume",
+                "Chemical Changes: Brand New Materials Created"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"The Stomach and Small Intestine\"."
             }
           ]
         },
@@ -258,6 +510,102 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "The diaphragm contracts and flattens down, expanding space in your chest to draw fresh air into the lungs."
+            },
+            {
+              "id": "L1-T4-G1",
+              "question": "In \"Respiratory System\", what does the term \"Alveoli\" mean?",
+              "options": [
+                "Heat transfer traveling through empty space across electromagnetic waves, without needing physical atoms to touch.",
+                "A flat, closed 2D shape with three or more straight sides.",
+                "Microscopic air sacs at the ends of lung bronchi tubes where oxygen is swapped for carbon dioxide.",
+                "The soft tissue inside the center of larger bones where new blood cells are made daily."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "\"Alveoli\" — Microscopic air sacs at the ends of lung bronchi tubes where oxygen is swapped for carbon dioxide."
+            },
+            {
+              "id": "L1-T4-G2",
+              "question": "Which term is defined as: \"Microscopic air sacs at the ends of lung bronchi tubes where oxygen is swapped for carbon dioxide.\"?",
+              "options": [
+                "Crust",
+                "Fraction",
+                "Alveoli",
+                "Refraction"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is the definition of \"Alveoli\"."
+            },
+            {
+              "id": "L1-T4-G3",
+              "question": "Which statement best summarizes the topic \"Respiratory System\"?",
+              "options": [
+                "Mixtures have separate parts you can pick apart; solutions are dissolved and look uniform.",
+                "The denominator is the total parts, and the numerator is the parts we have.",
+                "Weather tracks daily rain and sun in a town; climate is the long-term averages over decades.",
+                "The respiratory system absorbs oxygen and vents waste carbon dioxide via gas exchanges inside lung alveoli."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Key takeaway for Respiratory System."
+            },
+            {
+              "id": "L1-T4-G4",
+              "question": "Which topic is described as: \"Breathing mechanics, oxygen absorption in lungs, and removing waste carbon dioxide.\"?",
+              "options": [
+                "Habitats",
+                "Types of Forces",
+                "Respiratory System",
+                "Plants and Animals"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That description matches \"Respiratory System\"."
+            },
+            {
+              "id": "L1-T4-G5",
+              "question": "Which is an important point to remember about \"Respiratory System\"?",
+              "options": [
+                "Weather tracks daily rain and sun in a town; climate is the long-term averages over decades.",
+                "Plants act as producers making foods with sunlight; animals are consumers needing feeding.",
+                "The diaphragm muscle must contract and pull down to create suction that fills your lungs with fresh air.",
+                "Digestion transforms food into digestible blood nutrients through mechanical crushing and chemical acid breakdowns."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Important note for Respiratory System."
+            },
+            {
+              "id": "L1-T4-G6",
+              "question": "In \"Respiratory System\", which section covers: \"• Nose and Mouth: Air entering is warmed up, wetted, and hairs inside filter out dust particles\"?",
+              "options": [
+                "The Stomach and Small Intestine",
+                "The Four Linkages of a Chain",
+                "The Air Path: Nose to Windpipe",
+                "Floating and Sinking (Density Intro)"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"The Air Path: Nose to Windpipe\"."
+            },
+            {
+              "id": "L1-T4-G7",
+              "question": "In \"Respiratory System\", which section covers: \"Inside your lungs, bronchi branch out into tinier tubes, like limbs on a tree\"?",
+              "options": [
+                "The Stomach and Small Intestine",
+                "Inside the Lungs (The Trapped Air Bags)",
+                "Large Intestine and Waste",
+                "Kinetic vs. Potential Energy"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"Inside the Lungs (The Trapped Air Bags)\"."
+            },
+            {
+              "id": "L1-T4-G8",
+              "question": "In \"Respiratory System\", which section covers: \"How do you pull air in? A large dome-shaped muscle beneath your lungs called the Diaphragm pulls down when you inhale (creating space in your chest) and pushes up when you exhale to squeeze stale air out!\"?",
+              "options": [
+                "The Heart: A Powerful Involuntary Engine",
+                "Three-Dimensional Solids",
+                "The Air Path: Nose to Windpipe",
+                "The Diaphragm Muscle"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is discussed under \"The Diaphragm Muscle\"."
             }
           ]
         },
@@ -313,6 +661,102 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "White blood cells act as your body's immune defense, chasing and destroying germs and viruses."
+            },
+            {
+              "id": "L1-T5-G1",
+              "question": "In \"Circulatory System\", what does the term \"Capillary\" mean?",
+              "options": [
+                "A physical change that can be undone to return the object to its original state (like freezing water and then melting it).",
+                "A uniform mixture where a solute dissolves completely inside a liquid solvent.",
+                "A word that functions as the name of some specific thing or set of things, such as living creatures, objects, places, actions, or ideas.",
+                "A tiny microscopic blood vessel that connects arteries and veins, allowing materials to slip through its walls to feed cells."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "\"Capillary\" — A tiny microscopic blood vessel that connects arteries and veins, allowing materials to slip through its walls to feed cells."
+            },
+            {
+              "id": "L1-T5-G2",
+              "question": "Which term is defined as: \"A tiny microscopic blood vessel that connects arteries and veins, allowing materials to slip through its walls to feed cells.\"?",
+              "options": [
+                "Fraction",
+                "Waxing",
+                "Capillary",
+                "Radiation"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is the definition of \"Capillary\"."
+            },
+            {
+              "id": "L1-T5-G3",
+              "question": "Which statement best summarizes the topic \"Circulatory System\"?",
+              "options": [
+                "The heart pumps oxygenated, nutrient-dense blood through arteries and retrieves wastes in veins.",
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction.",
+                "Plants act as producers making foods with sunlight; animals are consumers needing feeding.",
+                "The respiratory system absorbs oxygen and vents waste carbon dioxide via gas exchanges inside lung alveoli."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Key takeaway for Circulatory System."
+            },
+            {
+              "id": "L1-T5-G4",
+              "question": "Which topic is described as: \"The heart engine, blood pipelines, and transport of materials to bodily tissues.\"?",
+              "options": [
+                "Circulatory System",
+                "Skeletal System",
+                "Working with Decimals",
+                "Plants and Animals"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That description matches \"Circulatory System\"."
+            },
+            {
+              "id": "L1-T5-G5",
+              "question": "Which is an important point to remember about \"Circulatory System\"?",
+              "options": [
+                "Nouns name what we talk about; pronouns stand in so we do not sound repetitive.",
+                "Heat moves from hot to cold via touching conduction, fluid convection loops, or radiation waves.",
+                "Arteries carry oxygen-rich blood away from the heart, while veins transport oxygen-poor blood back to the heart.",
+                "Motion is tracked from stationary references, calculating speed by dividing distance covered by time spent."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Important note for Circulatory System."
+            },
+            {
+              "id": "L1-T5-G6",
+              "question": "In \"Circulatory System\", which section covers: \"Your heart is a hollow involuntary muscle about the size of your fist\"?",
+              "options": [
+                "Numerator and Denominator",
+                "The Heart: A Powerful Involuntary Engine",
+                "Physical Changes: No New Substances Made",
+                "Solids: Definite Shape & Volume"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"The Heart: A Powerful Involuntary Engine\"."
+            },
+            {
+              "id": "L1-T5-G7",
+              "question": "In \"Circulatory System\", which section covers: \"1\"?",
+              "options": [
+                "Understanding Verb Tenses",
+                "What Bones Do (Core Functions)",
+                "Floating and Sinking (Density Intro)",
+                "The Three Types of Vessels (The Blood Pipelines)"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is discussed under \"The Three Types of Vessels (The Blood Pipelines)\"."
+            },
+            {
+              "id": "L1-T5-G8",
+              "question": "In \"Circulatory System\", which section covers: \"• Red Blood Cells: Delivery vehicles carrying oxygen\"?",
+              "options": [
+                "What makes up blood?",
+                "Polygons and Properties",
+                "Weather: Daily Changes",
+                "Synonyms: Matching Meanings"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is discussed under \"What makes up blood?\"."
             }
           ]
         }
@@ -374,6 +818,102 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "Liquids do not have a fixed shape. Their molecules slide past each other, taking the exact shape of whatever container holds them."
+            },
+            {
+              "id": "L2-T1-G1",
+              "question": "In \"States of Matter\", what does the term \"Matter\" mean?",
+              "options": [
+                "Organisms like fungi and bacteria that rot down dead plants and animals, returning mineral nutrients back to the soil.",
+                "A measurement of how tightly packed together the molecules inside a substance are.",
+                "Anything that has weight (mass) and takes up physical space.",
+                "The phases where the visible glowing portion of the Moon is growing larger night after night."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "\"Matter\" — Anything that has weight (mass) and takes up physical space."
+            },
+            {
+              "id": "L2-T1-G2",
+              "question": "Which term is defined as: \"Anything that has weight (mass) and takes up physical space.\"?",
+              "options": [
+                "Polygon",
+                "Matter",
+                "Verb",
+                "Velocity"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is the definition of \"Matter\"."
+            },
+            {
+              "id": "L2-T1-G3",
+              "question": "Which statement best summarizes the topic \"States of Matter\"?",
+              "options": [
+                "Particles are packed locked in solids, slide in liquids, and fly freely in gases.",
+                "Mixtures have separate parts you can pick apart; solutions are dissolved and look uniform.",
+                "Earth has 4 layers: solid outer crust, sluggish hot mantle, liquid outer core, and solid inner core.",
+                "Potential energy represents height or chemical storage; kinetic energy represents speed of motion."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Key takeaway for States of Matter."
+            },
+            {
+              "id": "L2-T1-G4",
+              "question": "Which topic is described as: \"Examine solids, liquids, and gases by how their tiny molecules behave under heating and cooling.\"?",
+              "options": [
+                "Forms of Energy",
+                "Heat Energy",
+                "Circulatory System",
+                "States of Matter"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That description matches \"States of Matter\"."
+            },
+            {
+              "id": "L2-T1-G5",
+              "question": "In \"States of Matter\", which section covers: \"In a solid, molecules are packed incredibly tightly together in a neat arrangement\"?",
+              "options": [
+                "Refraction: Bent Light",
+                "Solids: Definite Shape & Volume",
+                "Magnetic Force",
+                "Voluntary vs. Involuntary Muscles"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"Solids: Definite Shape & Volume\"."
+            },
+            {
+              "id": "L2-T1-G6",
+              "question": "In \"States of Matter\", which section covers: \"In a liquid, molecules are loose and can slide past each other\"?",
+              "options": [
+                "How Muscles Move Bones",
+                "Reflection: Bouncing Light",
+                "How to Measure Speed",
+                "Liquids: Flowing Fluids with Definite Volume"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is discussed under \"Liquids: Flowing Fluids with Definite Volume\"."
+            },
+            {
+              "id": "L2-T1-G7",
+              "question": "In \"States of Matter\", which section covers: \"In a gas, molecules are super active, far apart, and fly in all directions! A gas will spread out to fill any container it is in, no matter how big or small\"?",
+              "options": [
+                "Friction: The Braking Force",
+                "The Mouth and Esophagus",
+                "Gases: No Definite Shape or Volume",
+                "The Outer Gas Giants"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Gases: No Definite Shape or Volume\"."
+            },
+            {
+              "id": "L2-T1-G8",
+              "question": "What is \"States of Matter\" mainly about?",
+              "options": [
+                "Our home planet Earth is not just one solid rock ball",
+                "Matter is anything that has mass (weight) and takes up space",
+                "Geometry is the study of shapes and space",
+                "Your body needs energy to play and learn, but your organs cannot use a whole apple or a bowl of rice"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Overview of States of Matter."
             }
           ]
         },
@@ -429,6 +969,102 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "Solubility is the speed and ability of a substance (like sugar) to dissolve into a liquid solvent."
+            },
+            {
+              "id": "L2-T2-G1",
+              "question": "In \"Physical Properties\", what does the term \"Density\" mean?",
+              "options": [
+                "Anything that has weight (mass) and takes up physical space.",
+                "The speed of an object in a specific, chosen direction (like running 5 m/s North).",
+                "A measurement of how tightly packed together the molecules inside a substance are.",
+                "Organisms like fungi and bacteria that rot down dead plants and animals, returning mineral nutrients back to the soil."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "\"Density\" — A measurement of how tightly packed together the molecules inside a substance are."
+            },
+            {
+              "id": "L2-T2-G2",
+              "question": "Which term is defined as: \"A measurement of how tightly packed together the molecules inside a substance are.\"?",
+              "options": [
+                "Density",
+                "Polygon",
+                "Antonym",
+                "Photosynthesis"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is the definition of \"Density\"."
+            },
+            {
+              "id": "L2-T2-G3",
+              "question": "Which statement best summarizes the topic \"Physical Properties\"?",
+              "options": [
+                "Mixtures have separate parts you can pick apart; solutions are dissolved and look uniform.",
+                "The solar system orbits 8 planets around 1 sun: four close rocky planets and four distant gas giants.",
+                "Mass, volume, color, hardness, and magnetic traits let us describe and group matter.",
+                "Heat moves from hot to cold via touching conduction, fluid convection loops, or radiation waves."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Key takeaway for Physical Properties."
+            },
+            {
+              "id": "L2-T2-G4",
+              "question": "Which topic is described as: \"How to observe, measure, and identify substances using mass, shape, density, and magnetic traits.\"?",
+              "options": [
+                "Ecosystems",
+                "Physical Properties",
+                "Weather and Climate",
+                "Forms of Energy"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That description matches \"Physical Properties\"."
+            },
+            {
+              "id": "L2-T2-G5",
+              "question": "Which is an important point to remember about \"Physical Properties\"?",
+              "options": [
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction.",
+                "Every region (like wet forests, dry deserts, or oceans) has unique traits suited to its habitant species.",
+                "The heart pumps oxygenated, nutrient-dense blood through arteries and retrieves wastes in veins.",
+                "Ice floats on water because its crystalline structure makes it less dense than bulk liquid water molecules."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Important note for Physical Properties."
+            },
+            {
+              "id": "L2-T2-G6",
+              "question": "In \"Physical Properties\", which section covers: \"• Mass: The amount of material in an object\"?",
+              "options": [
+                "Synonyms: Matching Meanings",
+                "Mass and Volume",
+                "How to Measure Speed",
+                "Numerator and Denominator"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"Mass and Volume\"."
+            },
+            {
+              "id": "L2-T2-G7",
+              "question": "In \"Physical Properties\", which section covers: \"Why does a massive tree trunk float on a lake while a small steel nail sinks directly to the rock bed? This refers to Density!\"?",
+              "options": [
+                "The Outer Gas Giants",
+                "Solids: Definite Shape & Volume",
+                "Chemical Changes: Brand New Materials Created",
+                "Floating and Sinking (Density Intro)"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is discussed under \"Floating and Sinking (Density Intro)\"."
+            },
+            {
+              "id": "L2-T2-G8",
+              "question": "In \"Physical Properties\", which section covers: \"• Hardness: How easily a solid can be scratched (diamonds are the hardest!)\"?",
+              "options": [
+                "Floating and Sinking (Density Intro)",
+                "Biotic and Abiotic Assets",
+                "Reflection: Bouncing Light",
+                "Special Physical Traits"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is discussed under \"Special Physical Traits\"."
             }
           ]
         },
@@ -483,6 +1119,102 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "Tearing only changes the size and shape of the paper. It does not alter the actual ingredient molecules, keeping it a physical change."
+            },
+            {
+              "id": "L2-T3-G1",
+              "question": "In \"Changes in Matter\", what does the term \"Reversible Change\" mean?",
+              "options": [
+                "A physical change that can be undone to return the object to its original state (like freezing water and then melting it).",
+                "A word used to describe an action, state, or occurrence, forming the main part of the predicate of a sentence.",
+                "The localized natural home or environment of a plant or animal that satisfies all its life support needs.",
+                "A word that functions as the name of some specific thing or set of things, such as living creatures, objects, places, actions, or ideas."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "\"Reversible Change\" — A physical change that can be undone to return the object to its original state (like freezing water and then melting it)."
+            },
+            {
+              "id": "L2-T3-G2",
+              "question": "Which term is defined as: \"A physical change that can be undone to return the object to its original state (like freezing water and then melting it).\"?",
+              "options": [
+                "Polygon",
+                "Reversible Change",
+                "Photosynthesis",
+                "Crust"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is the definition of \"Reversible Change\"."
+            },
+            {
+              "id": "L2-T3-G3",
+              "question": "Which statement best summarizes the topic \"Changes in Matter\"?",
+              "options": [
+                "Every region (like wet forests, dry deserts, or oceans) has unique traits suited to its habitant species.",
+                "Physical changes alter appearance but keep ingredients; chemical changes create completely new materials.",
+                "Over 600 muscles of voluntary and involuntary types contract and work in pairs to enable motion.",
+                "The denominator is the total parts, and the numerator is the parts we have."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Key takeaway for Changes in Matter."
+            },
+            {
+              "id": "L2-T3-G4",
+              "question": "Which topic is described as: \"Physical changes versus chemical changes in substances.\"?",
+              "options": [
+                "States of Matter",
+                "Mixtures and Solutions",
+                "Skeletal System",
+                "Changes in Matter"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That description matches \"Changes in Matter\"."
+            },
+            {
+              "id": "L2-T3-G5",
+              "question": "In \"Changes in Matter\", which section covers: \"In a physical change, only the size, shape, or state of matter changes, but the material itself remains the same\"?",
+              "options": [
+                "Physical Changes: No New Substances Made",
+                "Antonyms: Opposites",
+                "The Lunar Cycle Progression",
+                "Three-Dimensional Solids"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is discussed under \"Physical Changes: No New Substances Made\"."
+            },
+            {
+              "id": "L2-T3-G6",
+              "question": "In \"Changes in Matter\", which section covers: \"In a chemical change, substances react and transform into brand new materials with entirely different properties\"?",
+              "options": [
+                "Solids: Definite Shape & Volume",
+                "Chief Protective Bones",
+                "What makes up blood?",
+                "Chemical Changes: Brand New Materials Created"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is discussed under \"Chemical Changes: Brand New Materials Created\"."
+            },
+            {
+              "id": "L2-T3-G7",
+              "question": "In \"Changes in Matter\", which section covers: \"How can you tell if a chemical change happened? Look for these signs:\"?",
+              "options": [
+                "The Lunar Cycle Progression",
+                "Kinetic vs. Potential Energy",
+                "Reflection: Bouncing Light",
+                "Clues of a Chemical Change"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is discussed under \"Clues of a Chemical Change\"."
+            },
+            {
+              "id": "L2-T3-G8",
+              "question": "What is \"Changes in Matter\" mainly about?",
+              "options": [
+                "Matter undergoes various changes",
+                "A fraction represents a part of a whole",
+                "We can describe, sort, and identify different objects by observing their physical properties",
+                "Decimals are another way of writing fractional amounts"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Overview of Changes in Matter."
             }
           ]
         },
@@ -537,6 +1269,102 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "The solute is the substance that gets dissolved (like sugar), while the solvent is the liquid that dissolves it (like water)."
+            },
+            {
+              "id": "L2-T4-G1",
+              "question": "In \"Mixtures and Solutions\", what does the term \"Solution\" mean?",
+              "options": [
+                "A uniform mixture where a solute dissolves completely inside a liquid solvent.",
+                "A physical change that can be undone to return the object to its original state (like freezing water and then melting it).",
+                "The speed of an object in a specific, chosen direction (like running 5 m/s North).",
+                "The smart, defensive guarding of natural resources and habitats to protect them from human destruction or extinction."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "\"Solution\" — A uniform mixture where a solute dissolves completely inside a liquid solvent."
+            },
+            {
+              "id": "L2-T4-G2",
+              "question": "Which term is defined as: \"A uniform mixture where a solute dissolves completely inside a liquid solvent.\"?",
+              "options": [
+                "Refraction",
+                "Potential Energy",
+                "Crust",
+                "Solution"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is the definition of \"Solution\"."
+            },
+            {
+              "id": "L2-T4-G3",
+              "question": "Which statement best summarizes the topic \"Mixtures and Solutions\"?",
+              "options": [
+                "Mixtures have separate parts you can pick apart; solutions are dissolved and look uniform.",
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction.",
+                "Your skeletal system acts as a protective shield and structural framework for the body, housing 206 living bones.",
+                "The solar system orbits 8 planets around 1 sun: four close rocky planets and four distant gas giants."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Key takeaway for Mixtures and Solutions."
+            },
+            {
+              "id": "L2-T4-G4",
+              "question": "Which topic is described as: \"Inspect combination mixtures where substances stay separate, versus dissolving into homogeneous solutions.\"?",
+              "options": [
+                "Changes in Matter",
+                "Mixtures and Solutions",
+                "Heat Energy",
+                "Food Chains"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That description matches \"Mixtures and Solutions\"."
+            },
+            {
+              "id": "L2-T4-G5",
+              "question": "In \"Mixtures and Solutions\", which section covers: \"A mixture is a combination of two or more materials that are mixed together but do not combine chemically\"?",
+              "options": [
+                "What Bones Do (Core Functions)",
+                "What is a Mixture?",
+                "What is a Solution?",
+                "How to Measure Speed"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"What is a Mixture?\"."
+            },
+            {
+              "id": "L2-T4-G6",
+              "question": "In \"Mixtures and Solutions\", which section covers: \"A solution is a special type of mixture where one substance dissolves completely and spreads evenly inside another substance\"?",
+              "options": [
+                "What is a Solution?",
+                "Three Types of Muscle Tissues",
+                "The Heart: A Powerful Involuntary Engine",
+                "Understanding Verb Tenses"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is discussed under \"What is a Solution?\"."
+            },
+            {
+              "id": "L2-T4-G7",
+              "question": "In \"Mixtures and Solutions\", which section covers: \"• Solute: The substance that *dissolves* (example: the salt powder)\"?",
+              "options": [
+                "How Muscles Move Bones",
+                "Solute vs. Solvent",
+                "The Diaphragm Muscle",
+                "What makes up blood?"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"Solute vs. Solvent\"."
+            },
+            {
+              "id": "L2-T4-G8",
+              "question": "What is \"Mixtures and Solutions\" mainly about?",
+              "options": [
+                "In science, substances can be combined",
+                "Every cell in your body needs gas called oxygen to release energy",
+                "Matter is anything that has mass (weight) and takes up space",
+                "The Solar System is our cosmic neighborhood"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Overview of Mixtures and Solutions."
             }
           ]
         }
@@ -586,6 +1414,114 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "Gravity is Earth's natural pull force that drags all physical materials back toward its center."
+            },
+            {
+              "id": "L3-T1-G1",
+              "question": "In \"Types of Forces\", what does the term \"Friction\" mean?",
+              "options": [
+                "Heat transfer traveling through empty space across electromagnetic waves, without needing physical atoms to touch.",
+                "A numerical expression showing the ratio of a part to a whole, written as a numerator over a denominator.",
+                "The phases where the visible glowing portion of the Moon is growing larger night after night.",
+                "A force that resists sliding movement between two touching surfaces, producing heat and slowing objects down."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "\"Friction\" — A force that resists sliding movement between two touching surfaces, producing heat and slowing objects down."
+            },
+            {
+              "id": "L3-T1-G2",
+              "question": "Which term is defined as: \"A force that resists sliding movement between two touching surfaces, producing heat and slowing objects down.\"?",
+              "options": [
+                "Friction",
+                "Photosynthesis",
+                "Orbit",
+                "Bone Marrow"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is the definition of \"Friction\"."
+            },
+            {
+              "id": "L3-T1-G3",
+              "question": "Which statement best summarizes the topic \"Types of Forces\"?",
+              "options": [
+                "Over 600 muscles of voluntary and involuntary types contract and work in pairs to enable motion.",
+                "Mass, volume, color, hardness, and magnetic traits let us describe and group matter.",
+                "Earth has 4 layers: solid outer crust, sluggish hot mantle, liquid outer core, and solid inner core.",
+                "Pushes and pulls include gravity pulling down, and friction resisting and slowing sliding objects."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Key takeaway for Types of Forces."
+            },
+            {
+              "id": "L3-T1-G4",
+              "question": "Which topic is described as: \"Pushes and pulls: GRAVITY pulling falling objects, and FRICTION resisting movement.\"?",
+              "options": [
+                "Ecosystems",
+                "Types of Forces",
+                "Verbs & Tenses",
+                "Plants and Animals"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That description matches \"Types of Forces\"."
+            },
+            {
+              "id": "L3-T1-G5",
+              "question": "In \"Types of Forces\", which section covers: \"Gravity is an invisible non-contact force that pulls all objects toward each other\"?",
+              "options": [
+                "Three Ways Heat Travels",
+                "Chemical Changes: Brand New Materials Created",
+                "Gravity: The Universal Puller",
+                "Reference Points"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Gravity: The Universal Puller\"."
+            },
+            {
+              "id": "L3-T1-G6",
+              "question": "In \"Types of Forces\", which section covers: \"Friction is a contact force that acts in the opposite direction of moving objects, slowing them down! When two surfaces slide past each other, bumps on the rough surfaces block rubbing wheels\"?",
+              "options": [
+                "Friction: The Braking Force",
+                "Peeling the Onion: The Four Spheres",
+                "Gases: No Definite Shape or Volume",
+                "Climate: Decades of Patterns"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is discussed under \"Friction: The Braking Force\"."
+            },
+            {
+              "id": "L3-T1-G7",
+              "question": "In \"Types of Forces\", which section covers: \"An invisible attraction or push force from magnetic fields\"?",
+              "options": [
+                "Magnetic Force",
+                "Special Physical Traits",
+                "The Three Types of Vessels (The Blood Pipelines)",
+                "Three Ways Heat Travels"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is discussed under \"Magnetic Force\"."
+            },
+            {
+              "id": "L3-T1-G8",
+              "question": "What is \"Types of Forces\" mainly about?",
+              "options": [
+                "Earth is our helper home",
+                "A force is simply a raise: any push or pull on an object",
+                "In science, Energy is defined as the ability to do work or make changes happen",
+                "A fraction represents a part of a whole"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Overview of Types of Forces."
+            },
+            {
+              "id": "L3-T1-R1",
+              "question": "Review 1: which statement is true about \"Types of Forces\"?",
+              "options": [
+                "Matter undergoes various changes",
+                "Pushes and pulls include gravity pulling down, and friction resisting and slowing sliding objects.",
+                "A flat, closed 2D shape with three or more straight sides.",
+                "The heart pumps oxygenated, nutrient-dense blood through arteries and retrieves wastes in veins."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Types of Forces."
             }
           ]
         },
@@ -624,6 +1560,114 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "Speed calculates how much distance is covered in a certain amount of time, giving speed = distance divided by time."
+            },
+            {
+              "id": "L3-T2-G1",
+              "question": "In \"Motion\", what does the term \"Velocity\" mean?",
+              "options": [
+                "A tough, white cord or band of fibrous tissue that connects a muscle securely to a bone.",
+                "The speed of an object in a specific, chosen direction (like running 5 m/s North).",
+                "A measurement of how tightly packed together the molecules inside a substance are.",
+                "Heat transfer traveling through empty space across electromagnetic waves, without needing physical atoms to touch."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "\"Velocity\" — The speed of an object in a specific, chosen direction (like running 5 m/s North)."
+            },
+            {
+              "id": "L3-T2-G2",
+              "question": "Which term is defined as: \"The speed of an object in a specific, chosen direction (like running 5 m/s North).\"?",
+              "options": [
+                "Crust",
+                "Absorption",
+                "Conservation",
+                "Velocity"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is the definition of \"Velocity\"."
+            },
+            {
+              "id": "L3-T2-G3",
+              "question": "Which statement best summarizes the topic \"Motion\"?",
+              "options": [
+                "Physical changes alter appearance but keep ingredients; chemical changes create completely new materials.",
+                "Particles are packed locked in solids, slide in liquids, and fly freely in gases.",
+                "Motion is tracked from stationary references, calculating speed by dividing distance covered by time spent.",
+                "Energy loops sun to producer, to feeding consumers, and returns to soil via decomposers."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Key takeaway for Motion."
+            },
+            {
+              "id": "L3-T2-G4",
+              "question": "Which topic is described as: \"Understanding speed, distance, and changes in position over time.\"?",
+              "options": [
+                "Changes in Matter",
+                "Muscular System",
+                "Motion",
+                "Light Energy"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That description matches \"Motion\"."
+            },
+            {
+              "id": "L3-T2-G5",
+              "question": "In \"Motion\", which section covers: \"Speed is how fast an object covers physical distance\"?",
+              "options": [
+                "Physical Changes: No New Substances Made",
+                "Reference Points",
+                "Fun Bone Facts",
+                "How to Measure Speed"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is discussed under \"How to Measure Speed\"."
+            },
+            {
+              "id": "L3-T2-G6",
+              "question": "In \"Motion\", which section covers: \"To know if something is moving, we need a stationary reference point (like a tree, a building, or a lamp post)\"?",
+              "options": [
+                "Biotic and Abiotic Assets",
+                "Physical Changes: No New Substances Made",
+                "Reference Points",
+                "Kinetic vs. Potential Energy"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Reference Points\"."
+            },
+            {
+              "id": "L3-T2-G7",
+              "question": "What is \"Motion\" mainly about?",
+              "options": [
+                "The Solar System is our cosmic neighborhood",
+                "Light is a form of energy that we can see with our eyes",
+                "The circulatory system is the delivery network of your body",
+                "Motion is a change in an object's position over time with respect to a reference point"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Overview of Motion."
+            },
+            {
+              "id": "L3-T2-R1",
+              "question": "Review 1: which statement is true about \"Motion\"?",
+              "options": [
+                "An ecosystem is a larger web",
+                "Motion is tracked from stationary references, calculating speed by dividing distance covered by time spent.",
+                "A tiny microscopic blood vessel that connects arteries and veins, allowing materials to slip through its walls to feed cells.",
+                "In science, Energy is defined as the ability to do work or make changes happen"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Motion."
+            },
+            {
+              "id": "L3-T2-R2",
+              "question": "Review 2: which statement is true about \"Motion\"?",
+              "options": [
+                "A flat, closed 2D shape with three or more straight sides.",
+                "We protect our planet through deliberate eco measures, minimizing waste plastic, and green planting.",
+                "The thin, cold, outermost layer of Earth's solid rock framing mountains and oceanic floors.",
+                "The speed of an object in a specific, chosen direction (like running 5 m/s North)."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Motion."
             }
           ]
         },
@@ -658,6 +1702,114 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "Objects at rest up high store gravitational potential energy, which converts to kinetic speed if they fall."
+            },
+            {
+              "id": "L3-T3-G1",
+              "question": "In \"Forms of Energy\", what does the term \"Potential Energy\" mean?",
+              "options": [
+                "Stored energy inside an object due to its high position, chemical composition, or stretched physical state.",
+                "The bending of light waves as they pass from one medium into another of different density (like air to water).",
+                "A curved path that a planet follows to revolve around a massive star like the Sun due to gravity.",
+                "The soft tissue inside the center of larger bones where new blood cells are made daily."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "\"Potential Energy\" — Stored energy inside an object due to its high position, chemical composition, or stretched physical state."
+            },
+            {
+              "id": "L3-T3-G2",
+              "question": "Which term is defined as: \"Stored energy inside an object due to its high position, chemical composition, or stretched physical state.\"?",
+              "options": [
+                "Potential Energy",
+                "Density",
+                "Decomposer",
+                "Polygon"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is the definition of \"Potential Energy\"."
+            },
+            {
+              "id": "L3-T3-G3",
+              "question": "Which statement best summarizes the topic \"Forms of Energy\"?",
+              "options": [
+                "Potential energy represents height or chemical storage; kinetic energy represents speed of motion.",
+                "Mass, volume, color, hardness, and magnetic traits let us describe and group matter.",
+                "Synonyms mean the same, antonyms mean the opposite.",
+                "Verbs are the engine of sentences, defining physical actions and timelines."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Key takeaway for Forms of Energy."
+            },
+            {
+              "id": "L3-T3-G4",
+              "question": "Which topic is described as: \"Analyze kinetic energy of speed, potential energy of altitude positions, plus chemical or sound energy formats.\"?",
+              "options": [
+                "Forms of Energy",
+                "Circulatory System",
+                "Food Chains",
+                "Ecosystems"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That description matches \"Forms of Energy\"."
+            },
+            {
+              "id": "L3-T3-G5",
+              "question": "In \"Forms of Energy\", which section covers: \"• Kinetic Energy (Energy of Motion): Anything moving carries kinetic energy\"?",
+              "options": [
+                "What Bones Do (Core Functions)",
+                "Kinetic vs. Potential Energy",
+                "What makes up blood?",
+                "Voluntary vs. Involuntary Muscles"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"Kinetic vs. Potential Energy\"."
+            },
+            {
+              "id": "L3-T3-G6",
+              "question": "What is \"Forms of Energy\" mainly about?",
+              "options": [
+                "In science, Energy is defined as the ability to do work or make changes happen",
+                "Your body needs energy to play and learn, but your organs cannot use a whole apple or a bowl of rice",
+                "The circulatory system is the delivery network of your body",
+                "Heat (thermal energy) is the energy caused by the vibrations of atoms inside matter"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Overview of Forms of Energy."
+            },
+            {
+              "id": "L3-T3-R1",
+              "question": "Review 1: which statement is true about \"Forms of Energy\"?",
+              "options": [
+                "Writing gets much more exciting when you choose precise, descriptive vocabulary",
+                "Potential energy represents height or chemical storage; kinetic energy represents speed of motion.",
+                "Every living thing needs energy",
+                "Your body needs energy to play and learn, but your organs cannot use a whole apple or a bowl of rice"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Forms of Energy."
+            },
+            {
+              "id": "L3-T3-R2",
+              "question": "Review 2: which statement is true about \"Forms of Energy\"?",
+              "options": [
+                "Each position to the right of the decimal point gets 10 times smaller.",
+                "Particles are packed locked in solids, slide in liquids, and fly freely in gases.",
+                "An ecosystem is a larger web",
+                "Stored energy inside an object due to its high position, chemical composition, or stretched physical state."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Forms of Energy."
+            },
+            {
+              "id": "L3-T3-R3",
+              "question": "Review 3: which statement is true about \"Forms of Energy\"?",
+              "options": [
+                "Weather tracks daily rain and sun in a town; climate is the long-term averages over decades.",
+                "Digestion transforms food into digestible blood nutrients through mechanical crushing and chemical acid breakdowns.",
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction.",
+                "Analyze kinetic energy of speed, potential energy of altitude positions, plus chemical or sound energy formats."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Forms of Energy."
             }
           ]
         },
@@ -692,6 +1844,114 @@
               ],
               "correctAnswerIndex": 0,
               "explanation": "Conduction is the transfer of heat between substances that are in direct contact with each other."
+            },
+            {
+              "id": "L3-T4-G1",
+              "question": "In \"Heat Energy\", what does the term \"Radiation\" mean?",
+              "options": [
+                "Heat transfer traveling through empty space across electromagnetic waves, without needing physical atoms to touch.",
+                "A numerical expression showing the ratio of a part to a whole, written as a numerator over a denominator.",
+                "The smart, defensive guarding of natural resources and habitats to protect them from human destruction or extinction.",
+                "The average weather conditions (temperature, rain, winds) in a large region over 30 years or more."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "\"Radiation\" — Heat transfer traveling through empty space across electromagnetic waves, without needing physical atoms to touch."
+            },
+            {
+              "id": "L3-T4-G2",
+              "question": "Which term is defined as: \"Heat transfer traveling through empty space across electromagnetic waves, without needing physical atoms to touch.\"?",
+              "options": [
+                "Crust",
+                "Radiation",
+                "Capillary",
+                "Refraction"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is the definition of \"Radiation\"."
+            },
+            {
+              "id": "L3-T4-G3",
+              "question": "Which statement best summarizes the topic \"Heat Energy\"?",
+              "options": [
+                "Heat moves from hot to cold via touching conduction, fluid convection loops, or radiation waves.",
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction.",
+                "Verbs are the engine of sentences, defining physical actions and timelines.",
+                "The denominator is the total parts, and the numerator is the parts we have."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Key takeaway for Heat Energy."
+            },
+            {
+              "id": "L3-T4-G4",
+              "question": "Which topic is described as: \"Study thermal transfers through solid conduction, liquid convection, and atmospheric radiation.\"?",
+              "options": [
+                "2D and 3D Shapes",
+                "Verbs & Tenses",
+                "Heat Energy",
+                "Layers of the Earth"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That description matches \"Heat Energy\"."
+            },
+            {
+              "id": "L3-T4-G5",
+              "question": "In \"Heat Energy\", which section covers: \"1\"?",
+              "options": [
+                "The Three Types of Vessels (The Blood Pipelines)",
+                "Clues of a Chemical Change",
+                "Three Ways Heat Travels",
+                "Mass and Volume"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Three Ways Heat Travels\"."
+            },
+            {
+              "id": "L3-T4-G6",
+              "question": "What is \"Heat Energy\" mainly about?",
+              "options": [
+                "In science, Energy is defined as the ability to do work or make changes happen",
+                "Your body needs energy to play and learn, but your organs cannot use a whole apple or a bowl of rice",
+                "Heat (thermal energy) is the energy caused by the vibrations of atoms inside matter",
+                "The skeletal system is made up of all the bones, cartilage, joints, and ligaments in your body"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Overview of Heat Energy."
+            },
+            {
+              "id": "L3-T4-R1",
+              "question": "Review 1: which statement is true about \"Heat Energy\"?",
+              "options": [
+                "Synonyms mean the same, antonyms mean the opposite.",
+                "The circulatory system is the delivery network of your body",
+                "Verbs are the engine of sentences, defining physical actions and timelines.",
+                "Heat moves from hot to cold via touching conduction, fluid convection loops, or radiation waves."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Heat Energy."
+            },
+            {
+              "id": "L3-T4-R2",
+              "question": "Review 2: which statement is true about \"Heat Energy\"?",
+              "options": [
+                "The circulatory system is the delivery network of your body",
+                "The muscular system is made up of over 600 muscles that cover your skeleton",
+                "Heat transfer traveling through empty space across electromagnetic waves, without needing physical atoms to touch.",
+                "A flat, closed 2D shape with three or more straight sides."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Review item for Heat Energy."
+            },
+            {
+              "id": "L3-T4-R3",
+              "question": "Review 3: which statement is true about \"Heat Energy\"?",
+              "options": [
+                "The respiratory system absorbs oxygen and vents waste carbon dioxide via gas exchanges inside lung alveoli.",
+                "In science, substances can be combined",
+                "The process where nutrients are soaked up through the walls of the small intestine into the bloodstream.",
+                "Study thermal transfers through solid conduction, liquid convection, and atmospheric radiation."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Heat Energy."
             }
           ]
         },
@@ -730,6 +1990,114 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "Refraction occurs because light slows down and bends as it travels from air into denser water fluid, distorting the geometric visual shape."
+            },
+            {
+              "id": "L3-T5-G1",
+              "question": "In \"Light Energy\", what does the term \"Refraction\" mean?",
+              "options": [
+                "The bending of light waves as they pass from one medium into another of different density (like air to water).",
+                "A flat, closed 2D shape with three or more straight sides.",
+                "A tough, white cord or band of fibrous tissue that connects a muscle securely to a bone.",
+                "The process where nutrients are soaked up through the walls of the small intestine into the bloodstream."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "\"Refraction\" — The bending of light waves as they pass from one medium into another of different density (like air to water)."
+            },
+            {
+              "id": "L3-T5-G2",
+              "question": "Which term is defined as: \"The bending of light waves as they pass from one medium into another of different density (like air to water).\"?",
+              "options": [
+                "Capillary",
+                "Crust",
+                "Antonym",
+                "Refraction"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is the definition of \"Refraction\"."
+            },
+            {
+              "id": "L3-T5-G3",
+              "question": "Which statement best summarizes the topic \"Light Energy\"?",
+              "options": [
+                "Over 600 muscles of voluntary and involuntary types contract and work in pairs to enable motion.",
+                "Energy loops sun to producer, to feeding consumers, and returns to soil via decomposers.",
+                "Mixtures have separate parts you can pick apart; solutions are dissolved and look uniform.",
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Key takeaway for Light Energy."
+            },
+            {
+              "id": "L3-T5-G4",
+              "question": "Which topic is described as: \"Explore straight-line light paths, bounce reflections, and bent refraction angles inside lenses.\"?",
+              "options": [
+                "Light Energy",
+                "Phases of the Moon",
+                "2D and 3D Shapes",
+                "Habitats"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That description matches \"Light Energy\"."
+            },
+            {
+              "id": "L3-T5-G5",
+              "question": "In \"Light Energy\", which section covers: \"When light waves hit a super smooth, shiny surface (like a looking glass mirror), they bounce off at the exact same angle they hit it\"?",
+              "options": [
+                "Biotic and Abiotic Assets",
+                "Chemical Changes: Brand New Materials Created",
+                "Reflection: Bouncing Light",
+                "Polygons and Properties"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Reflection: Bouncing Light\"."
+            },
+            {
+              "id": "L3-T5-G6",
+              "question": "In \"Light Energy\", which section covers: \"When light passes from one substance to another (like air into water), it changes speed and bends its path! This bending of light is called Refraction\"?",
+              "options": [
+                "Weather: Daily Changes",
+                "Fun Bone Facts",
+                "Refraction: Bent Light",
+                "Gravity: The Universal Puller"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Refraction: Bent Light\"."
+            },
+            {
+              "id": "L3-T5-G7",
+              "question": "What is \"Light Energy\" mainly about?",
+              "options": [
+                "Geometry is the study of shapes and space",
+                "Light is a form of energy that we can see with our eyes",
+                "Our home planet Earth is not just one solid rock ball",
+                "In science, Energy is defined as the ability to do work or make changes happen"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Overview of Light Energy."
+            },
+            {
+              "id": "L3-T5-R1",
+              "question": "Review 1: which statement is true about \"Light Energy\"?",
+              "options": [
+                "A tough, white cord or band of fibrous tissue that connects a muscle securely to a bone.",
+                "Flat shapes are 2D, while solid shapes that take up physical space are 3D.",
+                "Plants act as producers making foods with sunlight; animals are consumers needing feeding.",
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Light Energy."
+            },
+            {
+              "id": "L3-T5-R2",
+              "question": "Review 2: which statement is true about \"Light Energy\"?",
+              "options": [
+                "The bending of light waves as they pass from one medium into another of different density (like air to water).",
+                "A flat, closed 2D shape with three or more straight sides.",
+                "Physical changes alter appearance but keep ingredients; chemical changes create completely new materials.",
+                "Motion is tracked from stationary references, calculating speed by dividing distance covered by time spent."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Review item for Light Energy."
             }
           ]
         }
@@ -771,6 +2139,114 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "The Crust is the thin rocky skin of Earth. Soil and oceans sit on top of this layer."
+            },
+            {
+              "id": "L4-T1-G1",
+              "question": "In \"Layers of the Earth\", what does the term \"Crust\" mean?",
+              "options": [
+                "Anything that has weight (mass) and takes up physical space.",
+                "The thin, cold, outermost layer of Earth's solid rock framing mountains and oceanic floors.",
+                "A uniform mixture where a solute dissolves completely inside a liquid solvent.",
+                "A flat, closed 2D shape with three or more straight sides."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "\"Crust\" — The thin, cold, outermost layer of Earth's solid rock framing mountains and oceanic floors."
+            },
+            {
+              "id": "L4-T1-G2",
+              "question": "Which term is defined as: \"The thin, cold, outermost layer of Earth's solid rock framing mountains and oceanic floors.\"?",
+              "options": [
+                "Crust",
+                "Bone Marrow",
+                "Potential Energy",
+                "Decimal System"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is the definition of \"Crust\"."
+            },
+            {
+              "id": "L4-T1-G3",
+              "question": "Which statement best summarizes the topic \"Layers of the Earth\"?",
+              "options": [
+                "Earth has 4 layers: solid outer crust, sluggish hot mantle, liquid outer core, and solid inner core.",
+                "We protect our planet through deliberate eco measures, minimizing waste plastic, and green planting.",
+                "The respiratory system absorbs oxygen and vents waste carbon dioxide via gas exchanges inside lung alveoli.",
+                "Physical changes alter appearance but keep ingredients; chemical changes create completely new materials."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Key takeaway for Layers of the Earth."
+            },
+            {
+              "id": "L4-T1-G4",
+              "question": "Which topic is described as: \"Peeling back the planetary layers: solid crust, hot mantle, liquid outer core, and iron inner core.\"?",
+              "options": [
+                "Habitats",
+                "Nouns & Pronouns",
+                "Light Energy",
+                "Layers of the Earth"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That description matches \"Layers of the Earth\"."
+            },
+            {
+              "id": "L4-T1-G5",
+              "question": "In \"Layers of the Earth\", which section covers: \"1\"?",
+              "options": [
+                "Clues of a Chemical Change",
+                "What is a Solution?",
+                "Understanding Verb Tenses",
+                "Peeling the Onion: The Four Spheres"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is discussed under \"Peeling the Onion: The Four Spheres\"."
+            },
+            {
+              "id": "L4-T1-G6",
+              "question": "What is \"Layers of the Earth\" mainly about?",
+              "options": [
+                "Our home planet Earth is not just one solid rock ball",
+                "Every living thing needs energy",
+                "The Moon does not produce any light of its own",
+                "Matter undergoes various changes"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Overview of Layers of the Earth."
+            },
+            {
+              "id": "L4-T1-R1",
+              "question": "Review 1: which statement is true about \"Layers of the Earth\"?",
+              "options": [
+                "Earth has 4 layers: solid outer crust, sluggish hot mantle, liquid outer core, and solid inner core.",
+                "Weather tracks daily rain and sun in a town; climate is the long-term averages over decades.",
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction.",
+                "Digestion transforms food into digestible blood nutrients through mechanical crushing and chemical acid breakdowns."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Review item for Layers of the Earth."
+            },
+            {
+              "id": "L4-T1-R2",
+              "question": "Review 2: which statement is true about \"Layers of the Earth\"?",
+              "options": [
+                "Weather tracks daily rain and sun in a town; climate is the long-term averages over decades.",
+                "A force that resists sliding movement between two touching surfaces, producing heat and slowing objects down.",
+                "Verbs are the engine of sentences, defining physical actions and timelines.",
+                "The thin, cold, outermost layer of Earth's solid rock framing mountains and oceanic floors."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Layers of the Earth."
+            },
+            {
+              "id": "L4-T1-R3",
+              "question": "Review 3: which statement is true about \"Layers of the Earth\"?",
+              "options": [
+                "Pushes and pulls include gravity pulling down, and friction resisting and slowing sliding objects.",
+                "The speed of an object in a specific, chosen direction (like running 5 m/s North).",
+                "Peeling back the planetary layers: solid crust, hot mantle, liquid outer core, and iron inner core.",
+                "A uniform mixture where a solute dissolves completely inside a liquid solvent."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Review item for Layers of the Earth."
             }
           ]
         },
@@ -809,6 +2285,114 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "Long-term regional weather profiles observed over decades denote the climate of an area."
+            },
+            {
+              "id": "L4-T2-G1",
+              "question": "In \"Weather and Climate\", what does the term \"Climate\" mean?",
+              "options": [
+                "The average weather conditions (temperature, rain, winds) in a large region over 30 years or more.",
+                "A word used to describe an action, state, or occurrence, forming the main part of the predicate of a sentence.",
+                "A curved path that a planet follows to revolve around a massive star like the Sun due to gravity.",
+                "The non-living physical and chemical parts of an environment (like air temperature, rocks, or soil)."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "\"Climate\" — The average weather conditions (temperature, rain, winds) in a large region over 30 years or more."
+            },
+            {
+              "id": "L4-T2-G2",
+              "question": "Which term is defined as: \"The average weather conditions (temperature, rain, winds) in a large region over 30 years or more.\"?",
+              "options": [
+                "Matter",
+                "Capillary",
+                "Bone Marrow",
+                "Climate"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is the definition of \"Climate\"."
+            },
+            {
+              "id": "L4-T2-G3",
+              "question": "Which statement best summarizes the topic \"Weather and Climate\"?",
+              "options": [
+                "The heart pumps oxygenated, nutrient-dense blood through arteries and retrieves wastes in veins.",
+                "Weather tracks daily rain and sun in a town; climate is the long-term averages over decades.",
+                "An ecosystem matches the biotic living parts directly with abiotic non-living surroundings in a delicate state of balance.",
+                "Heat moves from hot to cold via touching conduction, fluid convection loops, or radiation waves."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Key takeaway for Weather and Climate."
+            },
+            {
+              "id": "L4-T2-G4",
+              "question": "Which topic is described as: \"The difference between temporary daily weather patterns and long-term climate regions.\"?",
+              "options": [
+                "Motion",
+                "Weather and Climate",
+                "Physical Properties",
+                "Phases of the Moon"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That description matches \"Weather and Climate\"."
+            },
+            {
+              "id": "L4-T2-G5",
+              "question": "In \"Weather and Climate\", which section covers: \"Weather is the day-to-day state of the atmosphere in a local town\"?",
+              "options": [
+                "Pronouns are Replacements",
+                "Three Ways Heat Travels",
+                "Weather: Daily Changes",
+                "Biotic and Abiotic Assets"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Weather: Daily Changes\"."
+            },
+            {
+              "id": "L4-T2-G6",
+              "question": "In \"Weather and Climate\", which section covers: \"Climate is the average weather pattern in a region recorded over 30 or more years\"?",
+              "options": [
+                "Climate: Decades of Patterns",
+                "Fun Bone Facts",
+                "Liquids: Flowing Fluids with Definite Volume",
+                "Friction: The Braking Force"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is discussed under \"Climate: Decades of Patterns\"."
+            },
+            {
+              "id": "L4-T2-G7",
+              "question": "What is \"Weather and Climate\" mainly about?",
+              "options": [
+                "Many students confuse weather and climate",
+                "Living organisms are sorted into groups by what they share",
+                "Motion is a change in an object's position over time with respect to a reference point",
+                "In science, substances can be combined"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Overview of Weather and Climate."
+            },
+            {
+              "id": "L4-T2-R1",
+              "question": "Review 1: which statement is true about \"Weather and Climate\"?",
+              "options": [
+                "Motion is tracked from stationary references, calculating speed by dividing distance covered by time spent.",
+                "The circulatory system is the delivery network of your body",
+                "Weather tracks daily rain and sun in a town; climate is the long-term averages over decades.",
+                "A flat, closed 2D shape with three or more straight sides."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Review item for Weather and Climate."
+            },
+            {
+              "id": "L4-T2-R2",
+              "question": "Review 2: which statement is true about \"Weather and Climate\"?",
+              "options": [
+                "Motion is a change in an object's position over time with respect to a reference point",
+                "The average weather conditions (temperature, rain, winds) in a large region over 30 years or more.",
+                "Each position to the right of the decimal point gets 10 times smaller.",
+                "Earth has 4 layers: solid outer crust, sluggish hot mantle, liquid outer core, and solid inner core."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Weather and Climate."
             }
           ]
         },
@@ -847,6 +2431,114 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "Saturn is a gas giant planet that features massive, highly visible rings made of rock, dust, and ice chunks."
+            },
+            {
+              "id": "L4-T3-G1",
+              "question": "In \"Solar System\", what does the term \"Orbit\" mean?",
+              "options": [
+                "A tough, white cord or band of fibrous tissue that connects a muscle securely to a bone.",
+                "A word that functions as the name of some specific thing or set of things, such as living creatures, objects, places, actions, or ideas.",
+                "The average weather conditions (temperature, rain, winds) in a large region over 30 years or more.",
+                "A curved path that a planet follows to revolve around a massive star like the Sun due to gravity."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "\"Orbit\" — A curved path that a planet follows to revolve around a massive star like the Sun due to gravity."
+            },
+            {
+              "id": "L4-T3-G2",
+              "question": "Which term is defined as: \"A curved path that a planet follows to revolve around a massive star like the Sun due to gravity.\"?",
+              "options": [
+                "Solution",
+                "Orbit",
+                "Capillary",
+                "Waxing"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is the definition of \"Orbit\"."
+            },
+            {
+              "id": "L4-T3-G3",
+              "question": "Which statement best summarizes the topic \"Solar System\"?",
+              "options": [
+                "An ecosystem matches the biotic living parts directly with abiotic non-living surroundings in a delicate state of balance.",
+                "Pushes and pulls include gravity pulling down, and friction resisting and slowing sliding objects.",
+                "The solar system orbits 8 planets around 1 sun: four close rocky planets and four distant gas giants.",
+                "We protect our planet through deliberate eco measures, minimizing waste plastic, and green planting."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Key takeaway for Solar System."
+            },
+            {
+              "id": "L4-T3-G4",
+              "question": "Which topic is described as: \"Our parent star Sun, and the eight planets revolving in orbits around it.\"?",
+              "options": [
+                "Solar System",
+                "Phases of the Moon",
+                "Light Energy",
+                "Skeletal System"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That description matches \"Solar System\"."
+            },
+            {
+              "id": "L4-T3-G5",
+              "question": "In \"Solar System\", which section covers: \"These four planets are closest to the Sun, rocky, and relatively small:\"?",
+              "options": [
+                "The Diaphragm Muscle",
+                "The Lunar Cycle Progression",
+                "The Inner Rocky Planets",
+                "Three Types of Muscle Tissues"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"The Inner Rocky Planets\"."
+            },
+            {
+              "id": "L4-T3-G6",
+              "question": "In \"Solar System\", which section covers: \"These four planets are far, massive, and made of ice and thick gases:\"?",
+              "options": [
+                "The Outer Gas Giants",
+                "Reference Points",
+                "Pronouns are Replacements",
+                "The Four Linkages of a Chain"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is discussed under \"The Outer Gas Giants\"."
+            },
+            {
+              "id": "L4-T3-G7",
+              "question": "What is \"Solar System\" mainly about?",
+              "options": [
+                "The circulatory system is the delivery network of your body",
+                "The muscular system is made up of over 600 muscles that cover your skeleton",
+                "Earth is our helper home",
+                "The Solar System is our cosmic neighborhood"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Overview of Solar System."
+            },
+            {
+              "id": "L4-T3-R1",
+              "question": "Review 1: which statement is true about \"Solar System\"?",
+              "options": [
+                "The respiratory system absorbs oxygen and vents waste carbon dioxide via gas exchanges inside lung alveoli.",
+                "The solar system orbits 8 planets around 1 sun: four close rocky planets and four distant gas giants.",
+                "The soft tissue inside the center of larger bones where new blood cells are made daily.",
+                "The speed of an object in a specific, chosen direction (like running 5 m/s North)."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Solar System."
+            },
+            {
+              "id": "L4-T3-R2",
+              "question": "Review 2: which statement is true about \"Solar System\"?",
+              "options": [
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction.",
+                "Energy loops sun to producer, to feeding consumers, and returns to soil via decomposers.",
+                "A curved path that a planet follows to revolve around a massive star like the Sun due to gravity.",
+                "Our home planet Earth is not just one solid rock ball"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Review item for Solar System."
             }
           ]
         },
@@ -881,6 +2573,114 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "A Full Moon happens when we see the entire sunlit half of the moon facing directly toward Earth."
+            },
+            {
+              "id": "L4-T4-G1",
+              "question": "In \"Phases of the Moon\", what does the term \"Waxing\" mean?",
+              "options": [
+                "The smart, defensive guarding of natural resources and habitats to protect them from human destruction or extinction.",
+                "The phases where the visible glowing portion of the Moon is growing larger night after night.",
+                "A curved path that a planet follows to revolve around a massive star like the Sun due to gravity.",
+                "A numerical expression showing the ratio of a part to a whole, written as a numerator over a denominator."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "\"Waxing\" — The phases where the visible glowing portion of the Moon is growing larger night after night."
+            },
+            {
+              "id": "L4-T4-G2",
+              "question": "Which term is defined as: \"The phases where the visible glowing portion of the Moon is growing larger night after night.\"?",
+              "options": [
+                "Waxing",
+                "Antonym",
+                "Orbit",
+                "Bone Marrow"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is the definition of \"Waxing\"."
+            },
+            {
+              "id": "L4-T4-G3",
+              "question": "Which statement best summarizes the topic \"Phases of the Moon\"?",
+              "options": [
+                "The respiratory system absorbs oxygen and vents waste carbon dioxide via gas exchanges inside lung alveoli.",
+                "Earth has 4 layers: solid outer crust, sluggish hot mantle, liquid outer core, and solid inner core.",
+                "The denominator is the total parts, and the numerator is the parts we have.",
+                "Moon phases morph as its lit side faces us during its monthly orbit around Earth."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Key takeaway for Phases of the Moon."
+            },
+            {
+              "id": "L4-T4-G4",
+              "question": "Which topic is described as: \"Lunar light reflection, revolution orbits, and cycles from New Moon to Waxing and Full Moon.\"?",
+              "options": [
+                "Food Chains",
+                "Environmental Conservation",
+                "Phases of the Moon",
+                "Physical Properties"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That description matches \"Phases of the Moon\"."
+            },
+            {
+              "id": "L4-T4-G5",
+              "question": "In \"Phases of the Moon\", which section covers: \"1\"?",
+              "options": [
+                "Inside the Lungs (The Trapped Air Bags)",
+                "The Lunar Cycle Progression",
+                "What is a Solution?",
+                "Magnetic Force"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"The Lunar Cycle Progression\"."
+            },
+            {
+              "id": "L4-T4-G6",
+              "question": "What is \"Phases of the Moon\" mainly about?",
+              "options": [
+                "Heat (thermal energy) is the energy caused by the vibrations of atoms inside matter",
+                "The Moon does not produce any light of its own",
+                "Words are grouped into different types called parts of speech",
+                "The Solar System is our cosmic neighborhood"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Overview of Phases of the Moon."
+            },
+            {
+              "id": "L4-T4-R1",
+              "question": "Review 1: which statement is true about \"Phases of the Moon\"?",
+              "options": [
+                "A numerical expression showing the ratio of a part to a whole, written as a numerator over a denominator.",
+                "Moon phases morph as its lit side faces us during its monthly orbit around Earth.",
+                "An ecosystem matches the biotic living parts directly with abiotic non-living surroundings in a delicate state of balance.",
+                "Mixtures have separate parts you can pick apart; solutions are dissolved and look uniform."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Phases of the Moon."
+            },
+            {
+              "id": "L4-T4-R2",
+              "question": "Review 2: which statement is true about \"Phases of the Moon\"?",
+              "options": [
+                "Over 600 muscles of voluntary and involuntary types contract and work in pairs to enable motion.",
+                "A curved path that a planet follows to revolve around a massive star like the Sun due to gravity.",
+                "Flat shapes are 2D, while solid shapes that take up physical space are 3D.",
+                "The phases where the visible glowing portion of the Moon is growing larger night after night."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Phases of the Moon."
+            },
+            {
+              "id": "L4-T4-R3",
+              "question": "Review 3: which statement is true about \"Phases of the Moon\"?",
+              "options": [
+                "A word used to describe an action, state, or occurrence, forming the main part of the predicate of a sentence.",
+                "Plants act as producers making foods with sunlight; animals are consumers needing feeding.",
+                "Stored energy inside an object due to its high position, chemical composition, or stretched physical state.",
+                "Lunar light reflection, revolution orbits, and cycles from New Moon to Waxing and Full Moon."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Phases of the Moon."
             }
           ]
         }
@@ -926,6 +2726,114 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "Chlorophyll is the green pigment in plant cells that acts like solar panels catching light energy."
+            },
+            {
+              "id": "L5-T1-G1",
+              "question": "In \"Plants and Animals\", what does the term \"Photosynthesis\" mean?",
+              "options": [
+                "The process where nutrients are soaked up through the walls of the small intestine into the bloodstream.",
+                "A curved path that a planet follows to revolve around a massive star like the Sun due to gravity.",
+                "The speed of an object in a specific, chosen direction (like running 5 m/s North).",
+                "The process where green plants turn water, sunlight, and carbon dioxide into sugars and release clean oxygen."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "\"Photosynthesis\" — The process where green plants turn water, sunlight, and carbon dioxide into sugars and release clean oxygen."
+            },
+            {
+              "id": "L5-T1-G2",
+              "question": "Which term is defined as: \"The process where green plants turn water, sunlight, and carbon dioxide into sugars and release clean oxygen.\"?",
+              "options": [
+                "Noun",
+                "Absorption",
+                "Photosynthesis",
+                "Polygon"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is the definition of \"Photosynthesis\"."
+            },
+            {
+              "id": "L5-T1-G3",
+              "question": "Which statement best summarizes the topic \"Plants and Animals\"?",
+              "options": [
+                "Weather tracks daily rain and sun in a town; climate is the long-term averages over decades.",
+                "Plants act as producers making foods with sunlight; animals are consumers needing feeding.",
+                "Digestion transforms food into digestible blood nutrients through mechanical crushing and chemical acid breakdowns.",
+                "Over 600 muscles of voluntary and involuntary types contract and work in pairs to enable motion."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Key takeaway for Plants and Animals."
+            },
+            {
+              "id": "L5-T1-G4",
+              "question": "Which topic is described as: \"Investigate basic cell classifications, differences between vascular plants, and simple species categorization.\"?",
+              "options": [
+                "Types of Forces",
+                "Changes in Matter",
+                "Synonyms and Antonyms",
+                "Plants and Animals"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That description matches \"Plants and Animals\"."
+            },
+            {
+              "id": "L5-T1-G5",
+              "question": "In \"Plants and Animals\", which section covers: \"Plants are producers because they make their own energy fuel! They use a green pigment called Chlorophyll to trap sunlight and turn water and air into sugar sugars\"?",
+              "options": [
+                "Inside the Lungs (The Trapped Air Bags)",
+                "Producers: Plants making Food",
+                "What is a Mixture?",
+                "Three-Dimensional Solids"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"Producers: Plants making Food\"."
+            },
+            {
+              "id": "L5-T1-G6",
+              "question": "In \"Plants and Animals\", which section covers: \"Animals cannot make their own food\"?",
+              "options": [
+                "Solids: Definite Shape & Volume",
+                "Friction: The Braking Force",
+                "Consumers: Animals seeking Food",
+                "Mass and Volume"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Consumers: Animals seeking Food\"."
+            },
+            {
+              "id": "L5-T1-G7",
+              "question": "What is \"Plants and Animals\" mainly about?",
+              "options": [
+                "Matter undergoes various changes",
+                "A force is simply a raise: any push or pull on an object",
+                "A fraction represents a part of a whole",
+                "Living organisms are sorted into groups by what they share"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Overview of Plants and Animals."
+            },
+            {
+              "id": "L5-T1-R1",
+              "question": "Review 1: which statement is true about \"Plants and Animals\"?",
+              "options": [
+                "Flat shapes are 2D, while solid shapes that take up physical space are 3D.",
+                "Mass, volume, color, hardness, and magnetic traits let us describe and group matter.",
+                "Plants act as producers making foods with sunlight; animals are consumers needing feeding.",
+                "A curved path that a planet follows to revolve around a massive star like the Sun due to gravity."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Review item for Plants and Animals."
+            },
+            {
+              "id": "L5-T1-R2",
+              "question": "Review 2: which statement is true about \"Plants and Animals\"?",
+              "options": [
+                "Energy loops sun to producer, to feeding consumers, and returns to soil via decomposers.",
+                "Every complete sentence must contain a verb",
+                "The process where green plants turn water, sunlight, and carbon dioxide into sugars and release clean oxygen.",
+                "The speed of an object in a specific, chosen direction (like running 5 m/s North)."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Review item for Plants and Animals."
             }
           ]
         },
@@ -960,6 +2868,114 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "Mushrooms (fungi) are decomposers. They decay waste organic remains to feed soil ecosystems."
+            },
+            {
+              "id": "L5-T2-G1",
+              "question": "In \"Food Chains\", what does the term \"Decomposer\" mean?",
+              "options": [
+                "Organisms like fungi and bacteria that rot down dead plants and animals, returning mineral nutrients back to the soil.",
+                "The average weather conditions (temperature, rain, winds) in a large region over 30 years or more.",
+                "A word used to describe an action, state, or occurrence, forming the main part of the predicate of a sentence.",
+                "A base-10 number system where points designate values smaller than 1."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "\"Decomposer\" — Organisms like fungi and bacteria that rot down dead plants and animals, returning mineral nutrients back to the soil."
+            },
+            {
+              "id": "L5-T2-G2",
+              "question": "Which term is defined as: \"Organisms like fungi and bacteria that rot down dead plants and animals, returning mineral nutrients back to the soil.\"?",
+              "options": [
+                "Bone Marrow",
+                "Decomposer",
+                "Reversible Change",
+                "Friction"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is the definition of \"Decomposer\"."
+            },
+            {
+              "id": "L5-T2-G3",
+              "question": "Which statement best summarizes the topic \"Food Chains\"?",
+              "options": [
+                "Moon phases morph as its lit side faces us during its monthly orbit around Earth.",
+                "An ecosystem matches the biotic living parts directly with abiotic non-living surroundings in a delicate state of balance.",
+                "Physical changes alter appearance but keep ingredients; chemical changes create completely new materials.",
+                "Energy loops sun to producer, to feeding consumers, and returns to soil via decomposers."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Key takeaway for Food Chains."
+            },
+            {
+              "id": "L5-T2-G4",
+              "question": "Which topic is described as: \"How sun energy flows through feeding relationships: producers, primary consumers, secondary consumers, and decomposers.\"?",
+              "options": [
+                "Food Chains",
+                "Circulatory System",
+                "Environmental Conservation",
+                "Physical Properties"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That description matches \"Food Chains\"."
+            },
+            {
+              "id": "L5-T2-G5",
+              "question": "In \"Food Chains\", which section covers: \"1\"?",
+              "options": [
+                "Major Habitats on Earth",
+                "The Four Linkages of a Chain",
+                "The Outer Gas Giants",
+                "What Bones Do (Core Functions)"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"The Four Linkages of a Chain\"."
+            },
+            {
+              "id": "L5-T2-G6",
+              "question": "What is \"Food Chains\" mainly about?",
+              "options": [
+                "The Moon does not produce any light of its own",
+                "Every living thing needs energy",
+                "A force is simply a raise: any push or pull on an object",
+                "Matter undergoes various changes"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Overview of Food Chains."
+            },
+            {
+              "id": "L5-T2-R1",
+              "question": "Review 1: which statement is true about \"Food Chains\"?",
+              "options": [
+                "Stored energy inside an object due to its high position, chemical composition, or stretched physical state.",
+                "Every cell in your body needs gas called oxygen to release energy",
+                "Physical changes alter appearance but keep ingredients; chemical changes create completely new materials.",
+                "Energy loops sun to producer, to feeding consumers, and returns to soil via decomposers."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Food Chains."
+            },
+            {
+              "id": "L5-T2-R2",
+              "question": "Review 2: which statement is true about \"Food Chains\"?",
+              "options": [
+                "Light is a form of energy that we can see with our eyes",
+                "An ecosystem is a larger web",
+                "Many students confuse weather and climate",
+                "Organisms like fungi and bacteria that rot down dead plants and animals, returning mineral nutrients back to the soil."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Food Chains."
+            },
+            {
+              "id": "L5-T2-R3",
+              "question": "Review 3: which statement is true about \"Food Chains\"?",
+              "options": [
+                "Plants act as producers making foods with sunlight; animals are consumers needing feeding.",
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction.",
+                "Earth is our helper home",
+                "How sun energy flows through feeding relationships: producers, primary consumers, secondary consumers, and decomposers."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Food Chains."
             }
           ]
         },
@@ -994,6 +3010,114 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "Desert plants like cacti are adapted with thick, waxy, fleshy stems that hold water for long periods when rain is absent."
+            },
+            {
+              "id": "L5-T3-G1",
+              "question": "In \"Habitats\", what does the term \"Habitat\" mean?",
+              "options": [
+                "A word that functions as the name of some specific thing or set of things, such as living creatures, objects, places, actions, or ideas.",
+                "The average weather conditions (temperature, rain, winds) in a large region over 30 years or more.",
+                "The localized natural home or environment of a plant or animal that satisfies all its life support needs.",
+                "A uniform mixture where a solute dissolves completely inside a liquid solvent."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "\"Habitat\" — The localized natural home or environment of a plant or animal that satisfies all its life support needs."
+            },
+            {
+              "id": "L5-T3-G2",
+              "question": "Which term is defined as: \"The localized natural home or environment of a plant or animal that satisfies all its life support needs.\"?",
+              "options": [
+                "Antonym",
+                "Habitat",
+                "Velocity",
+                "Climate"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is the definition of \"Habitat\"."
+            },
+            {
+              "id": "L5-T3-G3",
+              "question": "Which statement best summarizes the topic \"Habitats\"?",
+              "options": [
+                "Nouns name what we talk about; pronouns stand in so we do not sound repetitive.",
+                "The solar system orbits 8 planets around 1 sun: four close rocky planets and four distant gas giants.",
+                "Every region (like wet forests, dry deserts, or oceans) has unique traits suited to its habitant species.",
+                "We protect our planet through deliberate eco measures, minimizing waste plastic, and green planting."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Key takeaway for Habitats."
+            },
+            {
+              "id": "L5-T3-G4",
+              "question": "Which topic is described as: \"Different landscapes where species are adapted to thrive, such as oceans, rainforests, and sandy dry deserts.\"?",
+              "options": [
+                "Heat Energy",
+                "Habitats",
+                "Forms of Energy",
+                "Nouns & Pronouns"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That description matches \"Habitats\"."
+            },
+            {
+              "id": "L5-T3-G5",
+              "question": "In \"Habitats\", which section covers: \"• Desert: Cruelly dry and sandy\"?",
+              "options": [
+                "Floating and Sinking (Density Intro)",
+                "What is a Mixture?",
+                "Major Habitats on Earth",
+                "Fun Bone Facts"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Major Habitats on Earth\"."
+            },
+            {
+              "id": "L5-T3-G6",
+              "question": "What is \"Habitats\" mainly about?",
+              "options": [
+                "Motion is a change in an object's position over time with respect to a reference point",
+                "The circulatory system is the delivery network of your body",
+                "In science, Energy is defined as the ability to do work or make changes happen",
+                "A habitat is the natural home or environment of an animal, plant, or other organism"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Overview of Habitats."
+            },
+            {
+              "id": "L5-T3-R1",
+              "question": "Review 1: which statement is true about \"Habitats\"?",
+              "options": [
+                "Synonyms mean the same, antonyms mean the opposite.",
+                "The process where nutrients are soaked up through the walls of the small intestine into the bloodstream.",
+                "Stored energy inside an object due to its high position, chemical composition, or stretched physical state.",
+                "Every region (like wet forests, dry deserts, or oceans) has unique traits suited to its habitant species."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Habitats."
+            },
+            {
+              "id": "L5-T3-R2",
+              "question": "Review 2: which statement is true about \"Habitats\"?",
+              "options": [
+                "The localized natural home or environment of a plant or animal that satisfies all its life support needs.",
+                "Geometry is the study of shapes and space",
+                "A force that resists sliding movement between two touching surfaces, producing heat and slowing objects down.",
+                "The speed of an object in a specific, chosen direction (like running 5 m/s North)."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Review item for Habitats."
+            },
+            {
+              "id": "L5-T3-R3",
+              "question": "Review 3: which statement is true about \"Habitats\"?",
+              "options": [
+                "An ecosystem matches the biotic living parts directly with abiotic non-living surroundings in a delicate state of balance.",
+                "The non-living physical and chemical parts of an environment (like air temperature, rocks, or soil).",
+                "Your body needs energy to play and learn, but your organs cannot use a whole apple or a bowl of rice",
+                "Different landscapes where species are adapted to thrive, such as oceans, rainforests, and sandy dry deserts."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Habitats."
             }
           ]
         },
@@ -1028,6 +3152,114 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "Water is abiotic because it is not alive, even though it is extremely necessary to sustain the living fish and plants in the lake."
+            },
+            {
+              "id": "L5-T4-G1",
+              "question": "In \"Ecosystems\", what does the term \"Abiotic\" mean?",
+              "options": [
+                "Microscopic air sacs at the ends of lung bronchi tubes where oxygen is swapped for carbon dioxide.",
+                "The non-living physical and chemical parts of an environment (like air temperature, rocks, or soil).",
+                "A tiny microscopic blood vessel that connects arteries and veins, allowing materials to slip through its walls to feed cells.",
+                "The bending of light waves as they pass from one medium into another of different density (like air to water)."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "\"Abiotic\" — The non-living physical and chemical parts of an environment (like air temperature, rocks, or soil)."
+            },
+            {
+              "id": "L5-T4-G2",
+              "question": "Which term is defined as: \"The non-living physical and chemical parts of an environment (like air temperature, rocks, or soil).\"?",
+              "options": [
+                "Solution",
+                "Potential Energy",
+                "Abiotic",
+                "Radiation"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is the definition of \"Abiotic\"."
+            },
+            {
+              "id": "L5-T4-G3",
+              "question": "Which statement best summarizes the topic \"Ecosystems\"?",
+              "options": [
+                "Pushes and pulls include gravity pulling down, and friction resisting and slowing sliding objects.",
+                "Over 600 muscles of voluntary and involuntary types contract and work in pairs to enable motion.",
+                "An ecosystem matches the biotic living parts directly with abiotic non-living surroundings in a delicate state of balance.",
+                "Every region (like wet forests, dry deserts, or oceans) has unique traits suited to its habitant species."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Key takeaway for Ecosystems."
+            },
+            {
+              "id": "L5-T4-G4",
+              "question": "Which topic is described as: \"The delicate balance between living communities of organisms and non-living elements like soil and water.\"?",
+              "options": [
+                "Nouns & Pronouns",
+                "Solar System",
+                "Physical Properties",
+                "Ecosystems"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That description matches \"Ecosystems\"."
+            },
+            {
+              "id": "L5-T4-G5",
+              "question": "In \"Ecosystems\", which section covers: \"• Biotic Factors (LIVING): All the animals, plants, insects, mushrooms, and bacteria in the forest\"?",
+              "options": [
+                "Biotic and Abiotic Assets",
+                "The Mouth and Esophagus",
+                "Climate: Decades of Patterns",
+                "Large Intestine and Waste"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is discussed under \"Biotic and Abiotic Assets\"."
+            },
+            {
+              "id": "L5-T4-G6",
+              "question": "What is \"Ecosystems\" mainly about?",
+              "options": [
+                "Words are grouped into different types called parts of speech",
+                "Writing gets much more exciting when you choose precise, descriptive vocabulary",
+                "Motion is a change in an object's position over time with respect to a reference point",
+                "An ecosystem is a larger web"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Overview of Ecosystems."
+            },
+            {
+              "id": "L5-T4-R1",
+              "question": "Review 1: which statement is true about \"Ecosystems\"?",
+              "options": [
+                "An ecosystem matches the biotic living parts directly with abiotic non-living surroundings in a delicate state of balance.",
+                "Digestion transforms food into digestible blood nutrients through mechanical crushing and chemical acid breakdowns.",
+                "Decimals are another way of writing fractional amounts",
+                "The bending of light waves as they pass from one medium into another of different density (like air to water)."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Review item for Ecosystems."
+            },
+            {
+              "id": "L5-T4-R2",
+              "question": "Review 2: which statement is true about \"Ecosystems\"?",
+              "options": [
+                "The non-living physical and chemical parts of an environment (like air temperature, rocks, or soil).",
+                "Every region (like wet forests, dry deserts, or oceans) has unique traits suited to its habitant species.",
+                "The localized natural home or environment of a plant or animal that satisfies all its life support needs.",
+                "Potential energy represents height or chemical storage; kinetic energy represents speed of motion."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Review item for Ecosystems."
+            },
+            {
+              "id": "L5-T4-R3",
+              "question": "Review 3: which statement is true about \"Ecosystems\"?",
+              "options": [
+                "A base-10 number system where points designate values smaller than 1.",
+                "The delicate balance between living communities of organisms and non-living elements like soil and water.",
+                "Plants act as producers making foods with sunlight; animals are consumers needing feeding.",
+                "The heart pumps oxygenated, nutrient-dense blood through arteries and retrieves wastes in veins."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Ecosystems."
             }
           ]
         },
@@ -1062,6 +3294,114 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "Reusing is finding a second life for an item you would normally throw away without sending it to factory melting furnaces first."
+            },
+            {
+              "id": "L5-T5-G1",
+              "question": "In \"Environmental Conservation\", what does the term \"Conservation\" mean?",
+              "options": [
+                "A curved path that a planet follows to revolve around a massive star like the Sun due to gravity.",
+                "The smart, defensive guarding of natural resources and habitats to protect them from human destruction or extinction.",
+                "A base-10 number system where points designate values smaller than 1.",
+                "The localized natural home or environment of a plant or animal that satisfies all its life support needs."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "\"Conservation\" — The smart, defensive guarding of natural resources and habitats to protect them from human destruction or extinction."
+            },
+            {
+              "id": "L5-T5-G2",
+              "question": "Which term is defined as: \"The smart, defensive guarding of natural resources and habitats to protect them from human destruction or extinction.\"?",
+              "options": [
+                "Density",
+                "Conservation",
+                "Tendon",
+                "Matter"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is the definition of \"Conservation\"."
+            },
+            {
+              "id": "L5-T5-G3",
+              "question": "Which statement best summarizes the topic \"Environmental Conservation\"?",
+              "options": [
+                "Flat shapes are 2D, while solid shapes that take up physical space are 3D.",
+                "Physical changes alter appearance but keep ingredients; chemical changes create completely new materials.",
+                "We protect our planet through deliberate eco measures, minimizing waste plastic, and green planting.",
+                "Verbs are the engine of sentences, defining physical actions and timelines."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Key takeaway for Environmental Conservation."
+            },
+            {
+              "id": "L5-T5-G4",
+              "question": "Which topic is described as: \"Conservation protocols: recycling waste, saving water, and shielding threatened species.\"?",
+              "options": [
+                "Nouns & Pronouns",
+                "Environmental Conservation",
+                "Physical Properties",
+                "Digestive System"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That description matches \"Environmental Conservation\"."
+            },
+            {
+              "id": "L5-T5-G5",
+              "question": "In \"Environmental Conservation\", which section covers: \"• Reduce: Buy and use less plastic wraps\"?",
+              "options": [
+                "Weather: Daily Changes",
+                "The Three R's of Waste Control",
+                "Solute vs. Solvent",
+                "Fun Bone Facts"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"The Three R's of Waste Control\"."
+            },
+            {
+              "id": "L5-T5-G6",
+              "question": "What is \"Environmental Conservation\" mainly about?",
+              "options": [
+                "Decimals are another way of writing fractional amounts",
+                "Our home planet Earth is not just one solid rock ball",
+                "Earth is our helper home",
+                "Every complete sentence must contain a verb"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Overview of Environmental Conservation."
+            },
+            {
+              "id": "L5-T5-R1",
+              "question": "Review 1: which statement is true about \"Environmental Conservation\"?",
+              "options": [
+                "Mass, volume, color, hardness, and magnetic traits let us describe and group matter.",
+                "We protect our planet through deliberate eco measures, minimizing waste plastic, and green planting.",
+                "Matter undergoes various changes",
+                "Words are grouped into different types called parts of speech"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Environmental Conservation."
+            },
+            {
+              "id": "L5-T5-R2",
+              "question": "Review 2: which statement is true about \"Environmental Conservation\"?",
+              "options": [
+                "Physical changes alter appearance but keep ingredients; chemical changes create completely new materials.",
+                "The smart, defensive guarding of natural resources and habitats to protect them from human destruction or extinction.",
+                "The respiratory system absorbs oxygen and vents waste carbon dioxide via gas exchanges inside lung alveoli.",
+                "An ecosystem matches the biotic living parts directly with abiotic non-living surroundings in a delicate state of balance."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Environmental Conservation."
+            },
+            {
+              "id": "L5-T5-R3",
+              "question": "Review 3: which statement is true about \"Environmental Conservation\"?",
+              "options": [
+                "The soft tissue inside the center of larger bones where new blood cells are made daily.",
+                "The smart, defensive guarding of natural resources and habitats to protect them from human destruction or extinction.",
+                "Earth is our helper home",
+                "Conservation protocols: recycling waste, saving water, and shielding threatened species."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Environmental Conservation."
             }
           ]
         }
@@ -1121,6 +3461,102 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "3/6 simplifies to 1/2 when you divide the numerator and denominator by 3."
+            },
+            {
+              "id": "L-MATH1-T1-G1",
+              "question": "In \"Understanding Fractions\", what does the term \"Fraction\" mean?",
+              "options": [
+                "A numerical expression showing the ratio of a part to a whole, written as a numerator over a denominator.",
+                "The localized natural home or environment of a plant or animal that satisfies all its life support needs.",
+                "The smart, defensive guarding of natural resources and habitats to protect them from human destruction or extinction.",
+                "A tough, white cord or band of fibrous tissue that connects a muscle securely to a bone."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "\"Fraction\" — A numerical expression showing the ratio of a part to a whole, written as a numerator over a denominator."
+            },
+            {
+              "id": "L-MATH1-T1-G2",
+              "question": "Which term is defined as: \"A numerical expression showing the ratio of a part to a whole, written as a numerator over a denominator.\"?",
+              "options": [
+                "Orbit",
+                "Conservation",
+                "Antonym",
+                "Fraction"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is the definition of \"Fraction\"."
+            },
+            {
+              "id": "L-MATH1-T1-G3",
+              "question": "Which statement best summarizes the topic \"Understanding Fractions\"?",
+              "options": [
+                "Physical changes alter appearance but keep ingredients; chemical changes create completely new materials.",
+                "The denominator is the total parts, and the numerator is the parts we have.",
+                "Pushes and pulls include gravity pulling down, and friction resisting and slowing sliding objects.",
+                "Nouns name what we talk about; pronouns stand in so we do not sound repetitive."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Key takeaway for Understanding Fractions."
+            },
+            {
+              "id": "L-MATH1-T1-G4",
+              "question": "Which topic is described as: \"An introduction to how portions of a whole are represented using fractional notation.\"?",
+              "options": [
+                "Digestive System",
+                "Understanding Fractions",
+                "2D and 3D Shapes",
+                "Habitats"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That description matches \"Understanding Fractions\"."
+            },
+            {
+              "id": "L-MATH1-T1-G5",
+              "question": "In \"Understanding Fractions\", which section covers: \"Every fraction has two main numbers:\"?",
+              "options": [
+                "The Mouth and Esophagus",
+                "Nouns are Names",
+                "Numerator and Denominator",
+                "Equivalent Fractions"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Numerator and Denominator\"."
+            },
+            {
+              "id": "L-MATH1-T1-G6",
+              "question": "In \"Understanding Fractions\", which section covers: \"Fractions that look different but represent the exact same value are called equivalent fractions\"?",
+              "options": [
+                "The Lunar Cycle Progression",
+                "The Air Path: Nose to Windpipe",
+                "Equivalent Fractions",
+                "Nouns are Names"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Equivalent Fractions\"."
+            },
+            {
+              "id": "L-MATH1-T1-G7",
+              "question": "What is \"Understanding Fractions\" mainly about?",
+              "options": [
+                "An ecosystem is a larger web",
+                "Every complete sentence must contain a verb",
+                "A fraction represents a part of a whole",
+                "In science, substances can be combined"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Overview of Understanding Fractions."
+            },
+            {
+              "id": "L-MATH1-T1-R1",
+              "question": "Review 1: which statement is true about \"Understanding Fractions\"?",
+              "options": [
+                "The phases where the visible glowing portion of the Moon is growing larger night after night.",
+                "The denominator is the total parts, and the numerator is the parts we have.",
+                "The solar system orbits 8 planets around 1 sun: four close rocky planets and four distant gas giants.",
+                "Moon phases morph as its lit side faces us during its monthly orbit around Earth."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Understanding Fractions."
             }
           ]
         },
@@ -1155,6 +3591,114 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "The first digit to the right of the decimal point is the tenths place, so 7/10 is written as 0.7."
+            },
+            {
+              "id": "L-MATH1-T2-G1",
+              "question": "In \"Working with Decimals\", what does the term \"Decimal System\" mean?",
+              "options": [
+                "A uniform mixture where a solute dissolves completely inside a liquid solvent.",
+                "A base-10 number system where points designate values smaller than 1.",
+                "A tough, white cord or band of fibrous tissue that connects a muscle securely to a bone.",
+                "The average weather conditions (temperature, rain, winds) in a large region over 30 years or more."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "\"Decimal System\" — A base-10 number system where points designate values smaller than 1."
+            },
+            {
+              "id": "L-MATH1-T2-G2",
+              "question": "Which term is defined as: \"A base-10 number system where points designate values smaller than 1.\"?",
+              "options": [
+                "Photosynthesis",
+                "Capillary",
+                "Radiation",
+                "Decimal System"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is the definition of \"Decimal System\"."
+            },
+            {
+              "id": "L-MATH1-T2-G3",
+              "question": "Which statement best summarizes the topic \"Working with Decimals\"?",
+              "options": [
+                "Each position to the right of the decimal point gets 10 times smaller.",
+                "Pushes and pulls include gravity pulling down, and friction resisting and slowing sliding objects.",
+                "Flat shapes are 2D, while solid shapes that take up physical space are 3D.",
+                "Nouns name what we talk about; pronouns stand in so we do not sound repetitive."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Key takeaway for Working with Decimals."
+            },
+            {
+              "id": "L-MATH1-T2-G4",
+              "question": "Which topic is described as: \"Understanding place values of tenths, hundredths, and matching decimals to fractions.\"?",
+              "options": [
+                "Types of Forces",
+                "Habitats",
+                "Forms of Energy",
+                "Working with Decimals"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That description matches \"Working with Decimals\"."
+            },
+            {
+              "id": "L-MATH1-T2-G5",
+              "question": "In \"Working with Decimals\", which section covers: \"The direct placements to the right of the decimal point represent fractional values:\"?",
+              "options": [
+                "Three Types of Muscle Tissues",
+                "Large Intestine and Waste",
+                "Place Value After the Decimal",
+                "Mass and Volume"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Place Value After the Decimal\"."
+            },
+            {
+              "id": "L-MATH1-T2-G6",
+              "question": "What is \"Working with Decimals\" mainly about?",
+              "options": [
+                "Matter undergoes various changes",
+                "Light is a form of energy that we can see with our eyes",
+                "Writing gets much more exciting when you choose precise, descriptive vocabulary",
+                "Decimals are another way of writing fractional amounts"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Overview of Working with Decimals."
+            },
+            {
+              "id": "L-MATH1-T2-R1",
+              "question": "Review 1: which statement is true about \"Working with Decimals\"?",
+              "options": [
+                "A word that functions as the name of some specific thing or set of things, such as living creatures, objects, places, actions, or ideas.",
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction.",
+                "The Moon does not produce any light of its own",
+                "Each position to the right of the decimal point gets 10 times smaller."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Working with Decimals."
+            },
+            {
+              "id": "L-MATH1-T2-R2",
+              "question": "Review 2: which statement is true about \"Working with Decimals\"?",
+              "options": [
+                "Writing gets much more exciting when you choose precise, descriptive vocabulary",
+                "Pushes and pulls include gravity pulling down, and friction resisting and slowing sliding objects.",
+                "A base-10 number system where points designate values smaller than 1.",
+                "A fraction represents a part of a whole"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Review item for Working with Decimals."
+            },
+            {
+              "id": "L-MATH1-T2-R3",
+              "question": "Review 3: which statement is true about \"Working with Decimals\"?",
+              "options": [
+                "In science, Energy is defined as the ability to do work or make changes happen",
+                "Understanding place values of tenths, hundredths, and matching decimals to fractions.",
+                "Heat moves from hot to cold via touching conduction, fluid convection loops, or radiation waves.",
+                "Words are grouped into different types called parts of speech"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Working with Decimals."
             }
           ]
         }
@@ -1200,6 +3744,114 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "A cube has 6 flat faces, 12 edges, and exactly 8 vertices (corners)."
+            },
+            {
+              "id": "L-MATH2-T1-G1",
+              "question": "In \"2D and 3D Shapes\", what does the term \"Polygon\" mean?",
+              "options": [
+                "The smart, defensive guarding of natural resources and habitats to protect them from human destruction or extinction.",
+                "A flat, closed 2D shape with three or more straight sides.",
+                "The speed of an object in a specific, chosen direction (like running 5 m/s North).",
+                "Organisms like fungi and bacteria that rot down dead plants and animals, returning mineral nutrients back to the soil."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "\"Polygon\" — A flat, closed 2D shape with three or more straight sides."
+            },
+            {
+              "id": "L-MATH2-T1-G2",
+              "question": "Which term is defined as: \"A flat, closed 2D shape with three or more straight sides.\"?",
+              "options": [
+                "Waxing",
+                "Refraction",
+                "Polygon",
+                "Decimal System"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is the definition of \"Polygon\"."
+            },
+            {
+              "id": "L-MATH2-T1-G3",
+              "question": "Which statement best summarizes the topic \"2D and 3D Shapes\"?",
+              "options": [
+                "Flat shapes are 2D, while solid shapes that take up physical space are 3D.",
+                "Motion is tracked from stationary references, calculating speed by dividing distance covered by time spent.",
+                "Earth has 4 layers: solid outer crust, sluggish hot mantle, liquid outer core, and solid inner core.",
+                "Plants act as producers making foods with sunlight; animals are consumers needing feeding."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Key takeaway for 2D and 3D Shapes."
+            },
+            {
+              "id": "L-MATH2-T1-G4",
+              "question": "Which topic is described as: \"Symmetry, vertices, edges, and sides of squares, polygons, and prisms.\"?",
+              "options": [
+                "Motion",
+                "2D and 3D Shapes",
+                "Skeletal System",
+                "Nouns & Pronouns"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That description matches \"2D and 3D Shapes\"."
+            },
+            {
+              "id": "L-MATH2-T1-G5",
+              "question": "In \"2D and 3D Shapes\", which section covers: \"Polygons are flat 2D shapes with straight lines\"?",
+              "options": [
+                "Kinetic vs. Potential Energy",
+                "The Stomach and Small Intestine",
+                "Voluntary vs. Involuntary Muscles",
+                "Polygons and Properties"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is discussed under \"Polygons and Properties\"."
+            },
+            {
+              "id": "L-MATH2-T1-G6",
+              "question": "In \"2D and 3D Shapes\", which section covers: \"3D shapes have length, width, and height\"?",
+              "options": [
+                "Solute vs. Solvent",
+                "Gases: No Definite Shape or Volume",
+                "Three-Dimensional Solids",
+                "Reflection: Bouncing Light"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Three-Dimensional Solids\"."
+            },
+            {
+              "id": "L-MATH2-T1-G7",
+              "question": "What is \"2D and 3D Shapes\" mainly about?",
+              "options": [
+                "Many students confuse weather and climate",
+                "The circulatory system is the delivery network of your body",
+                "Writing gets much more exciting when you choose precise, descriptive vocabulary",
+                "Geometry is the study of shapes and space"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Overview of 2D and 3D Shapes."
+            },
+            {
+              "id": "L-MATH2-T1-R1",
+              "question": "Review 1: which statement is true about \"2D and 3D Shapes\"?",
+              "options": [
+                "A force is simply a raise: any push or pull on an object",
+                "Flat shapes are 2D, while solid shapes that take up physical space are 3D.",
+                "The heart pumps oxygenated, nutrient-dense blood through arteries and retrieves wastes in veins.",
+                "Stored energy inside an object due to its high position, chemical composition, or stretched physical state."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for 2D and 3D Shapes."
+            },
+            {
+              "id": "L-MATH2-T1-R2",
+              "question": "Review 2: which statement is true about \"2D and 3D Shapes\"?",
+              "options": [
+                "A flat, closed 2D shape with three or more straight sides.",
+                "Potential energy represents height or chemical storage; kinetic energy represents speed of motion.",
+                "Geometry is the study of shapes and space",
+                "Nouns name what we talk about; pronouns stand in so we do not sound repetitive."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Review item for 2D and 3D Shapes."
             }
           ]
         }
@@ -1259,6 +3911,102 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "'They' is a personal pronoun used to replace the nouns representing the group of people."
+            },
+            {
+              "id": "L-ENG1-T1-G1",
+              "question": "In \"Nouns & Pronouns\", what does the term \"Noun\" mean?",
+              "options": [
+                "The thin, cold, outermost layer of Earth's solid rock framing mountains and oceanic floors.",
+                "The process where green plants turn water, sunlight, and carbon dioxide into sugars and release clean oxygen.",
+                "A word that functions as the name of some specific thing or set of things, such as living creatures, objects, places, actions, or ideas.",
+                "A flat, closed 2D shape with three or more straight sides."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "\"Noun\" — A word that functions as the name of some specific thing or set of things, such as living creatures, objects, places, actions, or ideas."
+            },
+            {
+              "id": "L-ENG1-T1-G2",
+              "question": "Which term is defined as: \"A word that functions as the name of some specific thing or set of things, such as living creatures, objects, places, actions, or ideas.\"?",
+              "options": [
+                "Friction",
+                "Matter",
+                "Potential Energy",
+                "Noun"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "That is the definition of \"Noun\"."
+            },
+            {
+              "id": "L-ENG1-T1-G3",
+              "question": "Which statement best summarizes the topic \"Nouns & Pronouns\"?",
+              "options": [
+                "Nouns name what we talk about; pronouns stand in so we do not sound repetitive.",
+                "Plants act as producers making foods with sunlight; animals are consumers needing feeding.",
+                "Potential energy represents height or chemical storage; kinetic energy represents speed of motion.",
+                "Heat moves from hot to cold via touching conduction, fluid convection loops, or radiation waves."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Key takeaway for Nouns & Pronouns."
+            },
+            {
+              "id": "L-ENG1-T1-G4",
+              "question": "Which topic is described as: \"Identify names of persons, places, and things, plus pronoun substitutes.\"?",
+              "options": [
+                "Respiratory System",
+                "Nouns & Pronouns",
+                "Skeletal System",
+                "Changes in Matter"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That description matches \"Nouns & Pronouns\"."
+            },
+            {
+              "id": "L-ENG1-T1-G5",
+              "question": "In \"Nouns & Pronouns\", which section covers: \"A noun is a word that names a person, place, thing, or idea\"?",
+              "options": [
+                "Polygons and Properties",
+                "Nouns are Names",
+                "Three-Dimensional Solids",
+                "The Inner Rocky Planets"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"Nouns are Names\"."
+            },
+            {
+              "id": "L-ENG1-T1-G6",
+              "question": "In \"Nouns & Pronouns\", which section covers: \"Pronouns are words used in place of nouns to avoid repetition\"?",
+              "options": [
+                "Pronouns are Replacements",
+                "Solute vs. Solvent",
+                "Refraction: Bent Light",
+                "Floating and Sinking (Density Intro)"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is discussed under \"Pronouns are Replacements\"."
+            },
+            {
+              "id": "L-ENG1-T1-G7",
+              "question": "What is \"Nouns & Pronouns\" mainly about?",
+              "options": [
+                "A force is simply a raise: any push or pull on an object",
+                "Every complete sentence must contain a verb",
+                "Earth is our helper home",
+                "Words are grouped into different types called parts of speech"
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Overview of Nouns & Pronouns."
+            },
+            {
+              "id": "L-ENG1-T1-R1",
+              "question": "Review 1: which statement is true about \"Nouns & Pronouns\"?",
+              "options": [
+                "The speed of an object in a specific, chosen direction (like running 5 m/s North).",
+                "Nouns name what we talk about; pronouns stand in so we do not sound repetitive.",
+                "Motion is tracked from stationary references, calculating speed by dividing distance covered by time spent.",
+                "A uniform mixture where a solute dissolves completely inside a liquid solvent."
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Nouns & Pronouns."
             }
           ]
         },
@@ -1297,6 +4045,114 @@
               ],
               "correctAnswerIndex": 2,
               "explanation": "'will study' uses the auxiliary verb 'will' to specify a future tense action."
+            },
+            {
+              "id": "L-ENG1-T2-G1",
+              "question": "In \"Verbs & Tenses\", what does the term \"Verb\" mean?",
+              "options": [
+                "A word used to describe an action, state, or occurrence, forming the main part of the predicate of a sentence.",
+                "The non-living physical and chemical parts of an environment (like air temperature, rocks, or soil).",
+                "A flat, closed 2D shape with three or more straight sides.",
+                "Organisms like fungi and bacteria that rot down dead plants and animals, returning mineral nutrients back to the soil."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "\"Verb\" — A word used to describe an action, state, or occurrence, forming the main part of the predicate of a sentence."
+            },
+            {
+              "id": "L-ENG1-T2-G2",
+              "question": "Which term is defined as: \"A word used to describe an action, state, or occurrence, forming the main part of the predicate of a sentence.\"?",
+              "options": [
+                "Verb",
+                "Habitat",
+                "Potential Energy",
+                "Decomposer"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is the definition of \"Verb\"."
+            },
+            {
+              "id": "L-ENG1-T2-G3",
+              "question": "Which statement best summarizes the topic \"Verbs & Tenses\"?",
+              "options": [
+                "Earth has 4 layers: solid outer crust, sluggish hot mantle, liquid outer core, and solid inner core.",
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction.",
+                "Particles are packed locked in solids, slide in liquids, and fly freely in gases.",
+                "Verbs are the engine of sentences, defining physical actions and timelines."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Key takeaway for Verbs & Tenses."
+            },
+            {
+              "id": "L-ENG1-T2-G4",
+              "question": "Which topic is described as: \"Action words, linking verbs, and conjugation across past, present, and future tenses.\"?",
+              "options": [
+                "Forms of Energy",
+                "Verbs & Tenses",
+                "Mixtures and Solutions",
+                "States of Matter"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That description matches \"Verbs & Tenses\"."
+            },
+            {
+              "id": "L-ENG1-T2-G5",
+              "question": "In \"Verbs & Tenses\", which section covers: \"• Action Verbs: Express physical or mental actions (run, think, write)\"?",
+              "options": [
+                "Action vs. Linking Verbs",
+                "Inside the Lungs (The Trapped Air Bags)",
+                "The Three R's of Waste Control",
+                "Large Intestine and Waste"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is discussed under \"Action vs. Linking Verbs\"."
+            },
+            {
+              "id": "L-ENG1-T2-G6",
+              "question": "In \"Verbs & Tenses\", which section covers: \"Tenses show when the action takes place:\"?",
+              "options": [
+                "Understanding Verb Tenses",
+                "Solids: Definite Shape & Volume",
+                "Major Habitats on Earth",
+                "Equivalent Fractions"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is discussed under \"Understanding Verb Tenses\"."
+            },
+            {
+              "id": "L-ENG1-T2-G7",
+              "question": "What is \"Verbs & Tenses\" mainly about?",
+              "options": [
+                "The skeletal system is made up of all the bones, cartilage, joints, and ligaments in your body",
+                "Every complete sentence must contain a verb",
+                "Geometry is the study of shapes and space",
+                "Matter undergoes various changes"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Overview of Verbs & Tenses."
+            },
+            {
+              "id": "L-ENG1-T2-R1",
+              "question": "Review 1: which statement is true about \"Verbs & Tenses\"?",
+              "options": [
+                "Stored energy inside an object due to its high position, chemical composition, or stretched physical state.",
+                "Verbs are the engine of sentences, defining physical actions and timelines.",
+                "A numerical expression showing the ratio of a part to a whole, written as a numerator over a denominator.",
+                "The circulatory system is the delivery network of your body"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "Review item for Verbs & Tenses."
+            },
+            {
+              "id": "L-ENG1-T2-R2",
+              "question": "Review 2: which statement is true about \"Verbs & Tenses\"?",
+              "options": [
+                "Digestion transforms food into digestible blood nutrients through mechanical crushing and chemical acid breakdowns.",
+                "Your skeletal system acts as a protective shield and structural framework for the body, housing 206 living bones.",
+                "A word used to describe an action, state, or occurrence, forming the main part of the predicate of a sentence.",
+                "Light travels in straight lines, bouncing off mirrors as reflection, and bending in fluids as refraction."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Review item for Verbs & Tenses."
             }
           ]
         }
@@ -1342,6 +4198,114 @@
               ],
               "correctAnswerIndex": 1,
               "explanation": "'Sluggish' means slow, which is the direct opposite (antonym) of 'swift' (fast)."
+            },
+            {
+              "id": "L-ENG2-T1-G1",
+              "question": "In \"Synonyms and Antonyms\", what does the term \"Antonym\" mean?",
+              "options": [
+                "A word opposite in meaning to another (e.g. bad and good).",
+                "A word used to describe an action, state, or occurrence, forming the main part of the predicate of a sentence.",
+                "A flat, closed 2D shape with three or more straight sides.",
+                "A physical change that can be undone to return the object to its original state (like freezing water and then melting it)."
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "\"Antonym\" — A word opposite in meaning to another (e.g. bad and good)."
+            },
+            {
+              "id": "L-ENG2-T1-G2",
+              "question": "Which term is defined as: \"A word opposite in meaning to another (e.g. bad and good).\"?",
+              "options": [
+                "Antonym",
+                "Velocity",
+                "Capillary",
+                "Friction"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "That is the definition of \"Antonym\"."
+            },
+            {
+              "id": "L-ENG2-T1-G3",
+              "question": "Which statement best summarizes the topic \"Synonyms and Antonyms\"?",
+              "options": [
+                "The denominator is the total parts, and the numerator is the parts we have.",
+                "Motion is tracked from stationary references, calculating speed by dividing distance covered by time spent.",
+                "Over 600 muscles of voluntary and involuntary types contract and work in pairs to enable motion.",
+                "Synonyms mean the same, antonyms mean the opposite."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Key takeaway for Synonyms and Antonyms."
+            },
+            {
+              "id": "L-ENG2-T1-G4",
+              "question": "Which topic is described as: \"How to use varied definitions and matching opposites to make your narratives stand out.\"?",
+              "options": [
+                "Circulatory System",
+                "2D and 3D Shapes",
+                "Synonyms and Antonyms",
+                "Forms of Energy"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That description matches \"Synonyms and Antonyms\"."
+            },
+            {
+              "id": "L-ENG2-T1-G5",
+              "question": "In \"Synonyms and Antonyms\", which section covers: \"Synonyms are words with identical or very similar meanings\"?",
+              "options": [
+                "The Inner Rocky Planets",
+                "Synonyms: Matching Meanings",
+                "What is a Mixture?",
+                "Reflection: Bouncing Light"
+              ],
+              "correctAnswerIndex": 1,
+              "explanation": "That is discussed under \"Synonyms: Matching Meanings\"."
+            },
+            {
+              "id": "L-ENG2-T1-G6",
+              "question": "In \"Synonyms and Antonyms\", which section covers: \"Antonyms are words with opposite meanings, like hot and cold, heavy and lightweight, or swift and sluggish\"?",
+              "options": [
+                "Gases: No Definite Shape or Volume",
+                "Magnetic Force",
+                "Antonyms: Opposites",
+                "Numerator and Denominator"
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "That is discussed under \"Antonyms: Opposites\"."
+            },
+            {
+              "id": "L-ENG2-T1-G7",
+              "question": "What is \"Synonyms and Antonyms\" mainly about?",
+              "options": [
+                "Writing gets much more exciting when you choose precise, descriptive vocabulary",
+                "Living organisms are sorted into groups by what they share",
+                "The muscular system is made up of over 600 muscles that cover your skeleton",
+                "Heat (thermal energy) is the energy caused by the vibrations of atoms inside matter"
+              ],
+              "correctAnswerIndex": 0,
+              "explanation": "Overview of Synonyms and Antonyms."
+            },
+            {
+              "id": "L-ENG2-T1-R1",
+              "question": "Review 1: which statement is true about \"Synonyms and Antonyms\"?",
+              "options": [
+                "The solar system orbits 8 planets around 1 sun: four close rocky planets and four distant gas giants.",
+                "Verbs are the engine of sentences, defining physical actions and timelines.",
+                "Synonyms mean the same, antonyms mean the opposite.",
+                "Anything that has weight (mass) and takes up physical space."
+              ],
+              "correctAnswerIndex": 2,
+              "explanation": "Review item for Synonyms and Antonyms."
+            },
+            {
+              "id": "L-ENG2-T1-R2",
+              "question": "Review 2: which statement is true about \"Synonyms and Antonyms\"?",
+              "options": [
+                "Decimals are another way of writing fractional amounts",
+                "A force is simply a raise: any push or pull on an object",
+                "Mixtures have separate parts you can pick apart; solutions are dissolved and look uniform.",
+                "A word opposite in meaning to another (e.g. bad and good)."
+              ],
+              "correctAnswerIndex": 3,
+              "explanation": "Review item for Synonyms and Antonyms."
             }
           ]
         }

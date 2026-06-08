@@ -218,9 +218,9 @@ export default function App() {
   };
 
   // Dynamic Progress Scoring - update user's score record instantly in global React state!
-  const handleSaveQuizScore = (topicId: string, lessonId: string, score: number, answers: number[]) => {
+  const handleSaveQuizScore = (topicId: string, lessonId: string, score: number, total: number, answers: number[]) => {
     if (!currentUser || role !== 'student') return;
-    
+
     const lrn = (currentUser as StudentUser).lrn;
     const originalProgress = progressRecords[lrn] || {
       studentLrn: lrn,
@@ -229,12 +229,12 @@ export default function App() {
       summativeScores: {}
     };
 
-    // Update attempts
+    // Update attempts — perfectScore is the real quiz length so teacher/student agree.
     const updatedAttempts = { ...originalProgress.quizAttempts };
     updatedAttempts[topicId] = {
       topicId,
       score,
-      perfectScore: 3, // Each topic quiz is standard 3 points size
+      perfectScore: total,
       answers,
       completedAt: new Date().toISOString().split('T')[0]
     };
@@ -258,7 +258,7 @@ export default function App() {
 
     // Sync "up" to the server (Mock no-ops). Section drives the down-broadcast.
     const section = (currentUser as StudentUser).section || (currentUser as StudentUser).gradeLevel;
-    repo.saveQuizAttempt({ lrn, topicId, lessonId, score, answers, section, subject: activeSubject }).catch(() => {});
+    repo.saveQuizAttempt({ lrn, topicId, lessonId, score, perfectScore: total, answers, section, subject: activeSubject }).catch(() => {});
   };
 
   // Dynamic Summative scoring

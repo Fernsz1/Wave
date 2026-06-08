@@ -17,7 +17,7 @@ interface StudentLessonsProps {
   progress: StudentProgress;
   lessons: Lesson[];
   remediationMaterials: TeacherRemediationMaterial[];
-  onSaveQuizScore: (topicId: string, lessonId: string, score: number, answers: number[]) => void;
+  onSaveQuizScore: (topicId: string, lessonId: string, score: number, total: number, answers: number[]) => void;
   onSaveSummativeScore: (lessonId: string, score: number) => void;
   onStartRemedial: (material: TeacherRemediationMaterial) => void;
   activeSubject: string;
@@ -28,6 +28,14 @@ interface StudentLessonsProps {
   navViewState?: 'syllabus' | 'reading' | 'quiz' | 'summative';
   clearNavContext?: () => void;
 }
+
+/**
+ * The summative draws a fixed sample of 2 questions per topic (not every quiz
+ * item) so it stays a reasonable length now that each topic has 10 questions.
+ * Render and scoring share this so indices always line up.
+ */
+const summativeQuestionsOf = (lesson: Lesson): QuizQuestion[] =>
+  lesson.topics.flatMap((t) => t.quiz.slice(0, 2));
 
 export default function StudentLessons({
   student,
@@ -159,8 +167,8 @@ export default function StudentLessons({
       submitted: true
     });
 
-    // Save to global React state
-    onSaveQuizScore(selectedTopic.id, selectedLessonId, correct, userSelectedAnswers);
+    // Save to global React state (total = the real quiz length, not a constant)
+    onSaveQuizScore(selectedTopic.id, selectedLessonId, correct, selectedTopic.quiz.length, userSelectedAnswers);
   };
 
   // Launch Summative Assessment on full lesson completion
@@ -183,9 +191,8 @@ export default function StudentLessons({
     if (!selectedLesson) return;
     let correct = 0;
     
-    // Simple mock key: let's evaluate correctness
-    // We aggregate all topic quiz questions in this lesson
-    const allQuestions = selectedLesson.topics.flatMap(t => t.quiz);
+    // Evaluate against the fixed summative sample (2 per topic).
+    const allQuestions = summativeQuestionsOf(selectedLesson);
     allQuestions.forEach((q, idx) => {
       if (summativeAnswers[idx] === q.correctAnswerIndex) {
         correct++;
@@ -975,7 +982,7 @@ export default function StudentLessons({
                 </div>
 
                 {/* Iterate aggregate quiz questions */}
-                {selectedLesson.topics.flatMap(t => t.quiz).map((q, qIdx) => (
+                {summativeQuestionsOf(selectedLesson).map((q, qIdx) => (
                   <div key={q.id} className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
                     <h4 className="text-xs text-slate-500 uppercase font-bold">Question {qIdx + 1}</h4>
                     <p className="font-display font-medium text-sm text-slate-800 leading-normal">{q.question}</p>
@@ -1011,7 +1018,7 @@ export default function StudentLessons({
                   type="button"
                   onClick={handleSubmitSummative}
                   id="submit-summative-btn"
-                  disabled={selectedLesson.topics.flatMap(t => t.quiz).some((_, idx) => summativeAnswers[idx] === undefined)}
+                  disabled={summativeQuestionsOf(selectedLesson).some((_, idx) => summativeAnswers[idx] === undefined)}
                   className="w-full mt-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs transition-shadow shadow-md shadow-indigo-500/10 disabled:opacity-40"
                 >
                   Post Final Answers

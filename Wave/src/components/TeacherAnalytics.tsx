@@ -45,63 +45,38 @@ export default function TeacherAnalytics({
     const prog = progressRecords[student.lrn];
     let completedTopicsCount = 0;
     
-    const activeLessonsProgress = lessons.map(lesson => {
-      const totalCount = lesson.topics.length;
-      let completedCount = 0;
-      if (prog) {
-        completedCount = lesson.topics.filter(t => prog.completedTopicIds.includes(t.id)).length;
-      } else {
-        const lrnId = parseInt(student.lrn.slice(-4)) || 0;
-        completedCount = totalCount > 0 ? (2 + (lrnId % (totalCount + 1))) % (totalCount + 1) : 0;
-        if (completedCount > totalCount) completedCount = totalCount;
-      }
-      return { completedCount, totalCount };
-    });
-
-    let quizAvg = 85; 
-    let summativeScore = 17;
-    let overallGrade = 84;
-
     const totalTopicsInSyllabus = lessons.flatMap(l => l.topics).length;
+    const allTopicIds = new Set(lessons.flatMap(l => l.topics.map(t => t.id)));
+    const allLessonIds = new Set(lessons.map(l => l.id));
 
+    // Real data only — no fabricated fallbacks, so a reset reads as genuine zeros.
+    completedTopicsCount = prog
+      ? prog.completedTopicIds.filter(id => allTopicIds.has(id)).length
+      : 0;
+
+    let scoreSum = 0;
+    let perfectSum = 0;
     if (prog) {
-      completedTopicsCount = prog.completedTopicIds.filter(id => lessons.flatMap(l => l.topics.map(t => t.id)).includes(id)).length;
-      let scoreSum = 0;
-      let perfectSum = 0;
       Object.values(prog.quizAttempts).forEach((att: any) => {
-        if (lessons.flatMap(l => l.topics.map(t => t.id)).includes(att.topicId)) {
-          scoreSum += att.score;
-          perfectSum += att.perfectScore;
-        }
+        if (allTopicIds.has(att.topicId)) { scoreSum += att.score; perfectSum += att.perfectScore; }
       });
-      if (perfectSum > 0) {
-        quizAvg = Math.round((scoreSum / perfectSum) * 100);
-      } else {
-        quizAvg = 0;
-      }
-
-      const sumList = Object.entries(prog.summativeScores)
-        .filter(([lessonId]) => lessons.map(l => l.id).includes(lessonId))
-        .map(([_, v]: any) => v);
-
-      if (sumList.length > 0) {
-        summativeScore = sumList[0].score;
-        const sumPct = Math.round((summativeScore / 20) * 105);
-        overallGrade = Math.round(quizAvg * 0.4 + sumPct * 0.6);
-      } else {
-        const fallbackIndex = parseInt(student.lrn.slice(-2)) % 10;
-        summativeScore = 14 + (fallbackIndex % 5);
-        const sumPct = Math.round((summativeScore / 20) * 100);
-        overallGrade = Math.round(quizAvg * 0.4 + sumPct * 0.6);
-      }
-    } else {
-      const fallbackIndex = parseInt(student.lrn.slice(-2)) % 10;
-      completedTopicsCount = activeLessonsProgress.reduce((sum, item) => sum + item.completedCount, 0);
-      quizAvg = 75 + (fallbackIndex % 5) * 5;
-      summativeScore = 14 + (fallbackIndex % 4);
-      const sumPct = Math.round((summativeScore / 20) * 100);
-      overallGrade = Math.round(quizAvg * 0.4 + sumPct * 0.6);
     }
+    const quizAvg = perfectSum > 0 ? Math.round((scoreSum / perfectSum) * 100) : 0;
+
+    // Summative = average of summatives taken (out of 20), as a percentage.
+    const sumList = prog
+      ? Object.entries(prog.summativeScores).filter(([lid]) => allLessonIds.has(lid)).map(([, v]: any) => v)
+      : [];
+    const hasSummative = sumList.length > 0;
+    const summativePct = hasSummative
+      ? Math.round((sumList.reduce((s: number, v: any) => s + v.score, 0) / sumList.length / 20) * 100)
+      : 0;
+
+    // Overall standing: weighted 40/60 when both exist; otherwise the real signal; 0 if none.
+    let overallGrade = 0;
+    if (perfectSum > 0 && hasSummative) overallGrade = Math.round(quizAvg * 0.4 + summativePct * 0.6);
+    else if (perfectSum > 0) overallGrade = quizAvg;
+    else if (hasSummative) overallGrade = summativePct;
 
     const progressPercentage = totalTopicsInSyllabus > 0 ? Math.round((completedTopicsCount / totalTopicsInSyllabus) * 100) : 0;
 
@@ -166,8 +141,8 @@ export default function TeacherAnalytics({
         }
       });
 
-      // Stable fallback average scores for consistent visual line chart trends
-      const finalAvg = count > 0 ? Math.round(sum / count) : (74 + ((lIdx + tIdx)% 4) * 6);
+      // Real class average for this topic, or 0 when no one has attempted it yet.
+      const finalAvg = count > 0 ? Math.round(sum / count) : 0;
       return {
         topicId: topic.id,
         topicName: topic.name,
@@ -473,9 +448,6 @@ export default function TeacherAnalytics({
                   const prog = progressRecords[student.lrn];
                   if (prog) {
                     actualCompletions += lesson.topics.filter(t => prog.completedTopicIds.includes(t.id)).length;
-                  } else {
-                    const lrnId = parseInt(student.lrn.slice(-4)) || 0;
-                    actualCompletions += (2 + (lrnId % (lesson.topics.length + 1))) % (lesson.topics.length + 1);
                   }
                 });
 

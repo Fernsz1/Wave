@@ -37,6 +37,7 @@ export interface QuizAttemptWrite {
   topicId: string;
   lessonId: string;
   score: number;
+  perfectScore: number;
   answers: number[];
   section: string;
   subject: string;

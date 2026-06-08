@@ -1,0 +1,51 @@
+@startuml Wave_Activity_Diagram
+title Wave — Activity Diagram (live quiz-sync loop)
+
+|Student App|
+start
+:Open topic ▶ Take quiz;
+repeat
+  :Answer current question;
+repeat while (All questions answered?) is (No)
+->Yes;
+:Submit ▶ grade locally;
+:Optimistic setProgressRecords\n(score / 10 shows instantly);
+:repo.saveQuizAttempt;
+:codec.encode ▶ tokenized envelope\n(direction = up);
+if (Online?) then (No)
+  :Outbox: queue write\n(localStorage / IndexedDB);
+  note right: flushed on reconnect\nvia Outbox.flushAsync
+  stop
+else (Yes)
+  :POST /api/sync/push\n(Authorization: Token);
+endif
+
+|Django Server|
+:codec.decode_envelope;
+:Zod / DRF serializer validate;
+:persist QuizAttempt\n(upsert by student + topic);
+:derive.compute_rankings\n+ assemble_progress;
+:mqtt.publish_downstream\n(qos=1, retain=true, direction=down);
+
+|MQTT Broker (LAN :9001)|
+:Broker fan-out by topic;
+fork
+  :wave/<section>/StudentProgress;
+fork again
+  :wave/<section>/Rankings;
+end fork
+
+|Teacher App|
+:MqttTransport receives (ws://host:9001);
+note right
+  A teacher that was offline gets the
+  RETAINED message on reconnect
+  ("delivered when reachable").
+end note
+:codec.decode + Zod validate\n(ignore direction=up echoes);
+:applyRepoUpdate;
+:setProgressRecords;
+:Class Records + Rankings\nre-render live — no refresh;
+stop
+
+@enduml

@@ -4,6 +4,7 @@
  */
 
 import { Lesson, StudentUser, TeacherUser, StudentProgress, TeacherRemediationMaterial } from './types';
+import { expandLessons, scaleProgressToQuizSize } from './quizgen';
 
 export const MOCK_STUDENTS: StudentUser[] = [
   { lrn: "101234567891", name: "Sophia Cruz", gradeLevel: "Grade 4 - Section Newton" },
@@ -1094,7 +1095,7 @@ export const MOCK_LESSONS: Lesson[] = [
 ];
 
 // Initial Student progress consistent with rankings and scores
-export const INITIAL_PROGRESS_RECORDS: Record<string, StudentProgress> = {
+const RAW_INITIAL_PROGRESS_RECORDS: Record<string, StudentProgress> = {
   // Sophia Cruz (Top student - active user)
   "101234567891": {
     studentLrn: "101234567891",
@@ -1483,8 +1484,19 @@ export const MOCK_ENGLISH_LESSONS: Lesson[] = [
   }
 ];
 
-export const MOCK_LESSONS_BY_SUBJECT: Record<string, Lesson[]> = {
+const RAW_LESSONS_BY_SUBJECT: Record<string, Lesson[]> = {
   science: MOCK_LESSONS,
   mathematics: MOCK_MATH_LESSONS,
   english: MOCK_ENGLISH_LESSONS
 };
+
+// Normalize every topic to a consistent 10-question quiz (quizgen.ts) so the
+// student quiz, seeded progress, and teacher records share one denominator.
+// Deterministic, so the runtime catalog and the exported server seed match.
+export const MOCK_LESSONS_BY_SUBJECT: Record<string, Lesson[]> = expandLessons(RAW_LESSONS_BY_SUBJECT);
+
+// Student records start BLANK (reset). The curated demo progress is preserved in
+// RAW_INITIAL_PROGRESS_RECORDS above — to restore it, export:
+//   scaleProgressToQuizSize(RAW_INITIAL_PROGRESS_RECORDS)
+export const INITIAL_PROGRESS_RECORDS: Record<string, StudentProgress> = {};
+void scaleProgressToQuizSize; // kept available for restoring the seeded records
