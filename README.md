@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# 🌊 Wave
+# Wave
 ### Offline-First AI Education for Remote Classrooms
 
 *Delivering personalized, AI-powered learning to students where the internet never reaches.*
