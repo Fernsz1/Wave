@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> **The most complete and up-to-date code is on the [`semi-final-demo`](../../tree/semi-final-demo) branch.**
+> Switch to that branch to see the latest features, fixes, and working demo setup.
+
 <div align="center">
 
 # 🌊 Wave
