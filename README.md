@@ -67,7 +67,7 @@ The teacher sees a full preview of every AI-generated output before it reaches s
                      │ HTTP REST + WebSocket MQTT
 ┌────────────────────▼─────────────────────────────────┐
 │              Django REST Framework (Laptop)           │
-│   wave_api/ai.py  ──►  Gemini API (via ethernet)     │
+│   wave_api/ai.py  ──►  Gemini API (internet)         │
 │   Eclipse Mosquitto MQTT Broker  :9001               │
 │   SQLite database                                     │
 └────────────────────┬─────────────────────────────────┘
@@ -106,36 +106,31 @@ Wave is not a standard web app. The prototype runs across three physical devices
 | # | Device | Role | Internet? |
 |---|---|---|---|
 | **Phone 1** | Android phone | **Hotspot Router** — creates the local WiFi network all devices communicate through | No |
-| **Laptop** | Windows laptop | **Server + Teacher terminal** — runs Django, Mosquitto, Vite, and the teacher browser tab | Yes (ethernet only, for Gemini API calls) |
+| **Laptop** | Windows laptop | **Server + Teacher terminal** — runs Django, Mosquitto, Vite, and the teacher browser tab | Demo only: mobile data briefly enabled on Phone 1 during AI generation, then turned off |
 | **Phone 2** | Android phone | **Student device** — opens the Wave PWA in a mobile browser | No |
 
 ### Network Diagram
 
 ```
-         INTERNET (home router — ethernet cable)
+        INTERNET (mobile data on Phone 1 — demo only, briefly enabled)
                         │
-               ┌────────▼───────────────────┐
-               │         LAPTOP             │
-               │  Django      :8000         │──► Gemini API
-               │  Mosquitto   :9001         │    (ethernet only)
-               │  Vite        :5173         │
-               │  WiFi IP: 192.168.43.x     │
-               └────────────┬───────────────┘
-                            │ WiFi (LAN only)
-                   ┌────────▼────────┐
-                   │    PHONE 1      │
-                   │  Hotspot Router │
-                   │  192.168.43.1   │
-                   └────────┬────────┘
-                            │ WiFi (LAN only)
-                   ┌────────▼────────┐
-                   │    PHONE 2      │
-                   │ Student browser │
-                   │ :5173 via LAN   │
-                   └─────────────────┘
+               ┌────────▼────────┐
+               │    PHONE 1      │
+               │  Hotspot Router │◄── mobile data ON only during AI call
+               │  192.168.43.1   │    then turned OFF immediately after
+               └──────┬──────────┘
+                      │ WiFi (LAN)
+         ┌────────────┴────────────────────┐
+         │                                 │
+┌────────▼───────────────────┐    ┌────────▼────────┐
+│         LAPTOP             │    │    PHONE 2      │
+│  Django      :8000         │    │ Student browser │
+│  Mosquitto   :9001         │    │ :5173 via LAN   │
+│  Vite        :5173         │    └─────────────────┘
+└────────────────────────────┘
 ```
 
-> **Key point:** Phone 1 and Phone 2 have zero internet access. Only the laptop's Django server reaches the Gemini API — and only during the brief moments the teacher triggers AI generation. All other sync (quiz scores, rankings, remedial delivery) runs entirely on the local LAN.
+> **Demo note:** All three devices connect exclusively through Phone 1's hotspot. For the demo, Phone 1's mobile data is switched **on** for the few seconds it takes Gemini to generate the remedial pack, then switched **off** — all subsequent delivery (lesson, quiz, rankings) happens over the local LAN with no internet. This is a demo convenience to show the concept; in the actual deployment model, the server would have its own dedicated internet uplink (e.g. a LoRa gateway with a satellite or cellular backhaul) so no manual toggling is needed.
 
 ---
 
