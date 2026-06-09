@@ -16,6 +16,8 @@ import { UserRole, StudentUser, TeacherUser, StudentProgress, TeacherRemediation
 
 // Data-access seam (Mock by default; Http+MQTT when VITE_API_BASE is set)
 import { createRepository, RepoUpdate } from './repo';
+import { sectionOf, withSection } from './section';
+import { summativeFeedback } from './feedback';
 
 // Seed Mock Data
 import { 
@@ -74,13 +76,13 @@ export default function App() {
         const parsed = JSON.parse(stored);
         const hasNewGrades = parsed.some((s: any) => s.gradeLevel?.includes('Grade 4') || s.gradeLevel?.includes('Grade 6'));
         if (hasNewGrades) {
-          return parsed;
+          return parsed.map((s: StudentUser) => withSection(s));
         }
       } catch (e) {
         // Fallback
       }
     }
-    const initial = MOCK_STUDENTS.map(s => ({
+    const initial = MOCK_STUDENTS.map(s => withSection({
       ...s,
       pin: s.pin || '123456'
     }));
@@ -123,9 +125,10 @@ export default function App() {
     // 'rankings' updates are reflected client-side via the progress recomputation.
   };
 
-  // Cold-start hydration from the server (no-op for Mock — defaults already set).
+  // Cold-start hydration. Runs in BOTH modes: Mock returns the localStorage-backed
+  // store (seed on first run), Http returns the server. The INITIAL_* useState
+  // defaults above are only first-paint; bootstrap overwrites them.
   useEffect(() => {
-    if (!repo.isLive) return;
     repo.bootstrap()
       .then(b => {
         setStudents(b.students);
@@ -150,7 +153,7 @@ export default function App() {
     if (!repo.isLive || !currentUser || !role) return;
     const lrn = role === 'student' ? (currentUser as StudentUser).lrn : undefined;
     const section = role === 'student'
-      ? ((currentUser as StudentUser).section || (currentUser as StudentUser).gradeLevel)
+      ? sectionOf(currentUser as StudentUser)
       : activeSection;
     repo.subscribeLive({ role, lrn, section, subject: activeSubject, onUpdate: applyRepoUpdate });
     return () => repo.unsubscribeLive();
@@ -256,8 +259,8 @@ export default function App() {
       [lrn]: updatedProgress
     }));
 
-    // Sync "up" to the server (Mock no-ops). Section drives the down-broadcast.
-    const section = (currentUser as StudentUser).section || (currentUser as StudentUser).gradeLevel;
+    // Sync "up" to the server (Mock persists locally). Section drives the down-broadcast.
+    const section = sectionOf(currentUser as StudentUser);
     repo.saveQuizAttempt({ lrn, topicId, lessonId, score, perfectScore: total, answers, section, subject: activeSubject }).catch(() => {});
   };
 
@@ -273,7 +276,9 @@ export default function App() {
     updatedSummatives[lessonId] = {
       score,
       perfectScore: 20,
-      feedback: score >= 15 ? "Outstanding grasp of linear lists characteristics." : "Acceptable attempt, slight review recommended."
+      // Subject-agnostic, derived from the score band — mirrored server-side so
+      // the teacher's class records show the identical feedback.
+      feedback: summativeFeedback(Math.round((score / 20) * 100))
     };
 
     const updatedProgress: StudentProgress = {
@@ -286,7 +291,7 @@ export default function App() {
       [lrn]: updatedProgress
     }));
 
-    const section = (currentUser as StudentUser).section || (currentUser as StudentUser).gradeLevel;
+    const section = sectionOf(currentUser as StudentUser);
     repo.saveSummativeResult({ lrn, lessonId, score, section, subject: activeSubject }).catch(() => {});
   };
 
@@ -829,6 +834,7 @@ export default function App() {
             preSelectedStudent={wizardPreSelectedStudent}
             preSelectedTopicId={wizardPreSelectedTopicId}
             onPublish={handlePublishRemedialMaterial}
+            onGenerate={(req) => repo.generateRemediation(req)}
             onClose={() => {
               setShowWizard(false);
               setWizardPreSelectedStudent(null);

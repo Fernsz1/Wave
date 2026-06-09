@@ -6,6 +6,7 @@
 import { motion } from 'motion/react';
 import { Trophy, Award, Search, UserCheck, Star } from 'lucide-react';
 import { StudentUser, StudentProgress, Lesson } from '../types';
+import { sectionOf } from '../section';
 
 interface StudentRankingsProps {
   currentStudent: StudentUser;
@@ -26,7 +27,7 @@ export default function StudentRankings({ currentStudent, progressRecords, lesso
   const activeTopicIds = new Set(lessons.flatMap(l => l.topics.map(t => t.id)));
 
   // Filter students to only include those in the same section as currentStudent (not mix other sections)
-  const sectionStudents = students.filter(student => student.gradeLevel === currentStudent.gradeLevel);
+  const sectionStudents = students.filter(student => sectionOf(student) === sectionOf(currentStudent));
 
   // Compile leaderboard
   const leaderboard = sectionStudents.map(student => {

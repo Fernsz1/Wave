@@ -1,0 +1,5 @@
+{
+  "_comment": "Cross-language DEFLATE interop fixture. `b64` is base64(zlib/DEFLATE(raw)) and is byte-identical from pako (TS) and zlib (Python). Both Wave/src/sync/compress.test.ts and server/tests/test_compress.py assert they inflate it back to `raw`, proving the app and server speak the same wire.",
+  "raw": "Wave LoRa interop check - opposing muscles work in pairs. 1234567890",
+  "b64": "eJwLTyxLVfDJD0pUyMwrSS3KL1BIzkhNzlbQVcgvKMgvzsxLV8gtLU7OSS1WKM8vygaqUihIzCwq1lMwNDI2MTUzt7A0AABAoRbN"
+}

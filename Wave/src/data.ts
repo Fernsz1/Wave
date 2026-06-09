@@ -1197,7 +1197,8 @@ export const INITIAL_REMEDIATION_MATERIALS: TeacherRemediationMaterial[] = [
       }
     ],
     publishDate: "2026-06-04",
-    assignedStudentLrn: "101234567900", // Jacob Flores
+    targetSection: "Grade 6 - Section Einstein", // Jacob's section — canonical broadcast key
+    assignedStudentLrn: "101234567900", // Jacob Flores (seed metadata only)
     isPublished: true,
   }
 ];

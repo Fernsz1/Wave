@@ -18,8 +18,11 @@ import paho.mqtt.client as mqtt
 from django.conf import settings
 
 from . import codec
+from .compress import deflate_to_b64, inflate_from_b64
 
 UP_TYPES = ("StudentSignup", "StudentProgress", "StudentSummativeResults", "QuizAttemptRequest")
+
+ENC_DEFLATE = 1  # envelope `enc` flag: 1 = DEFLATE+base64 payload; absent/0 = raw tokens
 
 
 def slug(section: str) -> str:
@@ -30,7 +33,24 @@ def topic_for(msg_type: str, key: str) -> str:
     return f"wave/{slug(key) if ' ' in key else key}/{msg_type}"
 
 
+def pack_payload(payload_tokens: list) -> tuple[int | None, object]:
+    """Compress the encoded payload when that shrinks the bytes (mirror of envelope.ts)."""
+    j = json.dumps(payload_tokens, separators=(",", ":"))
+    b64 = deflate_to_b64(j)
+    if len(b64) < len(j):
+        return ENC_DEFLATE, [b64]
+    return None, payload_tokens
+
+
+def unpack_payload(env: dict) -> list:
+    """Return the raw payload token array from a decoded envelope, inflating if compressed."""
+    if env.get("enc") == ENC_DEFLATE:
+        return json.loads(inflate_from_b64(env["payload"][0]))
+    return env["payload"]
+
+
 def build_envelope(msg_type: str, obj: dict, *, direction: str, subject: str = "", section: str = "") -> list:
+    enc, payload = pack_payload(codec.encode(msg_type, obj))
     return codec.encode_envelope(
         {
             "version": codec.PROTOCOL_VERSION,
@@ -42,7 +62,8 @@ def build_envelope(msg_type: str, obj: dict, *, direction: str, subject: str = "
             "createdAt": datetime.now(timezone.utc).isoformat(),
             "chunkIndex": 0,
             "chunkTotal": 1,
-            "payload": codec.encode(msg_type, obj),
+            "enc": enc,
+            "payload": payload,
         }
     )
 

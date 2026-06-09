@@ -11,11 +11,15 @@ import {
 } from 'lucide-react';
 import { StudentUser, Topic, QuizQuestion, TeacherRemediationMaterial, StudentProgress } from '../types';
 import { MOCK_LESSONS, MOCK_LESSONS_BY_SUBJECT } from '../data';
+import { sectionOf } from '../section';
+import { GenerateRemediationReq, GeneratedRemediation } from '../repo/repository';
 import WaveLogo from './WaveLogo';
 
 interface RemediationWizardProps {
   onPublish: (material: TeacherRemediationMaterial) => void;
   onClose: () => void;
+  /** Real generation via the repository seam (server Gemini / deterministic Mock). */
+  onGenerate: (req: GenerateRemediationReq) => Promise<GeneratedRemediation>;
   preSelectedStudent?: StudentUser | null;
   preSelectedTopicId?: string;
   students?: StudentUser[];
@@ -24,9 +28,10 @@ interface RemediationWizardProps {
   activeSection?: string;
 }
 
-export default function RemediationWizard({ 
-  onPublish, 
+export default function RemediationWizard({
+  onPublish,
   onClose,
+  onGenerate,
   preSelectedStudent = null,
   preSelectedTopicId = "",
   students = [],
@@ -38,7 +43,7 @@ export default function RemediationWizard({
   // Underperforming Student Calculation Based on Selected Subject & Section
   const sectionFilteredStudents = !activeSection || activeSection === 'All Sections'
     ? students
-    : students.filter(s => s.gradeLevel === activeSection);
+    : students.filter(s => sectionOf(s) === activeSection);
 
   const availableLessons = activeSubject ? (MOCK_LESSONS_BY_SUBJECT[activeSubject] || []) : MOCK_LESSONS;
   const activeTopicIds = new Set(availableLessons.flatMap(l => l.topics.map(t => t.id)));
@@ -156,15 +161,9 @@ export default function RemediationWizard({
 
       if (foundFailId) {
         setTargetTopicId(foundFailId);
-      } else {
-        // Auto-set low performance topic arrays based on student identity
-        if (lrn === "101234567900") {
-          setTargetTopicId("L1-T2"); // Jacob fails Muscular System!
-        } else if (availableLessons[0]?.topics[0]) {
-          setTargetTopicId(availableLessons[0].topics[0].id);
-        } else {
-          setTargetTopicId("L1-T1"); // Fallback Skeletal System
-        }
+      } else if (availableLessons[0]?.topics[0]) {
+        // Default to the first topic of the active subject when no failing topic is found.
+        setTargetTopicId(availableLessons[0].topics[0].id);
       }
     }
   };
@@ -173,114 +172,55 @@ export default function RemediationWizard({
   const triggerGenerationFlow = () => {
     setStep('generating');
     setGenPercentage(0);
-    setGenStatusMessage('Connecting to Gemini model instance channels...');
+    setGenStatusMessage("Analyzing the student's missed concepts...");
   };
 
-  // AI Progression Simulator Loop
+  // Real generation via the repository seam (server Gemini in Http mode;
+  // deterministic catalog-derived content in Mock). A lightweight progress
+  // animation runs while the async call is in flight.
   useEffect(() => {
     if (step !== 'generating') return;
+    let cancelled = false;
 
+    const messages = [
+      "Analyzing the student's missed concepts...",
+      'Grounding on the lesson material...',
+      'Drafting a simplified explanation...',
+      'Writing custom check questions...',
+    ];
+    let tick = 0;
     const timer = setInterval(() => {
-      setGenPercentage(prev => {
-        const next = prev + 10;
-        if (next === 30) {
-          setGenStatusMessage('Decomposing student failed quiz answer telemetry...');
-        } else if (next === 50) {
-          setGenStatusMessage('Writing customized analogy structure (Rubber band elasticity)...');
-        } else if (next === 70) {
-          setGenStatusMessage('Formulating custom diagnostic test elements...');
-        } else if (next === 90) {
-          setGenStatusMessage('Polishing terminology formatting constraints...');
-        } else if (next >= 100) {
-          clearInterval(timer);
-          
-          // Complete generating: populate realistic AI outputs
-          // We look up the original target topic
-          const originalTopic = MOCK_LESSONS.flatMap(l => l.topics).find(t => t.id === targetTopicId);
-          const topicName = originalTopic?.name || "Muscular System";
-
-          const titleVal = `AI Remedial Topic: Simplified Analogy for ${topicName}`;
-          let contentVal = `## Welcome to your Remedial Lesson for ${topicName}!\nThis lesson is custom-created specifically by Wave's AI co-grader to help you master the core concepts.\n\n`;
-          let notesVal = `Hi ${student?.name || 'Student'}, I noticed you struggled with some questions on the ${topicName} quiz. Let's make it super simple!`;
-          let quizQuestions: QuizQuestion[] = [];
-
-          if (targetTopicId === "L1-T2") {
-            contentVal += `### The Rubber Band Analogy for Muscles\nThink of your muscles as stretchy rubber bands. When they contract (squeeze and shorten), they pull on your bones to move them. But here is the trick: a rubber band can only **pull**, it cannot push!\n\nBecause muscles can only pull and cannot push, they always work in **opposing pairs**:\n• **Bending your arm**: Your bicep muscle contracts (tightens and pulls) while your tricep muscle relaxes.\n• **Straightening your arm**: Your tricep muscle contracts (tightens and pulls) while your bicep muscle relaxes.\n\n### Voluntary vs. Involuntary Muscles\n• **Voluntary**: Muscles you control (like hand muscles holding a pencil).\n• **Involuntary**: Muscles that work automatically without having to think (like your beating heart!).`;
-            notesVal = `Hi ${student?.name || 'Jacob'}, I wrote a special rubber band analogy to help you understand bicep and tricep opposing action pairs. Try the quick quiz below!`;
-            quizQuestions = [
-              {
-                id: "QREM-MS1",
-                question: "Why do skeletal muscles always work in opposing pairs?",
-                options: [
-                  "Because they are located on both sides of the nose",
-                  "Because muscles can only pull bones, they cannot push them back",
-                  "To produce bone marrow twice as fast",
-                  "To store extra water and calcium in biological nodes"
-                ],
-                correctAnswerIndex: 1,
-                explanation: "Skeletal muscles can only contract and pull. To move a bone back and forth, they must work in contraction pairs."
-              },
-              {
-                id: "QREM-MS2",
-                question: "Which of your muscles is an example of an involuntary muscle?",
-                options: [
-                  "Bicep muscle in your arm wiggling a finger",
-                  "The heart muscle beating on its own constantly",
-                  "Leg muscles wiggling a foot",
-                  "Jaw muscle chewing gum"
-                ],
-                correctAnswerIndex: 1,
-                explanation: "The heart beats automatically without you choosing to do so, making it involuntary."
-              }
-            ];
-          } else if (targetTopicId === "L1-T1") {
-            contentVal += `### The Construction Frame Analogy for Bones\nThink of your skeleton as the strong wooden or metal frame of a house. Without it, the roof would fall and walls would collapse! Your bones form a sturdy frame that supports your body, lets you stand tall, and protects your soft organs (like your brain inside the skull, and heart inside the chest).\n\n### Key Functions\n• **Protects**: Skull protects brain; Rib Cage protects heart and lungs.\n• **Supports**: Spinal column backbone keeps you standing.\n• **Creates**: Bone marrow inside makes blood cells.`;
-            quizQuestions = [
-              {
-                id: "QREM-SS1",
-                question: "Which hard skeletal bone acts like a helmet protecting your brain?",
-                options: ["Rib cage", "Skull", "Backbone", "Thigh bone"],
-                correctAnswerIndex: 1,
-                explanation: "The skull is a round, hard bone that houses and protects your fragile brain from injuries."
-              },
-              {
-                id: "QREM-SS2",
-                question: "What is produced in the soft marrow found inside larger bones?",
-                options: ["Oxygen gas", "Water cells", "Blood cells", "Skeletal tendons"],
-                correctAnswerIndex: 2,
-                explanation: "Bone marrow tissue inside bones is a manufacturing center for producing brand new blood cells."
-              }
-            ];
-          } else {
-            contentVal += `### Core Summary of ${topicName}\nLet's break down ${topicName} into easy steps:\n\n1. Review your main definitions.\n2. Observe real-world examples (like how water freeze or heat travels).\n3. Answer custom questions to reinforce your scientific reasoning.\n\nStudying sciences is all about observing how things work in the natural world!`;
-            quizQuestions = [
-              {
-                id: "QREM-GEN1",
-                question: `What is the best way to understand ${topicName}?`,
-                options: [
-                  "By connecting concepts with physical examples in nature",
-                  "By memorizing words without thinking about their meanings"
-                ],
-                correctAnswerIndex: 0,
-                explanation: "Real understanding comes from visualizing concepts and checking physical examples."
-              }
-            ];
-          }
-
-          setGeneratedTitle(titleVal);
-          setGeneratedContent(contentVal);
-          setGeneratedNotes(notesVal);
-          setGeneratedQuiz(quizQuestions);
-
-          setStep('preview');
-          return 100;
-        }
-        return next;
-      });
+      tick++;
+      setGenPercentage(prev => Math.min(prev + 7, 90)); // climb toward 90% until the result lands
+      if (tick < messages.length) setGenStatusMessage(messages[tick]);
     }, 300);
 
-    return () => clearInterval(timer);
-  }, [step, targetTopicId, student]);
+    (async () => {
+      try {
+        const result = await onGenerate({
+          originalTopicId: targetTopicId,
+          subject: activeSubject,
+          studentLrn: student?.lrn || '',
+          studentName: student?.name || 'your student',
+        });
+        if (cancelled) return;
+        setGeneratedTitle(result.title);
+        setGeneratedContent(result.content);
+        setGeneratedNotes(result.teacherNotes);
+        setGeneratedQuiz(result.createdQuiz);
+        setGenPercentage(100);
+        setStep('preview');
+      } catch {
+        if (cancelled) return;
+        setGenStatusMessage('Generation failed. Please try again.');
+        setStep('setup');
+      }
+    })();
+
+    return () => { cancelled = true; clearInterval(timer); };
+    // Inputs are captured when generation starts; re-running on each keystroke is undesired.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
 
   // Save edits
   const saveWizardEdits = (title: string, content: string, notes: string) => {
@@ -302,6 +242,10 @@ export default function RemediationWizard({
       teacherNotes: generatedNotes,
       createdQuiz: generatedQuiz,
       publishDate: new Date().toISOString().split('T')[0],
+      // Canonical routing key: the pack broadcasts to the seed student's whole
+      // section, identically in Mock and Http modes. assignedStudentLrn is kept
+      // only as metadata recording whose failure seeded the pack.
+      targetSection: sectionOf(student),
       assignedStudentLrn: student.lrn,
       isPublished: true,
     };

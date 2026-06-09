@@ -9,6 +9,19 @@ from .derive import assemble_progress, compute_rankings
 from .models import RemediationMaterial, Student, SummativeResult, Teacher
 
 
+def summative_feedback(percent: int) -> str:
+    """Deterministic, subject-agnostic summative feedback by score band.
+
+    Mirror of `summativeFeedback` in Wave/src/feedback.ts so the teacher sees the
+    same feedback the student saw, without adding a field to the wire protocol.
+    """
+    if percent >= 90:
+        return "Excellent mastery."
+    if percent >= 60:
+        return "Good effort — light review recommended."
+    return "Needs targeted review."
+
+
 def _upsert_student_from_signup(p: dict) -> Student:
     student, _ = Student.objects.update_or_create(
         lrn=p["lrn"],
@@ -51,14 +64,20 @@ def _save_summative_results(p: dict) -> None:
     student = Student.objects.filter(lrn=p["studentLrn"]).first()
     if not student:
         return
+    total = p.get("total", 20) or 20
+    percent = p.get("percent")
+    if percent is None:
+        percent = round((p["score"] / total) * 100) if total else 0
     student.summatives.update_or_create(
         lesson_id=p["lessonId"],
         defaults={
             "score": p["score"],
-            "total": p.get("total", 20),
-            "percent": p.get("percent", 0),
-            "passed": p.get("passed", False),
+            "total": total,
+            "percent": percent,
+            "passed": p.get("passed", percent >= 60),
             "failed_items": p.get("failedItems", []),
+            # Derived identically on the client so teacher/student agree.
+            "feedback": summative_feedback(percent),
         },
     )
 

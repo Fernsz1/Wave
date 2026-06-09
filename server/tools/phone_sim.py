@@ -16,6 +16,7 @@ import paho.mqtt.client as mqtt
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # server/ on path
 from wave_api import codec  # noqa: E402
+from wave_api.mqtt import unpack_payload  # noqa: E402
 
 BROKER_HOST = os.getenv("WAVE_BROKER_HOST", "127.0.0.1")
 BROKER_PORT = int(os.getenv("WAVE_BROKER_PORT", "1883"))
@@ -29,7 +30,7 @@ def on_connect(client, userdata, flags, reason_code, properties=None):
 def on_message(client, userdata, msg):
     try:
         env = codec.decode_envelope(json.loads(msg.payload.decode()))
-        payload = codec.decode(env["type"], env["payload"])
+        payload = codec.decode(env["type"], unpack_payload(env))
         print(f"[phone] {msg.topic}  {env['direction']} {env['type']}")
         print(f"        {json.dumps(payload, ensure_ascii=False)[:300]}")
     except Exception as exc:  # noqa: BLE001

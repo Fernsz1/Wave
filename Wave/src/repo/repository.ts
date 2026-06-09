@@ -9,7 +9,7 @@
  * syncs with Django over REST + MQTT. Returns the app's INTERNAL types so the UI
  * components are unchanged.
  */
-import { Lesson, StudentProgress, StudentUser, TeacherRemediationMaterial } from '../types';
+import { Lesson, QuizQuestion, StudentProgress, StudentUser, TeacherRemediationMaterial } from '../types';
 
 export interface RepoBootstrap {
   students: StudentUser[];
@@ -51,6 +51,21 @@ export interface SummativeWrite {
   subject: string;
 }
 
+export interface GenerateRemediationReq {
+  originalTopicId: string;
+  subject: string;
+  studentLrn: string;
+  studentName: string;
+  failedItems?: string[];
+}
+
+export interface GeneratedRemediation {
+  title: string;
+  content: string;
+  teacherNotes: string;
+  createdQuiz: QuizQuestion[];
+}
+
 export interface SubscribeOpts {
   role: 'student' | 'teacher';
   lrn?: string;
@@ -67,6 +82,10 @@ export interface WaveRepository {
   saveQuizAttempt(w: QuizAttemptWrite): Promise<void>;
   saveSummativeResult(w: SummativeWrite): Promise<void>;
   publishRemediation(material: TeacherRemediationMaterial, opts: { subject: string; section: string }): Promise<void>;
+  /** AI-author a remedial pack (server Gemini in Http mode; deterministic in Mock). */
+  generateRemediation(req: GenerateRemediationReq): Promise<GeneratedRemediation>;
+  /** AI-author a topic quiz; falls back to the deterministic generator. */
+  generateTopicQuiz(req: { topicId: string; subject: string; n?: number }): Promise<QuizQuestion[]>;
   enrollStudent(student: StudentUser): Promise<void>;
   /** (Re)subscribe to live "down" updates; idempotent — replaces any prior subscription. No-op for Mock. */
   subscribeLive(opts: SubscribeOpts): void;

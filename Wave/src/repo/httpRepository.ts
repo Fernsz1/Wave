@@ -15,8 +15,18 @@ import { buildEnvelope, parseEnvelope } from '../sync/envelope';
 import { Outbox, LocalStorageStore, OutboxStore } from '../sync/outbox';
 import { MqttTransport, Transport } from '../sync/transport';
 import { topicFor, slug } from '../sync/topics';
-import { Lesson, StudentProgress, StudentUser, TeacherRemediationMaterial } from '../types';
-import { RepoBootstrap, RepoUpdate, SubscribeOpts, QuizAttemptWrite, SummativeWrite, WaveRepository } from './repository';
+import { withSection, sectionOf } from '../section';
+import { Lesson, QuizQuestion, StudentProgress, StudentUser, TeacherRemediationMaterial } from '../types';
+import {
+  RepoBootstrap,
+  RepoUpdate,
+  SubscribeOpts,
+  QuizAttemptWrite,
+  SummativeWrite,
+  WaveRepository,
+  GenerateRemediationReq,
+  GeneratedRemediation,
+} from './repository';
 
 const SUBJECTS = ['science', 'mathematics', 'english'];
 
@@ -54,6 +64,25 @@ export class HttpRepository implements WaveRepository {
     return res.json();
   }
 
+  private async postJson(path: string, body: Record<string, any>): Promise<any> {
+    const res = await fetch(`${this.apiBase}${path}`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error(`POST ${path} -> ${res.status}`);
+    return res.json();
+  }
+
+  async generateRemediation(req: GenerateRemediationReq): Promise<GeneratedRemediation> {
+    return this.postJson('/api/remediation/generate', req);
+  }
+
+  async generateTopicQuiz(req: { topicId: string; subject: string; n?: number }): Promise<QuizQuestion[]> {
+    const res = await this.postJson('/api/quiz/generate', req);
+    return res.quiz as QuizQuestion[];
+  }
+
   async authenticate(role: 'student' | 'teacher', principalId: string, name?: string): Promise<void> {
     const body =
       role === 'student'
@@ -69,7 +98,7 @@ export class HttpRepository implements WaveRepository {
 
   async bootstrap(): Promise<RepoBootstrap> {
     const roster = await this.get('/api/roster');
-    const students: StudentUser[] = roster.students;
+    const students: StudentUser[] = (roster.students as StudentUser[]).map(withSection);
 
     const lessonsBySubject: Record<string, Lesson[]> = {};
     for (const subject of SUBJECTS) {
@@ -200,7 +229,7 @@ export class HttpRepository implements WaveRepository {
       lrn: student.lrn,
       name: student.name,
       gradeLevel: student.gradeLevel,
-      section: student.section || student.gradeLevel,
+      section: sectionOf(student),
       pin: student.pin || '123456',
     };
     await this.push('StudentSignup', signup, '', signup.section);

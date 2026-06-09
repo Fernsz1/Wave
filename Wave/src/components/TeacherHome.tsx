@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { TeacherUser, StudentUser, StudentProgress, QuizQuestion } from '../types';
 import { MOCK_LESSONS_BY_SUBJECT } from '../data';
+import { sectionOf } from '../section';
 import WaveLogo from './WaveLogo';
 
 interface TeacherHomeProps {
@@ -309,7 +310,7 @@ export default function TeacherHome({
   // Filter students array based on active section
   const filteredStudents = activeSection === 'All Sections'
     ? students
-    : students.filter(student => student.gradeLevel === activeSection);
+    : students.filter(student => sectionOf(student) === activeSection);
 
   const totalStudents = filteredStudents.length;
   

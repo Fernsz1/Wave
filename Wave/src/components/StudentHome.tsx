@@ -7,6 +7,7 @@ import { BookOpen, CheckCircle2, AlertCircle, ArrowRight, UserCheck, Atom, Calcu
 import { motion } from 'motion/react';
 import { StudentUser, StudentProgress, Lesson, TeacherRemediationMaterial } from '../types';
 import { MOCK_LESSONS_BY_SUBJECT } from '../data';
+import { sectionOf } from '../section';
 import WaveLogo from './WaveLogo';
 
 interface StudentHomeProps {
@@ -42,7 +43,7 @@ export default function StudentHome({
 
   // Remedial packs for this student: section-targeted packs (canonical) reach
   // everyone in the section; legacy packs fall back to per-student targeting.
-  const studentSection = student.section || student.gradeLevel;
+  const studentSection = sectionOf(student);
   const myRemediations = remediationMaterials.filter(
     mat => mat.isPublished && (mat.targetSection ? mat.targetSection === studentSection : mat.assignedStudentLrn === student.lrn)
   );

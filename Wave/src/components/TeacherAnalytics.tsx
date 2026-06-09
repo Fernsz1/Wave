@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { MOCK_LESSONS, MOCK_LESSONS_BY_SUBJECT } from '../data';
 import { StudentUser } from '../types';
+import { sectionOf } from '../section';
 
 interface TeacherAnalyticsProps {
   progressRecords: Record<string, any>;
@@ -38,7 +39,7 @@ export default function TeacherAnalytics({
   // Filter students based on section
   const relevantStudents = activeSection === 'All Sections'
     ? students
-    : students.filter(s => s.gradeLevel === activeSection);
+    : students.filter(s => sectionOf(s) === activeSection);
 
   // Compile individual calculations to align with class records
   const studentStats = relevantStudents.map(student => {
@@ -132,7 +133,7 @@ export default function TeacherAnalytics({
         // Ensure student exists and matches section
         const studentObj = students.find(s => s.lrn === prog.studentLrn);
         if (!studentObj) return;
-        if (activeSection !== 'All Sections' && studentObj.gradeLevel !== activeSection) return;
+        if (activeSection !== 'All Sections' && sectionOf(studentObj) !== activeSection) return;
 
         const attempt = prog.quizAttempts[topic.id];
         if (attempt) {

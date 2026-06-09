@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { StudentUser, StudentProgress } from '../types';
 import { MOCK_LESSONS, MOCK_LESSONS_BY_SUBJECT } from '../data';
+import { sectionOf } from '../section';
 
 interface TeacherStudentsProps {
   progressRecords: Record<string, StudentProgress>;
@@ -44,7 +45,7 @@ export default function TeacherStudents({
   // Consistent section filtering
   const sectionStudents = activeSection === 'All Sections'
     ? students
-    : students.filter(student => student.gradeLevel === activeSection);
+    : students.filter(student => sectionOf(student) === activeSection);
 
   // Compile detailed table rows for enrollees
   const studentsCompiled = sectionStudents.map(student => {

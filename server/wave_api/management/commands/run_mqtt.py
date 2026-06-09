@@ -37,7 +37,7 @@ class Command(BaseCommand):
             env = codec.decode_envelope(json.loads(msg.payload.decode()))
             if env.get("direction") == "down":
                 return  # ignore our own broadcasts (avoids re-ingest loop)
-            payload = codec.decode(env["type"], env["payload"])
+            payload = codec.decode(env["type"], wave_mqtt.unpack_payload(env))
             self.stdout.write(f"[mqtt] up <- {msg.topic} ({env['type']})")
             downstream = ingest.handle(
                 env["type"], payload, subject=env.get("subject", ""), section=env.get("section", "")

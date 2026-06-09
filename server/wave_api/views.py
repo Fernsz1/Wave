@@ -3,7 +3,7 @@ from rest_framework import permissions, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
-from . import codec, ingest, mqtt
+from . import ai, codec, ingest, mqtt
 from .auth import ApiToken
 from .derive import assemble_progress, compute_rankings
 from .models import CatalogDocument, RemediationMaterial, Student, Teacher
@@ -127,12 +127,38 @@ def remediation(request):
 
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated])
+def generate_remediation(request):
+    """AI-author a remedial pack. Body: {originalTopicId, subject, studentLrn}.
+    Returns {title, content, teacherNotes, createdQuiz}; publishing still goes
+    through the normal compressed envelope path when the teacher hits Publish."""
+    data = request.data
+    topic_id = data.get("originalTopicId", "")
+    subject = data.get("subject", "science")
+    student = Student.objects.filter(lrn=data.get("studentLrn", "")).first()
+    student_name = student.name if student else data.get("studentName", "your student")
+    result = ai.generate_remediation(subject, topic_id, student_name, data.get("failedItems"))
+    return Response(result)
+
+
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated])
+def generate_quiz(request):
+    """AI-author a topic quiz. Body: {topicId, subject, n?}. Returns QuizQuestion[]."""
+    data = request.data
+    quiz = ai.generate_topic_quiz(
+        data.get("subject", "science"), data.get("topicId", ""), int(data.get("n", ai.QUIZ_SIZE))
+    )
+    return Response({"quiz": quiz})
+
+
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated])
 def sync_push(request):
     """REST fallback for 'up' writes. Body: {"envelopes": [<envelope token array>, ...]}."""
     acks = []
     for env_tokens in request.data.get("envelopes", []):
         env = codec.decode_envelope(env_tokens)
-        payload = codec.decode(env["type"], env["payload"])
+        payload = codec.decode(env["type"], mqtt.unpack_payload(env))
         downstream = ingest.handle(
             env["type"], payload, subject=env.get("subject", ""), section=env.get("section", "")
         )

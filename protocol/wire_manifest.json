@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "_comment": "Single source of truth for the Wave tokenized-array wire protocol. Field ORDER here is authoritative: both the TS codec (Wave/src/protocol/codec.ts) and the Python codec (server/wave_api/codec.py) walk these lists positionally so the app and server decode identical arrays over MQTT/LoRa. Field types: str | int | bool | enum:<name> | array:<elem> | map:<elem> | <DefName> (ref). 'array' alone in the envelope = raw passthrough of an already-encoded payload array. Enums encode to their index (small int) for compactness. Optional fields encode as null and decode back to absent.",
-  "protocolVersion": 1,
+  "protocolVersion": 2,
 
   "enums": {
     "type": [
@@ -30,6 +30,7 @@
       { "name": "createdAt", "t": "str" },
       { "name": "chunkIndex", "t": "int" },
       { "name": "chunkTotal", "t": "int" },
+      { "name": "enc", "t": "int", "optional": true },
       { "name": "payload", "t": "array" }
     ]
   },

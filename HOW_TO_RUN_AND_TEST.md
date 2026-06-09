@@ -2,15 +2,17 @@
 
 Wave is an offline-first learning app (`Wave/`, React + Vite) backed by an online Django
 server (`server/`) that they both speak to via a **tokenized-array protocol**
-(`protocol/wire_manifest.json`) over **MQTT** — the same last-mile path that LoRa will later use.
+(`protocol/wire_manifest.json`), **DEFLATE-compressed** into compact bytes and carried over
+**MQTT** — the same last-mile path that LoRa will later use. Remedial lessons and quizzes are
+**AI-generated** (Google Gemini) server-side, with a deterministic offline fallback.
 
 There are three ways to run it, smallest first:
 
 | Mode | Needs | What it proves |
 |---|---|---|
-| **A. Offline app** | Node only | The full UI on in-memory data (today's behavior) |
-| **B. Automated tests** | Node + Python | Codec/protocol, chunking, server API, derivations |
-| **C. Full live demo** | Node + Python + Mosquitto | Real student↔teacher sync over the broker, no internet |
+| **A. Offline app** | Node only | The full UI on in-memory data; AI uses the deterministic fallback |
+| **B. Automated tests** | Node + Python | Codec/protocol, compression, LoRa frames, AI fallback, server API |
+| **C. Full live demo** | Node + Python + Mosquitto | Real student↔teacher sync (compressed) + live Gemini generation |
 
 ---
 
@@ -35,6 +37,8 @@ npm run dev
 
 Open `http://localhost:3000`. With **no `.env.local`**, the app runs on the in-memory
 `MockRepository` — every screen works, data lives in the browser, nothing is sent anywhere.
+The AI Remediation Wizard generates content from the deterministic, catalog-derived fallback
+(no API key needed); live Gemini generation requires Mode C.
 
 Log in as:
 - **Student** — LRN `101234567891` (Sophia Cruz), PIN `123456`
@@ -44,24 +48,26 @@ Log in as:
 
 ## B. Automated tests
 
-**Frontend** (codec golden cases, chunking/reassembly, outbox, transport):
+**Frontend** (codec golden cases, DEFLATE compression, LoRa byte frames, outbox, transport):
 ```powershell
 cd Wave
-npm test          # vitest — expect ~22 passing
+npm test          # vitest — expect ~36 passing
 npm run lint      # tsc --noEmit, should be clean
 ```
 
-**Backend** (codec golden cases, login, catalog decode, sync push, derivations):
+**Backend** (codec, compression interop, AI fallback, login, catalog decode, sync push, derivations):
 ```powershell
 cd server
 python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
-.venv\Scripts\python -m pytest -q      # expect 8 passing
+.venv\Scripts\python -m pytest -q      # expect 15 passing
 ```
 
-> The codec golden fixtures (`protocol/fixtures/golden.json`) are asserted by **both** suites
-> against the same expected token arrays — that cross-language match is the proof the app and
-> server will agree over MQTT/LoRa.
+> Two cross-language fixtures are the proof the app and server agree over MQTT/LoRa: the codec
+> golden arrays (`protocol/fixtures/golden.json`) and the DEFLATE interop fixture
+> (`protocol/fixtures/compress.json`, byte-identical from `pako` and Python `zlib`), each asserted
+> by **both** suites. The AI tests run with no API key, so they exercise the deterministic fallback
+> only — no network.
 
 ---
 
@@ -79,6 +85,14 @@ python -m venv .venv
 .venv\Scripts\python manage.py seed_data     # seeds catalog/roster/progress from the frontend
 ```
 Re-export the seed from the frontend any time with: `cd Wave; npm run seed`.
+
+**Enable live AI generation (optional).** Without a key, the server still serves remedial
+content/quizzes from the deterministic fallback. To use Gemini, set the key before running the
+Django server (Terminal 2) — see `server/.env.example`:
+```powershell
+$env:GEMINI_API_KEY = "<your-key>"      # optional: $env:GEMINI_MODEL = "gemini-flash-latest"
+```
+The key stays on the server and is never sent to the browser.
 
 ### Run it — four terminals
 ```powershell
@@ -112,6 +126,12 @@ Delete `.env.local` to fall back to the offline MockRepository.
 2. Student tab/phone → log in as **Sophia Cruz** `101234567891` / `123456` (same section).
 3. Student takes a quiz and submits.
 4. Terminal 3 prints `up <- …` then `down -> …`, and the **teacher's records update live** — no refresh.
+5. Teacher → **AI Remediation Wizard** → pick a student/topic → Generate. With `GEMINI_API_KEY`
+   set you get live Gemini content; otherwise the grounded fallback. Publish broadcasts it
+   (compressed) to the whole section, and the student sees it.
+
+The down-broadcast payloads are DEFLATE-compressed (envelope `enc=1`); `tools\phone_sim.py` decodes
+them transparently, so you can watch the compressed traffic arrive and round-trip.
 
 **Offline/retained check:** stop the student's connection, run
 `server\.venv\Scripts\python tools\publish_score.py`, then reconnect the student — the retained
@@ -139,7 +159,8 @@ message arrives immediately ("delivered when reachable").
 ---
 
 ## Where things live
-- `protocol/` — shared wire manifest + golden fixtures (the source of truth).
-- `Wave/src/protocol/`, `schemas/`, `sync/`, `repo/` — codec, validation, sync layer, data seam.
-- `server/` — Django API + MQTT; see `server/README.md` for backend detail.
+- `protocol/` — shared wire manifest + golden/compress fixtures (the source of truth).
+- `Wave/src/protocol/`, `schemas/`, `sync/`, `repo/` — codec, validation, sync layer (compression +
+  `LoRaTransport` byte frames live in `sync/`), data seam.
+- `server/` — Django API + MQTT; AI generation in `wave_api/ai.py`. See `server/README.md`.
 - Demo posture: read endpoints are open and PINs are plaintext for the LAN demo — harden before production.

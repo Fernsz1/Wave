@@ -55,3 +55,8 @@ import os  # noqa: E402
 
 MQTT_HOST = os.getenv("WAVE_BROKER_HOST", "127.0.0.1")
 MQTT_PORT = int(os.getenv("WAVE_BROKER_PORT", "1883"))
+
+# Google Gemini for AI generation (server-side so the key never reaches the browser).
+# Unset key => the AI service degrades to deterministic, catalog-derived output.
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")

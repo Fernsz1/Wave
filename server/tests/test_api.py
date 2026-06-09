@@ -90,3 +90,29 @@ def test_progress_endpoint_reflects_ingest(student):
     decoded = codec.decode("StudentProgress", resp.data["tokens"])
     assert decoded["quizScores"]["L1-T1"]["percent"] == 67
     assert "L1-T1" in decoded["completedTopicIds"]
+
+
+def test_summative_feedback_is_derived_and_travels(student):
+    """A summative result with no transmitted feedback gets band-derived feedback
+    server-side, and assemble_progress surfaces it to the teacher — matching what
+    the student client computed for the same score band."""
+    from wave_api import ingest
+    from wave_api.derive import assemble_progress
+    from wave_api.models import SummativeResult
+
+    # Wire payload carries no `feedback` field (matches httpRepository.saveSummativeResult).
+    ingest.handle(
+        "StudentSummativeResults",
+        {"studentLrn": student.lrn, "section": student.section, "lessonId": "L1",
+         "score": 19, "total": 20, "percent": 95, "passed": True, "failedItems": []},
+        subject="science", section=student.section,
+    )
+
+    row = SummativeResult.objects.get(student=student, lesson_id="L1")
+    assert row.feedback == "Excellent mastery."
+    assert ingest.summative_feedback(95) == "Excellent mastery."
+    assert ingest.summative_feedback(75) == "Good effort — light review recommended."
+    assert ingest.summative_feedback(40) == "Needs targeted review."
+
+    assembled = assemble_progress(student)
+    assert assembled["summativeScores"]["L1"]["feedback"] == "Excellent mastery."

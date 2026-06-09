@@ -10,14 +10,12 @@ Override broker:  WAVE_BROKER_HOST=192.168.1.50 python tools/publish_score.py
 import json
 import os
 import sys
-import uuid
-from datetime import datetime, timezone
 from pathlib import Path
 
 import paho.mqtt.client as mqtt
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # server/ on path
-from wave_api import codec  # noqa: E402
+from wave_api.mqtt import build_envelope  # noqa: E402
 
 BROKER_HOST = os.getenv("WAVE_BROKER_HOST", "127.0.0.1")
 BROKER_PORT = int(os.getenv("WAVE_BROKER_PORT", "1883"))
@@ -37,18 +35,7 @@ progress = {
     "summativeScores": {},
 }
 
-env = codec.encode_envelope({
-    "version": codec.PROTOCOL_VERSION,
-    "msgId": str(uuid.uuid4()),
-    "type": "StudentProgress",
-    "direction": "up",
-    "subject": "science",
-    "section": SECTION,
-    "createdAt": datetime.now(timezone.utc).isoformat(),
-    "chunkIndex": 0,
-    "chunkTotal": 1,
-    "payload": codec.encode("StudentProgress", progress),
-})
+env = build_envelope("StudentProgress", progress, direction="up", subject="science", section=SECTION)
 
 topic = f"wave/{LRN}/StudentProgress"
 c = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id="wave-pub")

@@ -11,6 +11,7 @@ import {
   GraduationCap, Award, Sparkles, Smile, RefreshCw, Calculator, BookOpenCheck
 } from 'lucide-react';
 import { StudentUser, StudentProgress, Lesson, Topic, QuizQuestion, StudentQuizAttempt, TeacherRemediationMaterial } from '../types';
+import { sectionOf } from '../section';
 
 interface StudentLessonsProps {
   student: StudentUser;
@@ -108,7 +109,7 @@ export default function StudentLessons({
 
   // Remedial packs for this student: section-targeted packs (canonical) reach
   // everyone in the section; legacy packs fall back to per-student targeting.
-  const studentSection = student.section || student.gradeLevel;
+  const studentSection = sectionOf(student);
   const myRemediations = remediationMaterials.filter(
     mat => mat.isPublished && (mat.targetSection ? mat.targetSection === studentSection : mat.assignedStudentLrn === student.lrn)
   );
