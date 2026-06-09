@@ -44,7 +44,12 @@ export default function StudentHome({
   // everyone in the section; legacy packs fall back to per-student targeting.
   const studentSection = student.section || student.gradeLevel;
   const myRemediations = remediationMaterials.filter(
-    mat => mat.isPublished && (mat.targetSection ? mat.targetSection === studentSection : mat.assignedStudentLrn === student.lrn)
+    mat => mat.isPublished && (
+      mat.targetSection === studentSection ||
+      mat.targetSection?.toLowerCase() === 'all sections' ||
+      mat.targetSection === '' ||
+      (!mat.targetSection && mat.assignedStudentLrn === student.lrn)
+    )
   );
 
   // Render Lucide Icons dynamically for subjects instead of emojis

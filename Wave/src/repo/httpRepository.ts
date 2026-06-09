@@ -16,7 +16,7 @@ import { Outbox, LocalStorageStore } from '../sync/outbox';
 import { MqttTransport, Transport } from '../sync/transport';
 import { topicFor, slug } from '../sync/topics';
 import { Lesson, StudentProgress, StudentUser, TeacherUser, TeacherRemediationMaterial } from '../types';
-import { RepoBootstrap, SubscribeOpts, QuizAttemptWrite, SummativeWrite, WaveRepository } from './repository';
+import { GeneratedRemediation, GenerateRemediationReq, RepoBootstrap, SubscribeOpts, QuizAttemptWrite, SummativeWrite, WaveRepository } from './repository';
 
 const SUBJECTS = ['science', 'mathematics', 'english'];
 
@@ -40,6 +40,16 @@ export class HttpRepository implements WaveRepository {
   private async get(path: string): Promise<any> {
     const res = await fetch(`${this.apiBase}${path}`, { headers: this.headers() });
     if (!res.ok) throw new Error(`GET ${path} -> ${res.status}`);
+    return res.json();
+  }
+
+  private async post(path: string, body: Record<string, any>): Promise<any> {
+    const res = await fetch(`${this.apiBase}${path}`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error(`POST ${path} -> ${res.status}`);
     return res.json();
   }
 
@@ -169,6 +179,23 @@ export class HttpRepository implements WaveRepository {
     await this.push('StudentSummativeResults', results, w.subject, w.section);
   }
 
+  async fetchRemediation(section?: string): Promise<TeacherRemediationMaterial[]> {
+    const url = section ? `/api/remediation?section=${encodeURIComponent(section)}` : '/api/remediation';
+    const rem = await this.get(url);
+    return (rem.items as Token[][])
+      .map((t) => this.toInternalRemediation(t))
+      .filter((m): m is TeacherRemediationMaterial => m !== null);
+  }
+
+  async generateRemediation(req: GenerateRemediationReq): Promise<GeneratedRemediation> {
+    return this.post('/api/remediation/generate', {
+      subject: req.subject,
+      originalTopicId: req.topicId,
+      studentName: req.studentName,
+      failedItems: req.failedItems ?? [],
+    });
+  }
+
   async publishRemediation(
     material: TeacherRemediationMaterial,
     opts: { subject: string; section: string },
@@ -238,6 +265,8 @@ export class HttpRepository implements WaveRepository {
       this.transport.subscribe('wave/#', onMsg);
     }
     if (opts.lrn) this.transport.subscribe(`wave/${opts.lrn}/#`, onMsg);
+    // Always listen for section-wide broadcasts (e.g. remedial material published to "All Sections")
+    if (opts.lrn) this.transport.subscribe('wave/all-sections/#', onMsg);
   }
 
   unsubscribeLive(): void {

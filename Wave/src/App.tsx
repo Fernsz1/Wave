@@ -121,7 +121,11 @@ export default function App() {
     if (u.kind === 'progress') {
       setProgressRecords(prev => ({ ...prev, [u.record.studentLrn]: { ...prev[u.record.studentLrn], ...u.record } }));
     } else if (u.kind === 'remediation') {
-      setRemediationMaterials(prev => [u.material, ...prev.filter(m => m.id !== u.material.id)]);
+      // Only add the material if its payload is non-empty (an empty array payload
+      // is the broker's way of signalling a cleared retained message).
+      if (u.material && u.material.id) {
+        setRemediationMaterials(prev => [u.material, ...prev.filter(m => m.id !== u.material.id)]);
+      }
     }
     // 'rankings' updates are reflected client-side via the progress recomputation.
   };
@@ -163,6 +167,21 @@ export default function App() {
     // applyRepoUpdate only calls stable setState fns, so it's safe to omit from deps.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [repo, currentUser, role, activeSection, activeSubject]);
+
+  // Polling fallback: when MQTT WebSocket is unavailable (e.g. broker not serving WS),
+  // students still receive published remedial materials by polling the REST endpoint.
+  useEffect(() => {
+    if (!repo.isLive || role !== 'student' || !currentUser) return;
+    const studentSection = (currentUser as StudentUser).section || (currentUser as StudentUser).gradeLevel;
+    const poll = async () => {
+      try {
+        const fresh = await repo.fetchRemediation(studentSection);
+        setRemediationMaterials(fresh);
+      } catch { /* server unreachable — skip */ }
+    };
+    const id = setInterval(poll, 10000);
+    return () => clearInterval(id);
+  }, [repo, role, currentUser]);
 
   // Student dashboard custom direct lesson-topic navigation state hooks
   const [navTopicId, setNavTopicId] = useState<string>('');
@@ -662,9 +681,8 @@ export default function App() {
                                 setWizardPreSelectedTopicId("");
                                 setShowWizard(true);
                               }}
-                              onPublishRemedial={(material) => {
-                                setRemediationMaterials(prev => [material, ...prev]);
-                              }}
+                              onPublishRemedial={handlePublishRemedialMaterial}
+                              onGenerateRemediation={(req) => repo.generateRemediation(req)}
                               setActiveTab={setActiveTab}
                               activeSubject={activeSubject}
                               setActiveSubject={setActiveSubject}

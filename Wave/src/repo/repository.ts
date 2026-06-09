@@ -9,7 +9,21 @@
  * syncs with Django over REST + MQTT. Returns the app's INTERNAL types so the UI
  * components are unchanged.
  */
-import { Lesson, StudentProgress, StudentUser, TeacherUser, TeacherRemediationMaterial } from '../types';
+import { Lesson, QuizQuestion, StudentProgress, StudentUser, TeacherUser, TeacherRemediationMaterial } from '../types';
+
+export interface GenerateRemediationReq {
+  subject: string;
+  topicId: string;
+  studentName: string;
+  failedItems?: string[];
+}
+
+export interface GeneratedRemediation {
+  title: string;
+  content: string;
+  teacherNotes: string;
+  createdQuiz: QuizQuestion[];
+}
 
 export interface RepoBootstrap {
   students: StudentUser[];
@@ -69,6 +83,8 @@ export interface WaveRepository {
   saveQuizAttempt(w: QuizAttemptWrite): Promise<void>;
   saveSummativeResult(w: SummativeWrite): Promise<void>;
   publishRemediation(material: TeacherRemediationMaterial, opts: { subject: string; section: string }): Promise<void>;
+  generateRemediation(req: GenerateRemediationReq): Promise<GeneratedRemediation>;
+  fetchRemediation(section?: string): Promise<TeacherRemediationMaterial[]>;
   enrollStudent(student: StudentUser): Promise<void>;
   /** (Re)subscribe to live "down" updates; idempotent — replaces any prior subscription. No-op for Mock. */
   subscribeLive(opts: SubscribeOpts): void;

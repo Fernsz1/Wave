@@ -13,6 +13,25 @@ import {
 } from 'lucide-react';
 import { TeacherUser, StudentUser, StudentProgress, QuizQuestion } from '../types';
 import { MOCK_LESSONS_BY_SUBJECT } from '../data';
+import { GenerateRemediationReq, GeneratedRemediation } from '../repo/repository';
+
+function parseMarkdownSections(md: string): Array<{ title: string; body: string }> {
+  const lines = md.split('\n');
+  const result: Array<{ title: string; body: string }> = [];
+  let title = '';
+  let bodyLines: string[] = [];
+  for (const line of lines) {
+    if (/^#{1,3} /.test(line)) {
+      if (title) result.push({ title, body: bodyLines.join('\n').trim() });
+      title = line.replace(/^#{1,3} /, '');
+      bodyLines = [];
+    } else if (title) {
+      bodyLines.push(line);
+    }
+  }
+  if (title) result.push({ title, body: bodyLines.join('\n').trim() });
+  return result.length > 0 ? result : [{ title: 'Review Content', body: md.trim() }];
+}
 import WaveLogo from './WaveLogo';
 
 interface TeacherHomeProps {
@@ -20,6 +39,7 @@ interface TeacherHomeProps {
   progressRecords: Record<string, StudentProgress>;
   onLaunchWizard: () => void;
   onPublishRemedial: (material: import('../types').TeacherRemediationMaterial) => void;
+  onGenerateRemediation: (req: GenerateRemediationReq) => Promise<GeneratedRemediation>;
   setActiveTab: (tab: string) => void;
   activeSubject: string;
   setActiveSubject: (sbj: string) => void;
@@ -33,6 +53,7 @@ export default function TeacherHome({
   progressRecords,
   onLaunchWizard,
   onPublishRemedial,
+  onGenerateRemediation,
   setActiveTab,
   activeSubject,
   setActiveSubject,
@@ -82,7 +103,12 @@ export default function TeacherHome({
   const [customSections, setCustomSections] = useState<Array<{ title: string; body: string }>>([]);
   const [customQuiz, setCustomQuiz] = useState<Array<QuizQuestion>>([]);
   const [customSummative, setCustomSummative] = useState<Array<QuizQuestion>>([]);
+  const [customTargetSection, setCustomTargetSection] = useState(activeSection);
   
+  // AI generation coordination: animation and API call run in parallel
+  const [aiGenResult, setAiGenResult] = useState<GeneratedRemediation | null>(null);
+  const [animComplete, setAnimComplete] = useState(false);
+
   // Interactive notification message
   const [saveSuccessNotice, setSaveSuccessNotice] = useState(false);
 
@@ -111,49 +137,100 @@ export default function TeacherHome({
     }
   }, [activeSection, isApplied]);
 
-  // Timed Simulation of the custom lesson AI generation pipeline
+  // When both animation AND Gemini call are done, apply AI content and show preview
+  useEffect(() => {
+    if (!animComplete || !aiGenResult) return;
+    const secs = parseMarkdownSections(aiGenResult.content);
+    setCustomTitle(aiGenResult.title);
+    setCustomIntroduction(aiGenResult.teacherNotes);
+    setCustomSections(secs.length > 0 ? secs : customSections);
+    setCustomQuiz(aiGenResult.createdQuiz.length > 0 ? aiGenResult.createdQuiz : customQuiz);
+    setAiGenResult(null);
+    setAnimComplete(false);
+    setCustomWizardStep('preview');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [animComplete, aiGenResult]);
+
+  // Progress bar animation — sets animComplete when done instead of direct transition
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (showCustomWizard && customWizardStep === 'generating') {
       const messages = [
         'Analyzing student telemetry failing profiles...',
         'Matching target low performance topic metrics...',
-        'Scaffolding core lesson topics with Gemini standard parameters...',
-        'Synthesizing interactive multiple choice evaluation questions...',
+        'Scaffolding core lesson with Gemini AI...',
+        'Synthesizing multiple choice evaluation questions...',
         'Remedial blueprint compiled successfully!'
       ];
-      
       timer = setInterval(() => {
         setGenPercentage(prev => {
           const next = prev + 4;
-          
           if (next < 20) setGenStatusMessage(messages[0]);
           else if (next < 45) setGenStatusMessage(messages[1]);
           else if (next < 68) setGenStatusMessage(messages[2]);
           else if (next < 90) setGenStatusMessage(messages[3]);
           else setGenStatusMessage(messages[4]);
-
           if (next >= 100) {
             clearInterval(timer);
-            setCustomWizardStep('preview');
+            setAnimComplete(true);
             return 100;
           }
           return next;
         });
       }, 60);
     }
-    return () => {
-      if (timer) clearInterval(timer);
-    };
+    return () => { if (timer) clearInterval(timer); };
   }, [showCustomWizard, customWizardStep]);
 
-  // Launch AI generator with specific syllabus payloads
-  const handleStartCustomGeneration = () => {
+  // Launch AI generator — fires real Gemini call in parallel with the progress animation
+  const handleStartCustomGeneration = async () => {
     setShowCustomWizard(true);
     setCustomWizardStep('generating');
+    setCustomTargetSection(activeSection);
     setGenPercentage(0);
+    setAnimComplete(false);
+    setAiGenResult(null);
     setGenStatusMessage('Initiating analyzer pipeline...');
 
+    // Find the weakest topic from failing students in this section
+    const weakestTopicId = (() => {
+      const scores: Record<string, { sum: number; count: number }> = {};
+      sectionStudents.forEach(s => {
+        const prog = progressRecords[s.lrn];
+        if (!prog) return;
+        Object.values(prog.quizAttempts).forEach(att => {
+          if (!scores[att.topicId]) scores[att.topicId] = { sum: 0, count: 0 };
+          scores[att.topicId].sum += att.score / (att.perfectScore || 1);
+          scores[att.topicId].count += 1;
+        });
+      });
+      const sorted = Object.entries(scores).sort(([, a], [, b]) => (a.sum / a.count) - (b.sum / b.count));
+      return sorted[0]?.[0] ?? 'L1-T1';
+    })();
+
+    // Collect the most common wrong questions as context for the AI
+    const failedItems: string[] = (() => {
+      const counts: Record<string, number> = {};
+      const lessons = MOCK_LESSONS_BY_SUBJECT[activeSubject] ?? [];
+      sectionStudents.forEach(s => {
+        const prog = progressRecords[s.lrn];
+        if (!prog) return;
+        lessons.forEach(lesson => {
+          lesson.topics.forEach(topic => {
+            const att = prog.quizAttempts[topic.id];
+            if (!att) return;
+            topic.quiz.forEach((q, i) => {
+              if (att.answers[i] !== q.correctAnswerIndex) {
+                counts[q.question] = (counts[q.question] ?? 0) + 1;
+              }
+            });
+          });
+        });
+      });
+      return Object.entries(counts).sort(([, a], [, b]) => b - a).slice(0, 5).map(([q]) => q);
+    })();
+
+    // Seed fallback content immediately so preview has something if AI fails silently
     const subjectTitle = activeSubject || 'science';
     let title = '';
     let intro = '';
@@ -349,6 +426,24 @@ export default function TeacherHome({
     setCustomSections(sections);
     setCustomQuiz(quiz);
     setCustomSummative(summative);
+
+    // Fire real Gemini call — result applied by coordination effect once animation also completes.
+    // .catch uses local fallback vars (not stale React state) so the preview always has valid content.
+    onGenerateRemediation({
+      subject: subjectTitle,
+      topicId: weakestTopicId,
+      studentName: activeSection || 'your class',
+      failedItems: failedItems.length > 0 ? failedItems : undefined,
+    }).then(result => {
+      setAiGenResult(result);
+    }).catch(() => {
+      setAiGenResult({
+        title,
+        content: sections.map(s => `## ${s.title}\n${s.body}`).join('\n\n'),
+        teacherNotes: intro,
+        createdQuiz: quiz,
+      });
+    });
   };
 
   const handleEditSectionTitle = (index: number, value: string) => {
@@ -1128,16 +1223,29 @@ export default function TeacherHome({
                   <div className="space-y-6">
                     <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4.5 flex gap-3 text-xs leading-normal text-amber-800">
                       <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5 animate-pulse" />
-                      <div className="space-y-1">
+                      <div className="space-y-1 w-full">
                         <p className="font-extrabold">Notice: Confirming Release Broadcast</p>
-                        <p>This corrective lesson draft will be published directly to <span className="underline font-bold">{activeSection}</span>. All students registered within this block can immediately explore the modules and attempt the interactive assessments.</p>
+                        <p>This corrective lesson draft will be published directly to the selected section. All students registered within that block can immediately explore the modules and attempt the interactive assessments.</p>
+                        <div className="mt-2 flex items-center gap-2">
+                          <label className="font-bold shrink-0">Target Section:</label>
+                          <select
+                            value={customTargetSection}
+                            onChange={e => setCustomTargetSection(e.target.value)}
+                            className="flex-1 text-xs font-bold text-amber-900 bg-white border border-amber-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-amber-400"
+                          >
+                            {[...new Set(students.map(s => s.section || s.gradeLevel).filter(Boolean))].sort().map(sec => (
+                              <option key={sec} value={sec}>{sec}</option>
+                            ))}
+                            <option value="All Sections">All Sections</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
 
                     <div className="border border-slate-150 rounded-2xl p-5 space-y-4 bg-white/50">
                       <div>
                         <span className="text-[9px] uppercase font-black px-2 py-0.5 bg-blue-105 text-blue-700 border border-blue-200 rounded tracking-wider font-sans">
-                          {activeSubject.toUpperCase()} • {activeSection} DRAFT OUTLINE
+                          {activeSubject.toUpperCase()} • {customTargetSection} DRAFT OUTLINE
                         </span>
                         <h2 className="text-sm font-extrabold text-slate-800 mt-2">{customTitle}</h2>
                         <p className="text-xs text-slate-500 mt-1 pb-3.5 border-b border-slate-100 leading-relaxed font-sans">{customIntroduction}</p>
@@ -1205,7 +1313,7 @@ export default function TeacherHome({
                     <div className="space-y-1.5">
                       <h3 className="font-display font-black text-slate-800 text-base">Classroom Broadcast Active</h3>
                       <p className="text-slate-550 text-xs leading-relaxed max-w-sm">
-                        Wave's lesson synchronicities are broadcast. Students in the <span className="underline font-extrabold text-slate-800">{activeSection}</span> section have been notified of this custom remedial suite.
+                        Wave's lesson synchronicities are broadcast. Students in the <span className="underline font-extrabold text-slate-800">{customTargetSection}</span> section have been notified of this custom remedial suite.
                       </p>
                     </div>
 
@@ -1216,7 +1324,7 @@ export default function TeacherHome({
                         <Check className="h-4 w-4 text-emerald-600" />
                         <span className="text-[10px] font-black uppercase text-slate-450 tracking-wider">Broadcast Blueprint Summary</span>
                       </div>
-                      <span className="text-[10px] font-bold block text-slate-500">{activeSubject.toUpperCase()} • {activeSection}</span>
+                      <span className="text-[10px] font-bold block text-slate-500">{activeSubject.toUpperCase()} • {customTargetSection}</span>
                       <h4 className="text-xs font-black text-slate-800 leading-normal">{customTitle}</h4>
                       <p className="text-[10px] text-slate-450 leading-relaxed italic">{customQuiz.length} interactive diagnostic evaluation queries locked.</p>
                     </div>
@@ -1281,7 +1389,7 @@ export default function TeacherHome({
                           createdSummative: customSummative,
                           publishDate,
                           assignedStudentLrn: '',
-                          targetSection: activeSection,
+                          targetSection: customTargetSection,
                           targetSubject: activeSubject,
                           isPublished: true,
                         });

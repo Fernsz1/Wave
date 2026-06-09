@@ -3,7 +3,7 @@ from rest_framework import permissions, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
-from . import codec, ingest, mqtt
+from . import ai, codec, ingest, mqtt
 from .auth import ApiToken
 from .derive import assemble_progress, compute_rankings
 from .models import CatalogDocument, RemediationMaterial, Student, Teacher
@@ -109,10 +109,12 @@ def rankings(request):
 @api_view(["GET"])
 @permission_classes([permissions.AllowAny])
 def remediation(request):
+    from django.db.models import Q
     section = request.query_params.get("section", "")
     mats = RemediationMaterial.objects.filter(is_published=True)
     if section:
-        mats = mats.filter(target_section=section)
+        # Include materials targeting the student's exact section OR "All Sections" broadcasts
+        mats = mats.filter(Q(target_section=section) | Q(target_section__iexact="all sections") | Q(target_section=""))
     out = []
     for m in mats:
         obj = {
@@ -130,6 +132,20 @@ def remediation(request):
         }
         out.append(codec.encode("TeacherRemediationMaterial", obj))
     return Response({"type": "TeacherRemediationMaterial", "items": out})
+
+
+@api_view(["POST"])
+@permission_classes([permissions.AllowAny])
+def generate_remediation(request):
+    """Call Gemini to produce a personalized remedial lesson + quiz for a section."""
+    data = request.data
+    result = ai.generate_remediation(
+        subject=data.get("subject", "science"),
+        topic_id=data.get("originalTopicId", ""),
+        student_name=data.get("studentName", "your class"),
+        failed_items=data.get("failedItems") or [],
+    )
+    return Response(result)
 
 
 @api_view(["POST"])

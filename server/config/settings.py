@@ -55,3 +55,6 @@ import os  # noqa: E402
 
 MQTT_HOST = os.getenv("WAVE_BROKER_HOST", "127.0.0.1")
 MQTT_PORT = int(os.getenv("WAVE_BROKER_PORT", "1883"))
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")

@@ -10,5 +10,6 @@ urlpatterns = [
     path("progress/<str:lrn>", views.progress),
     path("rankings", views.rankings),
     path("remediation", views.remediation),
+    path("remediation/generate", views.generate_remediation),
     path("sync/push", views.sync_push),
 ]
