@@ -9,7 +9,7 @@
  * here because App.tsx keeps the authoritative React state (optimistic updates).
  */
 import { MOCK_LESSONS_BY_SUBJECT } from '../data';
-import { QuizQuestion, StudentUser, TeacherUser, Topic } from '../types';
+import { QuizQuestion, StudentUser, TeacherUser, Topic, TeacherRemediationMaterial } from '../types';
 import { GeneratedRemediation, GenerateRemediationReq, RepoBootstrap, WaveRepository } from './repository';
 
 function findTopic(topicId: string): Topic | undefined {

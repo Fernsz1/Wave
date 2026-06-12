@@ -26,8 +26,8 @@ export default function TeacherProfile({ teacher, onLogout, activeSubject, activ
         </div>
 
         <div className="space-y-1">
-          <h2 className="font-display font-bold text-xl text-slate-950">{teacher.name}</h2>
-          <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">{teacher.department}</p>
+          <h2 className="font-lexend font-extrabold text-xl text-slate-950">{teacher.name}</h2>
+          <p className="text-xs text-slate-400 font-medium uppercase tracking-wider font-lexend">{teacher.department}</p>
         </div>
 
         <div className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl font-mono text-xs text-slate-600 font-semibold shadow-inner">

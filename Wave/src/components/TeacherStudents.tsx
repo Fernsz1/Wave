@@ -143,8 +143,8 @@ export default function TeacherStudents({
       {/* Header section with professional branding */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="font-space font-medium text-2xl tracking-tight text-slate-900">Academic Records</h1>
-          <p className="text-sm font-sans text-slate-500 mt-1 max-w-2xl">
+          <h1 className="font-lexend font-extrabold text-2xl tracking-tight text-slate-900">Academic Records</h1>
+          <p className="text-sm font-lexend text-slate-500 mt-1 max-w-2xl">
             Browse Learner Reference Numbers, monitor completed topic tallies, and inspect scholastic standing for your active classroom section.
           </p>
         </div>

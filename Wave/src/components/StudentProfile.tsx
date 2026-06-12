@@ -24,8 +24,8 @@ export default function StudentProfile({ student, onLogout, activeSubject }: Stu
         </div>
 
         <div className="space-y-1">
-          <h2 className="font-display font-bold text-xl text-slate-950">{student.name}</h2>
-          <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Student Candidate</p>
+          <h2 className="font-lexend font-extrabold text-xl text-slate-950">{student.name}</h2>
+          <p className="text-xs text-slate-400 font-medium uppercase tracking-wider font-lexend">Student Candidate</p>
         </div>
 
         <div className="bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl font-mono text-xs text-slate-600 font-semibold shadow-inner">

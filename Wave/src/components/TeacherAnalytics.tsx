@@ -188,10 +188,10 @@ export default function TeacherAnalytics({
       {/* 1. Administrative Class Report Profile Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="font-space font-medium text-2xl tracking-tight text-slate-900 flex items-center gap-2.5">
+          <h1 className="font-lexend font-extrabold text-2xl tracking-tight text-slate-900 flex items-center gap-2.5">
             <TrendingUp className="h-6 w-6 text-blue-600" /> Administrative Class Report
           </h1>
-          <p className="text-sm font-sans text-slate-500 mt-1 max-w-2xl">
+          <p className="text-sm font-lexend text-slate-500 mt-1 max-w-2xl">
             Class performance overview, assessment results, and learning progress indicators. Optimized for DepEd course guidelines.
           </p>
         </div>
