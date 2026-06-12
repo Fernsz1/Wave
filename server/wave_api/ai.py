@@ -30,20 +30,25 @@ def _client():
 
 def _fallback(subject: str, topic_id: str, student_name: str) -> dict:
     return {
-        "title": f"Remedial Review: {topic_id} ({subject.title()})",
-        "content": (
-            f"## Introduction\n\nThis remedial lesson covers key concepts from {topic_id} "
-            f"in {subject.title()} that students in {student_name} found challenging.\n\n"
-            "## Key Concepts\n\nReview the core ideas from this topic carefully.\n\n"
-            "## Practice Tips\n\n- Re-read the lesson materials.\n"
-            "- Work through the examples step by step.\n"
-            "- Ask your teacher if any concept remains unclear."
-        ),
-        "teacherNotes": (
-            f"Focus on the items that {student_name} struggled with most. "
-            "Encourage step-by-step reasoning and class discussion."
-        ),
-        "createdQuiz": [],
+        "lesson_number": 1,
+        "lesson_title": f"Remedial Review: {topic_id} ({subject.title()})",
+        "learning_gap": f"Misunderstandings on core elements of {topic_id}.",
+        "grade_level_section": student_name,
+        "teachers_notes": [
+            "Encourage step-by-step reasoning and class discussion.",
+            "Focus on the concepts students struggled with most during evaluation."
+        ],
+        "concepts": [
+            {
+                "header_title": "Introduction",
+                "explanation": f"This remedial lesson covers key concepts from {topic_id} in {subject.title()} that students in {student_name} found challenging."
+            },
+            {
+                "header_title": "Practice Tips",
+                "explanation": "Re-read the lesson materials. Work through the examples step by step. Ask your teacher if any concept remains unclear."
+            }
+        ],
+        "summative_test": []
     }
 
 
@@ -56,8 +61,8 @@ def generate_remediation(
     failed_items: list[str] | None = None,
 ) -> dict:
     """
-    Returns {"title", "content", "teacherNotes", "createdQuiz"}.
-    `createdQuiz` items: {id, question, options[4], correctAnswerIndex, explanation}.
+    Returns the new AI schema matching format:
+    {"lesson_number", "lesson_title", "learning_gap", "grade_level_section", "teachers_notes", "concepts", "summative_test"}.
     """
     client = _client()
     if client is None:
@@ -68,33 +73,41 @@ def generate_remediation(
         items_list = "\n".join(f"- {q}" for q in failed_items[:5])
         failed_block = f"\n\nThe following questions were most commonly answered incorrectly by students:\n{items_list}"
 
-    prompt = f"""You are an expert Grade 6 teacher in the Philippines creating a personalized remedial lesson.
+    prompt = f"""You are an expert Grade 6-8 teacher in the Philippines creating a personalized remedial lesson.
 
 Subject: {subject.title()}
 Topic ID: {topic_id}
 Class / Section: {student_name}{failed_block}
 
-Generate a complete remedial learning package as a single JSON object with exactly these keys:
+Generate a complete remedial learning package as a single JSON object matching this schema:
 
 {{
-  "title": "<engaging lesson title, max 12 words>",
-  "content": "<full lesson in Markdown: use ## for main sections, ### for subsections, **bold** for key terms, - for bullet points. At least 3 sections with substantive content>",
-  "teacherNotes": "<2-3 sentence note to the teacher about what to emphasize and common misconceptions>",
-  "createdQuiz": [
+  "lesson_number": 1,
+  "lesson_title": "<engaging topic title, max 12 words>",
+  "learning_gap": "<the specific misunderstanding being addressed>",
+  "grade_level_section": "{student_name}",
+  "teachers_notes": [
+    "<actionable tip or warning 1>",
+    "<actionable tip or warning 2>"
+  ],
+  "concepts": [
     {{
-      "id": "rq-1",
-      "question": "<clear multiple-choice question>",
-      "options": ["<option A>", "<option B>", "<option C>", "<option D>"],
-      "correctAnswerIndex": <0-3>,
-      "explanation": "<why the correct answer is right, 1-2 sentences>"
+      "header_title": "<concept block subtitle>",
+      "explanation": "<instructional explanation text>"
+    }}
+  ],
+  "summative_test": [
+    {{
+      "question": "<multiple-choice question>",
+      "choices": ["<option A>", "<option B>", "<option C>", "<option D>"],
+      "correct_answer": "<the exact string from the choices array that is correct>"
     }}
   ]
 }}
 
 Rules:
-- createdQuiz must contain exactly 3 questions.
-- All 4 options must be plausible but only one correct.
-- Content must directly address the failed items if provided.
+- concepts must contain at least 2 key concept blocks.
+- summative_test must contain exactly 3 multiple choice questions.
 - Respond with ONLY the JSON object — no markdown fences, no extra text."""
 
     try:
@@ -106,22 +119,61 @@ Rules:
         raw = re.sub(r"\s*```$", "", raw)
         data = json.loads(raw)
 
-        # Normalise and assign stable IDs
-        quiz = []
-        for i, q in enumerate(data.get("createdQuiz", [])[:3]):
-            quiz.append({
-                "id": q.get("id") or f"rq-{uuid.uuid4().hex[:6]}",
+        # Normalize the keys to fit the requested AI JSON schema
+        lesson_number = data.get("lesson_number", 1)
+        lesson_title = data.get("lesson_title") or data.get("title") or f"Remedial Review: {topic_id}"
+        learning_gap = data.get("learning_gap") or f"Address gaps in {topic_id}"
+        grade_level_section = data.get("grade_level_section") or student_name
+        
+        raw_notes = data.get("teachers_notes") or data.get("teacherNotes") or []
+        if isinstance(raw_notes, str):
+            teachers_notes = [raw_notes]
+        else:
+            teachers_notes = [str(n) for n in raw_notes]
+            
+        concepts = []
+        raw_concepts = data.get("concepts")
+        if not raw_concepts and data.get("content"):
+            concepts.append({
+                "header_title": "Review Outline",
+                "explanation": str(data.get("content"))
+            })
+        elif isinstance(raw_concepts, list):
+            for c in raw_concepts:
+                concepts.append({
+                    "header_title": str(c.get("header_title", "Concept Block")),
+                    "explanation": str(c.get("explanation", ""))
+                })
+                
+        summative_test = []
+        raw_test = data.get("summative_test") or data.get("createdQuiz") or []
+        for q in raw_test:
+            choices = [str(o) for o in q.get("choices") or q.get("options") or []]
+            correct_answer = q.get("correct_answer")
+            if not correct_answer and "correctAnswerIndex" in q:
+                try:
+                    idx = int(q["correctAnswerIndex"])
+                    if 0 <= idx < len(choices):
+                        correct_answer = choices[idx]
+                except Exception:
+                    pass
+            if not correct_answer and choices:
+                correct_answer = choices[0]
+                
+            summative_test.append({
                 "question": str(q.get("question", "")),
-                "options": [str(o) for o in q.get("options", [])[:4]],
-                "correctAnswerIndex": int(q.get("correctAnswerIndex", 0)),
-                "explanation": str(q.get("explanation", "")),
+                "choices": choices[:4],
+                "correct_answer": str(correct_answer or "")
             })
 
         return {
-            "title": str(data.get("title", f"Remedial: {topic_id}")),
-            "content": str(data.get("content", "")),
-            "teacherNotes": str(data.get("teacherNotes", "")),
-            "createdQuiz": quiz,
+            "lesson_number": lesson_number,
+            "lesson_title": lesson_title,
+            "learning_gap": learning_gap,
+            "grade_level_section": grade_level_section,
+            "teachers_notes": teachers_notes,
+            "concepts": concepts,
+            "summative_test": summative_test
         }
 
     except Exception as exc:

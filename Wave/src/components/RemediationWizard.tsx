@@ -177,10 +177,50 @@ export default function RemediationWizard({
       })
       .then(data => {
         setGenPercentage(100);
-        setGeneratedTitle(data.title);
-        setGeneratedContent(data.content);
-        setGeneratedNotes(data.teacherNotes);
-        setGeneratedQuiz(data.createdQuiz);
+
+        // Map Title
+        const title = data.lesson_title || data.title || 'Remedial Lesson';
+
+        // Map Content from concepts list
+        let content = '';
+        if (data.concepts && Array.isArray(data.concepts)) {
+          content = data.concepts.map((c: any) => `## ${c.header_title}\n\n${c.explanation}`).join('\n\n');
+        } else {
+          content = data.content || '';
+        }
+
+        // Map Teacher Notes
+        let teacherNotes = '';
+        const notesList = data.teachers_notes || [];
+        const gapPrefix = data.learning_gap ? `**Learning Gap:** ${data.learning_gap}\n` : '';
+        if (notesList.length > 0) {
+          teacherNotes = [gapPrefix, ...notesList.map((note: string) => `• ${note}`)].filter(Boolean).join('\n');
+        } else {
+          teacherNotes = data.teacherNotes || '';
+        }
+
+        // Map Quiz Questions
+        let createdQuiz: QuizQuestion[] = [];
+        if (data.summative_test && Array.isArray(data.summative_test)) {
+          createdQuiz = data.summative_test.map((q: any, idx: number) => {
+            const options = q.choices || [];
+            const correctIdx = options.indexOf(q.correct_answer);
+            return {
+              id: `q-diag-${idx + 1}`,
+              question: q.question,
+              options: options,
+              correctAnswerIndex: correctIdx !== -1 ? correctIdx : 0,
+              explanation: `Correct choice: ${q.correct_answer}`
+            };
+          });
+        } else if (data.createdQuiz && Array.isArray(data.createdQuiz)) {
+          createdQuiz = data.createdQuiz;
+        }
+
+        setGeneratedTitle(title);
+        setGeneratedContent(content);
+        setGeneratedNotes(teacherNotes);
+        setGeneratedQuiz(createdQuiz);
         setStep('preview');
       })
       .catch(err => {

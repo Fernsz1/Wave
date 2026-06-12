@@ -15,7 +15,7 @@ import { buildEnvelope, parseEnvelope } from '../sync/envelope';
 import { Outbox, LocalStorageStore } from '../sync/outbox';
 import { MqttTransport, Transport } from '../sync/transport';
 import { topicFor, slug } from '../sync/topics';
-import { Lesson, StudentProgress, StudentUser, TeacherUser, TeacherRemediationMaterial } from '../types';
+import { Lesson, QuizQuestion, StudentProgress, StudentUser, TeacherUser, TeacherRemediationMaterial } from '../types';
 import { GeneratedRemediation, GenerateRemediationReq, RepoBootstrap, SubscribeOpts, QuizAttemptWrite, SummativeWrite, WaveRepository } from './repository';
 
 const SUBJECTS = ['science', 'mathematics', 'english'];
@@ -188,12 +188,58 @@ export class HttpRepository implements WaveRepository {
   }
 
   async generateRemediation(req: GenerateRemediationReq): Promise<GeneratedRemediation> {
-    return this.post('/api/remediation/generate', {
+    const data = await this.post('/api/remediation/generate', {
       subject: req.subject,
       originalTopicId: req.topicId,
       studentName: req.studentName,
       failedItems: req.failedItems ?? [],
     });
+
+    // Map Title
+    const title = data.lesson_title || data.title || 'Remedial Lesson';
+
+    // Map Content from concepts list
+    let content = '';
+    if (data.concepts && Array.isArray(data.concepts)) {
+      content = data.concepts.map((c: any) => `## ${c.header_title}\n\n${c.explanation}`).join('\n\n');
+    } else {
+      content = data.content || '';
+    }
+
+    // Map Teacher Notes
+    let teacherNotes = '';
+    const notesList = data.teachers_notes || [];
+    const gapPrefix = data.learning_gap ? `**Learning Gap:** ${data.learning_gap}\n` : '';
+    if (notesList.length > 0) {
+      teacherNotes = [gapPrefix, ...notesList.map((note: string) => `• ${note}`)].filter(Boolean).join('\n');
+    } else {
+      teacherNotes = data.teacherNotes || '';
+    }
+
+    // Map Quiz Questions
+    let createdQuiz: QuizQuestion[] = [];
+    if (data.summative_test && Array.isArray(data.summative_test)) {
+      createdQuiz = data.summative_test.map((q: any, idx: number) => {
+        const options = q.choices || [];
+        const correctIdx = options.indexOf(q.correct_answer);
+        return {
+          id: `q-diag-${idx + 1}`,
+          question: q.question,
+          options: options,
+          correctAnswerIndex: correctIdx !== -1 ? correctIdx : 0,
+          explanation: `Correct choice: ${q.correct_answer}`
+        };
+      });
+    } else if (data.createdQuiz && Array.isArray(data.createdQuiz)) {
+      createdQuiz = data.createdQuiz;
+    }
+
+    return {
+      title,
+      content,
+      teacherNotes,
+      createdQuiz
+    };
   }
 
   async publishRemediation(
