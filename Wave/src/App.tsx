@@ -76,7 +76,7 @@ export default function App() {
     if (stored) {
       try { return JSON.parse(stored); } catch { /* fall through */ }
     }
-    const seed: TeacherUser[] = [{ teacherId: 'T-2026-001', name: 'Mrs. Elena Santos', department: 'General Academics' }];
+    const seed: TeacherUser[] = [{ teacherId: 'T-2026-001', name: 'Mrs. Elena Santos', department: 'General Academics', password: 'password123' }];
     localStorage.setItem('wave_enrolled_teachers', JSON.stringify(seed));
     return seed;
   });
@@ -226,8 +226,9 @@ export default function App() {
     // ready, flush any writes that were queued before it arrived (outbox).
     if (repo.isLive) {
       const principalId = selectedRole === 'student' ? (user as StudentUser).lrn : (user as TeacherUser).teacherId;
+      const passOrName = selectedRole === 'student' ? (user as StudentUser).name : (user as TeacherUser).password;
       const pin = selectedRole === 'student' ? (user as StudentUser).pin : undefined;
-      repo.authenticate(selectedRole, principalId, user.name, pin)
+      repo.authenticate(selectedRole, principalId, passOrName, pin)
         .then(() => repo.flushPendingWrites())
         .catch(() => {});
     }

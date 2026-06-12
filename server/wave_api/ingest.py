@@ -102,7 +102,11 @@ def handle(msg_type: str, payload: dict, *, subject: str = "", section: str = ""
     elif msg_type == "TeacherSignup":
         Teacher.objects.update_or_create(
             teacher_id=payload["teacherId"],
-            defaults={"name": payload["name"], "department": payload.get("department", "General Academics")},
+            defaults={
+                "name": payload["name"],
+                "department": payload.get("department", "General Academics"),
+                "password": payload.get("password", "password123"),
+            },
         )
 
     elif msg_type == "StudentProgress":

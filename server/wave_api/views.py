@@ -35,14 +35,14 @@ def login(request):
         )
     if role == "teacher":
         tid = data.get("teacherId", "").strip()
-        name = data.get("name", "").strip()
-        if not tid or not name:
-            return Response({"error": "Teacher ID and Name required."}, status=status.HTTP_400_BAD_REQUEST)
+        password = data.get("password", "").strip()
+        if not tid or not password:
+            return Response({"error": "Teacher ID and Password required."}, status=status.HTTP_400_BAD_REQUEST)
         teacher = Teacher.objects.filter(teacher_id=tid).first()
         if not teacher:
             return Response({"error": "Teacher ID not recognized."}, status=status.HTTP_404_NOT_FOUND)
-        if teacher.name.strip().lower() != name.lower():
-            return Response({"error": "Incorrect name for this Teacher ID."}, status=status.HTTP_401_UNAUTHORIZED)
+        if teacher.password != password:
+            return Response({"error": "Incorrect password for this Teacher ID."}, status=status.HTTP_401_UNAUTHORIZED)
         token = ApiToken.issue("teacher", teacher.teacher_id)
         return Response(
             {
@@ -63,7 +63,7 @@ def roster(request):
         for s in Student.objects.all()
     ]
     teachers = [
-        {"teacherId": t.teacher_id, "name": t.name, "department": t.department}
+        {"teacherId": t.teacher_id, "name": t.name, "department": t.department, "password": t.password}
         for t in Teacher.objects.all()
     ]
     return Response({"students": students, "teachers": teachers})

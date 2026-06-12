@@ -24,7 +24,7 @@ export default function LoginScreen({ onLoginSuccess, students, teachers }: Logi
   
   // Teacher inputs
   const [teacherId, setTeacherId] = useState('');
-  const [teacherName, setTeacherName] = useState('');
+  const [password, setPassword] = useState('');
   
   // Error handling
   const [error, setError] = useState('');
@@ -57,8 +57,8 @@ export default function LoginScreen({ onLoginSuccess, students, teachers }: Logi
         setError('Student LRN is not enrolled on this platform. Please contact your teacher to enroll your account.');
       }
     } else {
-      if (!teacherId.trim() || !teacherName.trim()) {
-        setError('Please enter both your Teacher ID and Name.');
+      if (!teacherId.trim() || !password.trim()) {
+        setError('Please enter both your Teacher ID and Password.');
         return;
       }
 
@@ -67,8 +67,9 @@ export default function LoginScreen({ onLoginSuccess, students, teachers }: Logi
         setError('Teacher ID not recognized. Please contact your administrator.');
         return;
       }
-      if (match.name.toLowerCase() !== teacherName.trim().toLowerCase()) {
-        setError('Incorrect name for this Teacher ID. Please try again.');
+      const expectedPassword = match.password || 'password123';
+      if (expectedPassword !== password.trim()) {
+        setError('Incorrect password for this Teacher ID. Please try again.');
         return;
       }
       onLoginSuccess('teacher', match);
@@ -154,7 +155,6 @@ export default function LoginScreen({ onLoginSuccess, students, teachers }: Logi
                     type="text"
                     id="student-lrn"
                     maxLength={12}
-                    placeholder="e.g. 101234567891"
                     value={lrn}
                     onChange={(e) => setLrn(e.target.value.replace(/\D/g, ''))}
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner"
@@ -170,7 +170,6 @@ export default function LoginScreen({ onLoginSuccess, students, teachers }: Logi
                     type="password"
                     id="student-pin"
                     maxLength={6}
-                    placeholder="e.g. 123456"
                     value={pin}
                     onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner font-mono tracking-widest"
@@ -187,7 +186,6 @@ export default function LoginScreen({ onLoginSuccess, students, teachers }: Logi
                   <input
                     type="text"
                     id="teacher-id"
-                    placeholder="e.g. T-2026-001"
                     value={teacherId}
                     onChange={(e) => setTeacherId(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner"
@@ -195,15 +193,14 @@ export default function LoginScreen({ onLoginSuccess, students, teachers }: Logi
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 tracking-wide uppercase mb-1.5" htmlFor="teacher-name">
-                    Teacher Full Name
+                  <label className="block text-xs font-semibold text-slate-700 tracking-wide uppercase mb-1.5" htmlFor="teacher-password">
+                    Password
                   </label>
                   <input
-                    type="text"
-                    id="teacher-name"
-                    placeholder="e.g. Mrs. Elena Santos"
-                    value={teacherName}
-                    onChange={(e) => setTeacherName(e.target.value)}
+                    type="password"
+                    id="teacher-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner"
                   />
                 </div>

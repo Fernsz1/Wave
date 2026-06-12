@@ -37,6 +37,7 @@ const DEMO_TEACHER: TeacherUser = {
   teacherId: 'T-2026-001',
   name: 'Mrs. Elena Santos',
   department: 'General Academics',
+  password: 'password123',
 };
 
 function loadRoster(): StudentUser[] {
@@ -72,7 +73,7 @@ export class MockRepository implements WaveRepository {
     };
   }
 
-  async authenticate(): Promise<void> {}
+  async authenticate(role: 'student' | 'teacher', principalId: string, nameOrPassword?: string, pin?: string): Promise<void> {}
   async flushPendingWrites(): Promise<void> {}
   async saveQuizAttempt(): Promise<void> {}
   async saveSummativeResult(): Promise<void> {}

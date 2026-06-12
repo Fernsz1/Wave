@@ -39,6 +39,7 @@ class Teacher(models.Model):
     teacher_id = models.CharField(max_length=40, primary_key=True)
     name = models.CharField(max_length=120)
     department = models.CharField(max_length=120, default="General Academics")
+    password = models.CharField(max_length=40, default="password123")
 
     def __str__(self):
         return f"{self.name} ({self.teacher_id})"

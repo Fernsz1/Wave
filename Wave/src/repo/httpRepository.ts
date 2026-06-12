@@ -53,11 +53,11 @@ export class HttpRepository implements WaveRepository {
     return res.json();
   }
 
-  async authenticate(role: 'student' | 'teacher', principalId: string, name?: string, pin?: string): Promise<void> {
+  async authenticate(role: 'student' | 'teacher', principalId: string, nameOrPassword?: string, pin?: string): Promise<void> {
     const body =
       role === 'student'
         ? { role, lrn: principalId, pin: pin ?? '123456' }
-        : { role, teacherId: principalId, name };
+        : { role, teacherId: principalId, password: nameOrPassword };
     const res = await fetch(`${this.apiBase}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

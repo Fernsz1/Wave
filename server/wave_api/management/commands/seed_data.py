@@ -55,7 +55,11 @@ class Command(BaseCommand):
         for t in teachers:
             Teacher.objects.update_or_create(
                 teacher_id=t["teacherId"],
-                defaults={"name": t["name"], "department": t.get("department", "General Academics")},
+                defaults={
+                    "name": t["name"],
+                    "department": t.get("department", "General Academics"),
+                    "password": t.get("password", "password123"),
+                },
             )
         self.stdout.write(f"teachers: {len(teachers)}")
 

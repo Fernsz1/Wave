@@ -90,3 +90,26 @@ def test_progress_endpoint_reflects_ingest(student):
     decoded = codec.decode("StudentProgress", resp.data["tokens"])
     assert decoded["quizScores"]["L1-T1"]["percent"] == 67
     assert "L1-T1" in decoded["completedTopicIds"]
+
+
+@pytest.fixture
+def teacher(db):
+    from wave_api.models import Teacher
+    return Teacher.objects.create(
+        teacher_id="T-2026-001", name="Mrs. Elena Santos", department="General Academics", password="password123"
+    )
+
+
+def test_teacher_login_returns_token(teacher):
+    client = APIClient()
+    resp = client.post("/api/auth/login", {"role": "teacher", "teacherId": teacher.teacher_id, "password": "password123"}, format="json")
+    assert resp.status_code == 200
+    assert resp.data["token"]
+    assert resp.data["user"]["name"] == "Mrs. Elena Santos"
+
+
+def test_teacher_login_wrong_password_rejected(teacher):
+    client = APIClient()
+    resp = client.post("/api/auth/login", {"role": "teacher", "teacherId": teacher.teacher_id, "password": "wrongpassword"}, format="json")
+    assert resp.status_code == 401
+

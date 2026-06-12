@@ -77,7 +77,7 @@ export interface WaveRepository {
   /** Cold-start data load. */
   bootstrap(): Promise<RepoBootstrap>;
   /** Establish a session/token (no-op for Mock). */
-  authenticate(role: 'student' | 'teacher', principalId: string, name?: string, pin?: string): Promise<void>;
+  authenticate(role: 'student' | 'teacher', principalId: string, nameOrPassword?: string, pin?: string): Promise<void>;
   /** Flush any writes queued while offline. Call after authenticate resolves. No-op for Mock. */
   flushPendingWrites(): Promise<void>;
   saveQuizAttempt(w: QuizAttemptWrite): Promise<void>;

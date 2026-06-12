@@ -17,6 +17,7 @@ export interface TeacherUser {
   teacherId: string;
   name: string;
   department: string;
+  password?: string;
 }
 
 export interface QuizQuestion {

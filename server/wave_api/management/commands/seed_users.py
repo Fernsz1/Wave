@@ -32,6 +32,7 @@ DEMO_TEACHER = {
     "teacher_id": "T-2026-001",
     "name": "Mrs. Elena Santos",
     "department": "General Academics",
+    "password": "password123",
 }
 
 
@@ -56,6 +57,7 @@ class Command(BaseCommand):
             defaults={
                 "name": DEMO_TEACHER["name"],
                 "department": DEMO_TEACHER["department"],
+                "password": DEMO_TEACHER["password"],
             },
         )
         self.stdout.write(f"Teacher  {teacher.name} ({teacher.teacher_id}) — {'created' if created else 'already exists'}")
