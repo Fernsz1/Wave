@@ -218,7 +218,7 @@ export default function RemediationWizard({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100 max-w-2xl w-full"
+        className="bg-white rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-slate-100 max-w-2xl w-full"
       >
         {/* Banner with Brand Ribbon */}
         <div className="bg-gradient-to-br from-[#1D4ED8] via-[#2563EB] to-[#10B981] p-6 text-white flex items-center justify-between relative">
@@ -357,7 +357,7 @@ export default function RemediationWizard({
           <div className="p-6 sm:p-8 space-y-6 max-h-[480px] overflow-y-auto">
             <div className="space-y-4">
               <div className="flex justify-between items-center bg-slate-50 p-2 rounded-xl">
-                <span className="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-250 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1">
+                <span className="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1">
                   ✓ Generation Success
                 </span>
                 
@@ -373,26 +373,26 @@ export default function RemediationWizard({
 
               {/* Title & Notes */}
               <div className="space-y-2">
-                <span className="block text-[10px] text-slate-450 uppercase font-black tracking-widest">Outline Title</span>
+                <span className="block text-[10px] text-slate-400 uppercase font-black tracking-widest">Outline Title</span>
                 <h3 className="font-display font-bold text-base text-slate-800">{generatedTitle}</h3>
                 
-                <span className="block text-[10px] text-slate-450 uppercase font-black tracking-widest pt-2">Notes to student</span>
-                <p className="text-xs text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-150 italic">&quot;{generatedNotes}&quot;</p>
+                <span className="block text-[10px] text-slate-400 uppercase font-black tracking-widest pt-2">Notes to student</span>
+                <p className="text-xs text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-200/60 shadow-sm italic">&quot;{generatedNotes}&quot;</p>
               </div>
 
               {/* Content Markup */}
               <div className="space-y-1.5">
-                <span className="block text-[10px] text-slate-450 uppercase font-black tracking-widest">Remedial Handbook Material</span>
-                <div className="p-4 bg-white border border-slate-150 rounded-xl text-xs text-slate-600 leading-relaxed whitespace-pre-line max-h-44 overflow-y-auto">
+                <span className="block text-[10px] text-slate-400 uppercase font-black tracking-widest">Remedial Handbook Material</span>
+                <div className="p-4 bg-white border border-slate-200/80 rounded-xl text-xs text-slate-600 leading-relaxed whitespace-pre-line max-h-44 overflow-y-auto shadow-[0_4px_15px_rgba(0,0,0,0.01)]">
                   {generatedContent}
                 </div>
               </div>
 
               {/* Quiz breakdown */}
               <div className="space-y-2 pt-2">
-                <span className="block text-[10px] text-slate-450 uppercase font-black tracking-widest">Custom Diagnostic Test questions</span>
+                <span className="block text-[10px] text-slate-400 uppercase font-black tracking-widest">Custom Diagnostic Test questions</span>
                 {generatedQuiz.map((q, idx) => (
-                  <div key={idx} className="p-3 bg-slate-50 border border-slate-150 rounded-lg text-xs space-y-1">
+                  <div key={idx} className="p-3 bg-slate-50 border border-slate-200/65 rounded-lg text-xs space-y-1 shadow-[0_4px_15px_rgba(0,0,0,0.01)]">
                     <p className="font-bold text-slate-700">Q{idx + 1}: {q.question}</p>
                     <p className="text-slate-500 font-medium ml-3">✍ Correct Option: <strong className="text-emerald-700">{q.options[q.correctAnswerIndex]}</strong></p>
                   </div>
@@ -415,7 +415,7 @@ export default function RemediationWizard({
                 <button
                   type="button"
                   onClick={() => setStep('setup')}
-                  className="px-4 py-2.5 bg-slate-100 border border-slate-200 text-slate-650 rounded-xl text-xs font-semibold"
+                  className="px-4 py-2.5 bg-slate-100 border border-slate-200 text-slate-600 rounded-xl text-xs font-semibold"
                 >
                   Configure setup
                 </button>
@@ -484,7 +484,7 @@ export default function RemediationWizard({
               <button
                 type="button"
                 onClick={() => setStep('preview')}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-150 border border-slate-200 text-slate-650 rounded-xl text-xs font-semibold"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 rounded-xl text-xs font-semibold"
               >
                 Back to Preview
               </button>
@@ -520,7 +520,7 @@ export default function RemediationWizard({
               type="button"
               id="finish-wizard-close-btn"
               onClick={onClose}
-              className="w-full max-w-xs py-3 bg-slate-900 border border-slate-950 hover:bg-slate-800 text-white font-bold rounded-xl text-xs shadow"
+              className="w-full max-w-xs py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl text-xs shadow-lg shadow-blue-500/20 hover:shadow-xl hover:scale-[1.02] transition-all duration-200 border-0 cursor-pointer"
             >
               Close wizard
             </button>

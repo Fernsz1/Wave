@@ -70,7 +70,7 @@ interface StudentLessonsProps {
   hasSelectedSubject: boolean;
   setHasSelectedSubject: (selected: boolean) => void;
   navTopicId?: string;
-  navViewState?: 'syllabus' | 'reading' | 'quiz' | 'summative';
+  navViewState?: 'syllabus' | 'reading' | 'quiz' | 'summative' | 'remedial-reading' | 'remedial-quiz';
   clearNavContext?: () => void;
 }
 
@@ -112,24 +112,38 @@ export default function StudentLessons({
 
   // Handle outside direct navigation
   useEffect(() => {
-    if (navTopicId && lessons.length > 0) {
-      const foundLesson = lessons.find(l => l.topics.some(t => t.id === navTopicId));
-      const foundTopic = foundLesson?.topics.find(t => t.id === navTopicId);
-      if (foundTopic && foundLesson) {
-        setSelectedTopic(foundTopic);
-        setSelectedLessonId(foundLesson.id);
-        setViewState(navViewState);
-        if (navViewState === 'quiz') {
-          setCurrentQuestionIdx(0);
-          setUserSelectedAnswers([]);
-          setQuizResults(null);
+    if (navTopicId) {
+      if (navTopicId.startsWith('remedial-')) {
+        const remedialId = navTopicId.replace('remedial-', '');
+        const mat = remediationMaterials.find(m => m.id === remedialId);
+        if (mat) {
+          handleOpenRemedial(mat);
+          if (clearNavContext) {
+            clearNavContext();
+          }
+          return;
         }
-        if (clearNavContext) {
-          clearNavContext();
+      }
+
+      if (lessons.length > 0) {
+        const foundLesson = lessons.find(l => l.topics.some(t => t.id === navTopicId));
+        const foundTopic = foundLesson?.topics.find(t => t.id === navTopicId);
+        if (foundTopic && foundLesson) {
+          setSelectedTopic(foundTopic);
+          setSelectedLessonId(foundLesson.id);
+          setViewState(navViewState);
+          if (navViewState === 'quiz') {
+            setCurrentQuestionIdx(0);
+            setUserSelectedAnswers([]);
+            setQuizResults(null);
+          }
+          if (clearNavContext) {
+            clearNavContext();
+          }
         }
       }
     }
-  }, [navTopicId, navViewState, lessons, clearNavContext]);
+  }, [navTopicId, navViewState, lessons, remediationMaterials, clearNavContext]);
 
   // Interactive Quiz Running State
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState<number>(0);
@@ -421,18 +435,18 @@ export default function StudentLessons({
             <motion.div 
               initial={{ opacity: 0, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-gradient-to-br from-[#FEF3C7] to-[#FFFBEB] rounded-2xl p-5 border border-amber-200"
+              className="bg-gradient-to-br from-amber-50/80 via-amber-50/40 to-transparent rounded-3xl p-6 border border-amber-200/50 shadow-[0_12px_45px_rgba(245,158,11,0.03)]"
             >
-              <h2 className="text-sm font-bold text-amber-900 flex items-center gap-2 uppercase tracking-wide">
-                <Sparkles className="h-4.5 w-4.5 text-amber-600" /> Teacher-Assigned Study Pack
+              <h2 className="text-sm font-extrabold text-amber-900 flex items-center gap-2 uppercase tracking-wider font-lexend">
+                <Sparkles className="h-4.5 w-4.5 text-amber-600 animate-pulse" /> Teacher-Assigned Study Pack
               </h2>
               <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 {myRemediations.map((mat) => (
-                  <div key={mat.id} className="bg-white rounded-xl p-4 border border-amber-100 hover:shadow-sm transition-shadow flex flex-col justify-between">
+                  <div key={mat.id} className="bg-white rounded-2xl p-5 border border-amber-100/60 shadow-sm hover:shadow-md transition-all flex flex-col justify-between hover:scale-[1.01]">
                     <div>
-                      <h3 className="text-xs font-bold text-amber-900 mb-1">{mat.title}</h3>
-                      <p className="text-[11px] text-amber-700 font-medium mb-2.5">Date: {mat.publishDate}</p>
-                      <div className="bg-amber-50 p-2.5 rounded-lg text-[11px] text-amber-800 italic border-l-2 border-amber-500 line-clamp-3">
+                      <h3 className="text-xs font-extrabold text-amber-950 mb-1 font-lexend">{mat.title}</h3>
+                      <p className="text-[10px] text-amber-700 font-bold mb-3 uppercase tracking-wider">Published: {mat.publishDate}</p>
+                      <div className="bg-amber-50/50 p-3.5 rounded-xl text-[11px] text-amber-800 italic border-l-4 border-amber-500 line-clamp-3 leading-relaxed shadow-[0_4px_15px_rgba(245,158,11,0.01)]">
                         &quot;{mat.teacherNotes}&quot;
                       </div>
                     </div>
@@ -440,7 +454,7 @@ export default function StudentLessons({
                       type="button"
                       id={`run-remedial-${mat.id}`}
                       onClick={() => handleOpenRemedial(mat)}
-                      className="mt-4 w-full py-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+                      className="mt-5 w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/10 cursor-pointer hover:scale-[1.02] active:scale-98"
                     >
                       <GraduationCap className="h-3.5 w-3.5" /> Execute Workbook
                     </button>
@@ -1211,13 +1225,13 @@ export default function StudentLessons({
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-white border border-amber-100 rounded-3xl overflow-hidden shadow-md"
+          className="bg-white border border-amber-100/70 rounded-3xl overflow-hidden shadow-[0_12px_40px_rgba(245,158,11,0.03)]"
         >
-          <div className="p-5 border-b border-amber-100 bg-amber-50 flex items-center justify-between">
+          <div className="p-5 border-b border-amber-100/60 bg-gradient-to-r from-amber-50 to-amber-50/20 flex items-center justify-between">
             <button
               type="button"
               onClick={() => setViewState('syllabus')}
-              className="text-xs font-semibold text-amber-700 hover:text-amber-900 flex items-center gap-1"
+              className="text-xs font-semibold text-amber-700 hover:text-amber-900 flex items-center gap-1 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" /> Syllabus map
             </button>
@@ -1225,7 +1239,7 @@ export default function StudentLessons({
           </div>
 
           <div className="p-6 sm:p-10 max-w-3xl mx-auto space-y-6">
-            <span className="text-[10px] bg-amber-50 border border-amber-200 text-amber-700 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">
+            <span className="text-[10px] bg-amber-50/80 border border-amber-200/60 text-amber-700 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider shadow-sm">
               Personalized Remedial Lesson
             </span>
 
@@ -1234,8 +1248,8 @@ export default function StudentLessons({
             </h1>
 
             {activeRemedialMaterial.teacherNotes && (
-              <div className="bg-amber-50 border-l-4 border-amber-500 text-amber-900 p-4 rounded-r-xl text-xs leading-relaxed">
-                <strong className="block mb-1">Teacher Notes:</strong>
+              <div className="bg-amber-50/50 border-l-4 border-amber-500 text-amber-900 p-4.5 rounded-r-2xl text-xs leading-relaxed shadow-[0_4px_15px_rgba(245,158,11,0.02)]">
+                <strong className="block mb-1 text-amber-800">Teacher Notes:</strong>
                 {activeRemedialMaterial.teacherNotes}
               </div>
             )}
@@ -1244,11 +1258,11 @@ export default function StudentLessons({
               {renderSimpleMarkdown(activeRemedialMaterial.content)}
             </div>
 
-            <div className="border-t border-slate-100 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="border-t border-slate-100/80 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
               <button
                 type="button"
                 onClick={() => setViewState('syllabus')}
-                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition"
+                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-650 text-xs font-bold rounded-xl transition cursor-pointer"
               >
                 Done Reading
               </button>
@@ -1261,7 +1275,7 @@ export default function StudentLessons({
                     setRemedialQuizResults(null);
                     setViewState('remedial-quiz');
                   }}
-                  className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-2 shadow-sm"
+                  className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-2 shadow-md shadow-amber-500/15 cursor-pointer hover:scale-[1.02] active:scale-98"
                 >
                   Take the Quiz <ArrowRight className="h-4 w-4" />
                 </button>
@@ -1270,17 +1284,15 @@ export default function StudentLessons({
           </div>
         </motion.div>
       )}
-
-      {/* ────────────────────────────────────────────────────────── */}
       {/* REMEDIAL QUIZ VIEW */}
       {/* ────────────────────────────────────────────────────────── */}
       {viewState === 'remedial-quiz' && activeRemedialMaterial && (
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white border border-amber-100 rounded-3xl overflow-hidden shadow-md"
+          className="bg-white border border-amber-100/70 rounded-3xl overflow-hidden shadow-[0_12px_40px_rgba(245,158,11,0.03)]"
         >
-          <div className="px-5 py-4 border-b border-amber-100 bg-amber-50 flex items-center justify-between">
+          <div className="px-5 py-4 border-b border-amber-100/60 bg-gradient-to-r from-amber-50 to-amber-50/20 flex items-center justify-between">
             <div>
               <h2 className="text-xs font-bold text-amber-700 uppercase tracking-wider">{activeRemedialMaterial.title} — Quiz</h2>
               <span className="text-[11px] font-bold text-amber-600">Remedial Assessment</span>
@@ -1288,7 +1300,7 @@ export default function StudentLessons({
             <button
               type="button"
               onClick={() => setViewState('remedial-reading')}
-              className="text-xs text-slate-400 hover:text-slate-600 transition"
+              className="text-xs text-slate-400 hover:text-slate-650 transition cursor-pointer font-bold animate-fade-in"
             >
               Back
             </button>
@@ -1301,15 +1313,15 @@ export default function StudentLessons({
                   <span>Question {remedialQuizIdx + 1} of {activeRemedialMaterial.createdQuiz.length}</span>
                   <span>Remedial Quiz</span>
                 </div>
-                <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200/40">
                   <div
-                    className="h-full bg-amber-500 rounded-full transition-all duration-300"
+                    className="h-full bg-gradient-to-r from-amber-500 to-amber-600 rounded-full transition-all duration-300"
                     style={{ width: `${((remedialQuizIdx + 1) / activeRemedialMaterial.createdQuiz.length) * 100}%` }}
                   />
                 </div>
 
                 <div className="pt-6">
-                  <h3 className="font-display font-medium text-base sm:text-lg text-slate-900 leading-relaxed">
+                  <h3 className="font-display font-semibold text-base sm:text-lg text-slate-900 leading-relaxed">
                     {activeRemedialMaterial.createdQuiz[remedialQuizIdx].question}
                   </h3>
                 </div>
@@ -1326,10 +1338,10 @@ export default function StudentLessons({
                           updated[remedialQuizIdx] = optIdx;
                           setRemedialQuizAnswers(updated);
                         }}
-                        className={`w-full p-4 rounded-xl text-left text-xs font-medium border transition-all flex items-center justify-between ${
+                        className={`w-full p-4 rounded-2xl text-left text-xs font-semibold border transition-all flex items-center justify-between cursor-pointer ${
                           isSelected
-                            ? 'bg-amber-50 border-amber-400 text-amber-800 ring-2 ring-amber-100 shadow-sm'
-                            : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-600'
+                            ? 'bg-amber-50/80 border-amber-500 text-amber-900 ring-4 ring-amber-100/60 shadow-md shadow-amber-500/5'
+                            : 'bg-white hover:bg-slate-50/80 border-slate-200/80 text-slate-600 shadow-sm hover:shadow'
                         }`}
                       >
                         <span>{opt}</span>
@@ -1343,12 +1355,12 @@ export default function StudentLessons({
                   })}
                 </div>
 
-                <div className="pt-8 border-t border-slate-100 flex items-center justify-between">
+                <div className="pt-8 border-t border-slate-100/80 flex items-center justify-between">
                   <button
                     type="button"
                     onClick={() => setRemedialQuizIdx(prev => Math.max(0, prev - 1))}
                     disabled={remedialQuizIdx === 0}
-                    className="px-4 py-2 bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-600 text-xs font-semibold rounded-lg disabled:opacity-40"
+                    className="px-4 py-2 bg-slate-100 border border-slate-200/80 hover:bg-slate-200 text-slate-600 text-xs font-bold rounded-xl disabled:opacity-40 transition cursor-pointer"
                   >
                     Previous
                   </button>
@@ -1358,7 +1370,7 @@ export default function StudentLessons({
                       type="button"
                       onClick={() => setRemedialQuizIdx(prev => prev + 1)}
                       disabled={remedialQuizAnswers[remedialQuizIdx] === undefined}
-                      className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg shadow disabled:opacity-40"
+                      className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-bold rounded-xl shadow-md shadow-amber-500/10 disabled:opacity-40 transition cursor-pointer hover:scale-[1.02] active:scale-98"
                     >
                       Next Question
                     </button>
@@ -1378,7 +1390,7 @@ export default function StudentLessons({
                         );
                       }}
                       disabled={remedialQuizAnswers[remedialQuizIdx] === undefined}
-                      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-md disabled:opacity-40"
+                      className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-xs font-extrabold rounded-xl shadow-lg shadow-emerald-500/15 disabled:opacity-40 transition cursor-pointer hover:scale-[1.02] active:scale-98"
                     >
                       Submit Quiz
                     </button>
@@ -1391,12 +1403,12 @@ export default function StudentLessons({
                 animate={{ opacity: 1 }}
                 className="space-y-6 text-center"
               >
-                <div className="inline-flex h-16 w-16 bg-amber-50 border border-amber-200 rounded-2xl items-center justify-center text-amber-600 shadow-sm">
-                  <Award className="h-9 w-9" />
+                <div className="inline-flex h-16 w-16 bg-amber-50 border border-amber-200/80 rounded-2xl items-center justify-center text-amber-600 shadow-md">
+                  <Award className="h-9 w-9 animate-pulse" />
                 </div>
                 <h1 className="font-display font-medium text-xl text-slate-900">Remedial Quiz Completed!</h1>
 
-                <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl max-w-xs mx-auto flex items-center justify-around">
+                <div className="bg-slate-50/60 border border-slate-200/80 p-5 rounded-2xl max-w-xs mx-auto flex items-center justify-around shadow-sm">
                   <div>
                     <span className="block text-[10px] text-slate-400 font-bold uppercase">Score</span>
                     <span className="text-2xl font-black text-slate-800">
@@ -1418,7 +1430,7 @@ export default function StudentLessons({
                     const studentAnswer = remedialQuizAnswers[qIdx];
                     const isCorrect = studentAnswer === q.correctAnswerIndex;
                     return (
-                      <div key={qIdx} className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2">
+                      <div key={qIdx} className="bg-slate-50/50 border border-slate-200/60 rounded-2xl p-4 space-y-2 shadow-[0_4px_15px_rgba(0,0,0,0.01)]">
                         <div className="flex items-start gap-2">
                           <span className={`shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold ${isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
                             {isCorrect ? '✓' : '✗'}
@@ -1440,7 +1452,7 @@ export default function StudentLessons({
                 <button
                   type="button"
                   onClick={() => setViewState('syllabus')}
-                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition flex items-center justify-center gap-1.5"
+                  className="w-full py-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shadow-slate-900/10 cursor-pointer"
                 >
                   <ArrowLeft className="h-4 w-4" /> Back to Syllabus
                 </button>

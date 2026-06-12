@@ -183,9 +183,8 @@ export default function App() {
     return () => clearInterval(id);
   }, [repo, role, currentUser]);
 
-  // Student dashboard custom direct lesson-topic navigation state hooks
   const [navTopicId, setNavTopicId] = useState<string>('');
-  const [navViewState, setNavViewState] = useState<'syllabus' | 'reading' | 'quiz' | 'summative'>('syllabus');
+  const [navViewState, setNavViewState] = useState<'syllabus' | 'reading' | 'quiz' | 'summative' | 'remedial-reading' | 'remedial-quiz'>('syllabus');
   const clearNavContext = () => {
     setNavTopicId('');
     setNavViewState('syllabus');
@@ -336,10 +335,10 @@ export default function App() {
   };
 
   // Trigger remedial from Student screen
-  const handleStudentJumpToRemedial = (_material: TeacherRemediationMaterial) => {
+  const handleStudentJumpToRemedial = (material: TeacherRemediationMaterial) => {
+    setNavTopicId(`remedial-${material.id}`);
+    setNavViewState('remedial-reading');
     setActiveTab('lessons');
-    // Open reading with remedial parameters in StudentLessons components
-    // We can simulate an active tutorial load.
   };
 
   return (

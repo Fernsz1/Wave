@@ -935,7 +935,7 @@ export default function TeacherHome({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.2 }}
-              className="bg-white rounded-3xl w-full max-w-4xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col my-8 max-h-[85vh]"
+              className="bg-white rounded-3xl w-full max-w-4xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 overflow-hidden flex flex-col my-8 max-h-[85vh]"
             >
               {/* Header */}
               <div className="px-6 py-4.5 bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-600 text-white flex items-center justify-between shrink-0">
@@ -945,7 +945,7 @@ export default function TeacherHome({
                   </div>
                   <div>
                     <h3 className="font-display font-extrabold text-xs sm:text-sm tracking-tight uppercase">Custom AI Remedial Architect</h3>
-                    <p className="text-[10px] text-blue-105 font-bold">Target Block: {activeSection} • {activeSubject.toUpperCase()}</p>
+                    <p className="text-[10px] text-blue-100 font-bold">Target Block: {activeSection} • {activeSubject.toUpperCase()}</p>
                   </div>
                 </div>
                 <button 
@@ -958,19 +958,19 @@ export default function TeacherHome({
 
               {/* Step indicator tracker */}
               {customWizardStep !== 'generating' && (
-                <div className="bg-slate-50 border-b border-slate-100 px-6 py-3 flex items-center gap-3 text-[10px] shrink-0 font-extrabold tracking-wider text-slate-400 select-none uppercase">
+                <div className="bg-slate-50 border-b border-slate-100 px-6 py-3 flex items-center gap-3 text-[10px] shrink-0 font-extrabold tracking-wider text-slate-500 select-none uppercase">
                   <div className={`flex items-center gap-1 ${customWizardStep === 'preview' ? 'text-blue-600' : 'text-slate-500'}`}>
-                    <span className={`h-5 w-5 rounded-full flex items-center justify-center border font-sans ${customWizardStep === 'preview' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white border-slate-205'}`}>1</span>
+                    <span className={`h-5 w-5 rounded-full flex items-center justify-center border font-sans ${customWizardStep === 'preview' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white border-slate-200'}`}>1</span>
                     <span>Edit Preview</span>
                   </div>
                   <ChevronRight className="h-3 w-3 text-slate-300" />
                   <div className={`flex items-center gap-1 ${customWizardStep === 'confirm' ? 'text-blue-600' : 'text-slate-500'}`}>
-                    <span className={`h-5 w-5 rounded-full flex items-center justify-center border font-sans ${customWizardStep === 'confirm' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white border-slate-205'}`}>2</span>
+                    <span className={`h-5 w-5 rounded-full flex items-center justify-center border font-sans ${customWizardStep === 'confirm' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white border-slate-200'}`}>2</span>
                     <span>Verify Placement</span>
                   </div>
                   <ChevronRight className="h-3 w-3 text-slate-300" />
                   <div className={`flex items-center gap-1 ${customWizardStep === 'success' ? 'text-emerald-600' : 'text-slate-500'}`}>
-                    <span className={`h-5 w-5 rounded-full flex items-center justify-center border font-sans ${customWizardStep === 'success' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white border-slate-205'}`}>3</span>
+                    <span className={`h-5 w-5 rounded-full flex items-center justify-center border font-sans ${customWizardStep === 'success' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white border-slate-200'}`}>3</span>
                     <span>Broadcast Sent</span>
                   </div>
                 </div>
@@ -983,7 +983,7 @@ export default function TeacherHome({
                 {customWizardStep === 'generating' && (
                   <div className="flex flex-col items-center justify-center py-16 px-6 text-center space-y-5">
                     <div className="relative flex items-center justify-center">
-                      <div className="absolute animate-ping h-14 w-14 rounded-full bg-blue-105 opacity-75"></div>
+                      <div className="absolute animate-ping h-14 w-14 rounded-full bg-blue-100 opacity-75"></div>
                       <div className="h-16 w-16 bg-blue-50 border border-blue-200 rounded-full flex items-center justify-center z-10 shadow-inner">
                         <Sparkles className="h-7 w-7 text-blue-600 animate-spin [animation-duration:3s]" />
                       </div>
@@ -991,13 +991,13 @@ export default function TeacherHome({
                     
                     <div className="space-y-1">
                       <h3 className="font-display font-extrabold text-slate-800 text-base">Synthesizing Classroom Redirection Unit</h3>
-                      <p className="text-slate-450 text-[10px] uppercase font-bold tracking-widest">{genStatusMessage}</p>
+                      <p className="text-slate-400 text-[10px] uppercase font-bold tracking-widest">{genStatusMessage}</p>
                     </div>
 
-                    <div className="w-full max-w-sm bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-205">
+                    <div className="w-full max-w-sm bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-200">
                       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 h-full transition-all duration-75" style={{ width: `${genPercentage}%` }} />
                     </div>
-                    <span className="text-slate-650 text-xs font-extrabold font-sans bg-slate-50 border border-slate-150 px-3 py-1 rounded-full">{genPercentage}% Synchronized</span>
+                    <span className="text-slate-600 text-xs font-extrabold font-sans bg-slate-50 border border-slate-200 px-3 py-1 rounded-full">{genPercentage}% Synchronized</span>
                   </div>
                 )}
 
@@ -1032,7 +1032,7 @@ export default function TeacherHome({
                           rows={3}
                           value={customIntroduction} 
                           onChange={(e) => setCustomIntroduction(e.target.value)}
-                          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-605 leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all font-sans resize-none"
+                          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600 leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all font-sans resize-none"
                         />
                       </div>
                     </div>
@@ -1056,7 +1056,7 @@ export default function TeacherHome({
                             <button 
                               type="button"
                               onClick={() => setCustomSections(customSections.filter((_, idx) => idx !== sIdx))}
-                              className="absolute top-4 right-4 p-1 rounded-lg text-slate-450 hover:text-rose-500 hover:bg-slate-100 transition-colors cursor-pointer"
+                              className="absolute top-4 right-4 p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-slate-100 transition-colors cursor-pointer"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </button>
@@ -1101,7 +1101,7 @@ export default function TeacherHome({
                             <button 
                               type="button"
                               onClick={() => setCustomQuiz(customQuiz.filter((_, idx) => idx !== qIdx))}
-                              className="absolute top-4 right-4 p-1 rounded-lg text-slate-450 hover:text-rose-500 hover:bg-slate-100 transition-colors cursor-pointer"
+                              className="absolute top-4 right-4 p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-slate-100 transition-colors cursor-pointer"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </button>
@@ -1117,16 +1117,16 @@ export default function TeacherHome({
                             </div>
 
                             <div className="space-y-1.5">
-                              <span className="text-[9px] font-black text-slate-450 uppercase tracking-widest">Select correct option answer</span>
+                              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Select correct option answer</span>
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                 {q.options.map((opt, oIdx) => (
-                                  <div key={oIdx} className="flex items-center gap-2.5 bg-slate-100 border border-slate-150 rounded-xl px-3.5 py-2 hover:bg-slate-200 transition-colors">
+                                  <div key={oIdx} className="flex items-center gap-2.5 bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2 hover:bg-slate-200 transition-colors">
                                     <input 
                                       type="radio" 
                                       name={`correct-radio-${qIdx}`}
                                       checked={q.correctAnswerIndex === oIdx} 
                                       onChange={() => handleEditCorrectAnswer(qIdx, oIdx)}
-                                      className="h-3.5 w-3.5 text-blue-600 focus:ring-blue-105 cursor-pointer shrink-0"
+                                      className="h-3.5 w-3.5 text-blue-600 focus:ring-blue-100 cursor-pointer shrink-0"
                                     />
                                     <input 
                                       type="text" 
@@ -1145,7 +1145,7 @@ export default function TeacherHome({
                                 type="text" 
                                 value={q.explanation || ''} 
                                 onChange={(e) => handleEditQuizExplanation(qIdx, e.target.value)}
-                                className="w-full bg-slate-100 px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-650 font-bold focus:outline-none"
+                                className="w-full bg-slate-100 px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-600 font-bold focus:outline-none"
                               />
                             </div>
                           </div>
@@ -1242,9 +1242,9 @@ export default function TeacherHome({
                       </div>
                     </div>
 
-                    <div className="border border-slate-150 rounded-2xl p-5 space-y-4 bg-white/50">
+                    <div className="border border-slate-200 rounded-2xl p-5 space-y-4 bg-white/50 shadow-sm">
                       <div>
-                        <span className="text-[9px] uppercase font-black px-2 py-0.5 bg-blue-105 text-blue-700 border border-blue-200 rounded tracking-wider font-sans">
+                        <span className="text-[9px] uppercase font-black px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded tracking-wider font-sans">
                           {activeSubject.toUpperCase()} • {customTargetSection} DRAFT OUTLINE
                         </span>
                         <h2 className="text-sm font-extrabold text-slate-800 mt-2">{customTitle}</h2>
@@ -1257,7 +1257,7 @@ export default function TeacherHome({
                         {customSections.map((sec, idx) => (
                           <div key={idx} className="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
                             <h4 className="text-xs font-bold text-slate-800">{sec.title}</h4>
-                            <p className="text-[11px] text-slate-605 leading-relaxed">{sec.body}</p>
+                            <p className="text-[11px] text-slate-600 leading-relaxed">{sec.body}</p>
                           </div>
                         ))}
                       </div>
@@ -1271,7 +1271,7 @@ export default function TeacherHome({
                             <h4 className="text-xs font-extrabold text-slate-800 leading-normal">{q.question}</h4>
                             <div className="grid grid-cols-2 gap-2 mt-1">
                               {q.options.map((opt, oIdx) => (
-                                <div key={oIdx} className={`text-[11px] px-2.5 py-1.5 rounded-lg border font-medium ${q.correctAnswerIndex === oIdx ? 'bg-emerald-50 text-emerald-800 border-emerald-250 font-bold' : 'bg-white text-slate-500 border-slate-150'}`}>
+                                <div key={oIdx} className={`text-[11px] px-2.5 py-1.5 rounded-lg border font-medium ${q.correctAnswerIndex === oIdx ? 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold' : 'bg-white text-slate-500 border-slate-200'}`}>
                                   {q.correctAnswerIndex === oIdx ? '✓ ' : ''} {opt}
                                 </div>
                               ))}
@@ -1290,7 +1290,7 @@ export default function TeacherHome({
                             <h4 className="text-xs font-extrabold text-slate-800 leading-normal">{q.question}</h4>
                             <div className="grid grid-cols-2 gap-2 mt-1">
                               {q.options.map((opt, oIdx) => (
-                                <div key={oIdx} className={`text-[11px] px-2.5 py-1.5 rounded-lg border font-medium ${q.correctAnswerIndex === oIdx ? 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold' : 'bg-white text-slate-500 border-slate-150'}`}>
+                                <div key={oIdx} className={`text-[11px] px-2.5 py-1.5 rounded-lg border font-medium ${q.correctAnswerIndex === oIdx ? 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold' : 'bg-white text-slate-500 border-slate-200'}`}>
                                   {q.correctAnswerIndex === oIdx ? '✓ ' : ''}{opt}
                                 </div>
                               ))}
@@ -1306,23 +1306,22 @@ export default function TeacherHome({
                 {/* STEP 4: SUCCESS PLACEMENT SCREEN */}
                 {customWizardStep === 'success' && (
                   <div className="flex flex-col items-center justify-center py-16 px-6 text-center space-y-5">
-                    <div className="h-16 w-16 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-full flex items-center justify-center animate-bounce shadow-md">
-                      <CheckCircle2 className="h-10 w-10" />
+                    <div className="h-16 w-16 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-full flex items-center justify-center">
+                       <CheckCircle2 className="h-8 w-8" />
                     </div>
-
                     <div className="space-y-1.5">
                       <h3 className="font-display font-black text-slate-800 text-base">Classroom Broadcast Active</h3>
-                      <p className="text-slate-550 text-xs leading-relaxed max-w-sm">
+                      <p className="text-slate-500 text-xs leading-relaxed max-w-sm">
                         Wave's lesson synchronicities are broadcast. Students in the <span className="underline font-extrabold text-slate-800">{customTargetSection}</span> section have been notified of this custom remedial suite.
                       </p>
                     </div>
 
-                    <div className="h-px w-full max-w-xs bg-slate-150" />
+                    <div className="h-px w-full max-w-xs bg-slate-200" />
 
-                    <div className="bg-slate-50 rounded-2xl p-4 text-left space-y-2 max-w-sm border border-slate-100 shadow-sm mx-auto">
+                    <div className="bg-slate-50 rounded-2xl p-4 text-left space-y-2 max-w-sm border border-slate-200 shadow-sm mx-auto">
                       <div className="flex items-center gap-1">
                         <Check className="h-4 w-4 text-emerald-600" />
-                        <span className="text-[10px] font-black uppercase text-slate-450 tracking-wider">Broadcast Blueprint Summary</span>
+                        <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Broadcast Blueprint Summary</span>
                       </div>
                       <span className="text-[10px] font-bold block text-slate-500">{activeSubject.toUpperCase()} • {customTargetSection}</span>
                       <h4 className="text-xs font-black text-slate-800 leading-normal">{customTitle}</h4>
@@ -1336,7 +1335,7 @@ export default function TeacherHome({
               {/* Footer controls */}
               <div className="px-6 py-4.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between shrink-0">
                 {customWizardStep === 'generating' ? (
-                  <div className="text-[10px] text-slate-450 italic">Synthesizing draft model parameters...</div>
+                  <div className="text-[10px] text-slate-400 italic">Synthesizing draft model parameters...</div>
                 ) : customWizardStep === 'preview' ? (
                   <>
                     <button 
