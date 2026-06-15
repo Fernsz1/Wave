@@ -72,6 +72,7 @@ export const TeacherSignupSchema = z.object({
   teacherId: z.string(),
   name: z.string(),
   department: z.string(),
+  password: z.string().optional(),
 });
 
 export const StudentProgressSchema = z.object({

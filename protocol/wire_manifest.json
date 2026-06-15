@@ -50,7 +50,8 @@
       "fields": [
         { "name": "teacherId", "t": "str" },
         { "name": "name", "t": "str" },
-        { "name": "department", "t": "str" }
+        { "name": "department", "t": "str" },
+        { "name": "password", "t": "str", "optional": true }
       ]
     },
     "StudentProgress": {
