@@ -656,6 +656,21 @@ export default function App() {
                               progress={progressRecords[(currentUser as StudentUser).lrn] || { studentLrn: (currentUser as StudentUser).lrn, completedTopicIds: [], quizAttempts: {}, summativeScores: {} }}
                               lessons={currentLessons}
                               activeSubject={activeSubject}
+                              onNavigateToTopic={(topicId, viewState) => {
+                                // Find subject key having this topic ID across all subjects
+                                let foundSubject = activeSubject;
+                                for (const [subKey, subLessons] of Object.entries(MOCK_LESSONS_BY_SUBJECT)) {
+                                  if (subLessons.flatMap(l => l.topics).some(t => t.id === topicId)) {
+                                    foundSubject = subKey;
+                                    break;
+                                  }
+                                }
+                                setActiveSubject(foundSubject);
+                                setNavTopicId(topicId);
+                                setNavViewState(viewState);
+                                setHasSelectedSubject(true);
+                                setActiveTab('lessons');
+                              }}
                             />
                           )}
 

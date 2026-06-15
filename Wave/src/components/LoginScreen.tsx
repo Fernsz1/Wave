@@ -190,6 +190,7 @@ export default function LoginScreen({ onLoginSuccess, students, teachers }: Logi
                     onChange={(e) => setTeacherId(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner"
                   />
+                  <p className="text-[10px] text-slate-400 mt-1">Provide your administrator-assigned Teacher ID</p>
                 </div>
 
                 <div>
@@ -203,6 +204,7 @@ export default function LoginScreen({ onLoginSuccess, students, teachers }: Logi
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-inner"
                   />
+                  <p className="text-[10px] text-slate-400 mt-1">Enter your secure account password</p>
                 </div>
               </>
             )}
