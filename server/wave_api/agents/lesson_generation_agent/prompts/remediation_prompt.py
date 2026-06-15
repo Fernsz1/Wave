@@ -1,6 +1,6 @@
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 
-c = ChatPromptTemplate.from_messages([
+remediation_prompt = ChatPromptTemplate.from_messages([
     
     SystemMessagePromptTemplate.from_template(
     """

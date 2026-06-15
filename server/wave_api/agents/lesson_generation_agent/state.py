@@ -23,3 +23,4 @@ class AgentState(TypedDict):
     # --- 4. Human-in-the-Loop (HITL) ---
     teacher_feedback: str            # The predefined button clicked (e.g., "Simplify Language")
     final_lesson: str
+    teacher_revisions: Annotated[int, operator.add] 
