@@ -9,8 +9,12 @@ class AgentFactory:
     """
     def __init__(self, api_key: str = None):
         load_dotenv()
+        
+        # 1. FIX: Correctly assign the instance variable, falling back to the .env file if None
+        self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
+        
         if not self.api_key:
-            raise ValueError("A Google API Key must be provided.")
+            raise ValueError("A Google API Key must be provided. Set GOOGLE_API_KEY in your .env or pass it explicitly.")
 
     def create_llm(self, role: AgentRole, **kwargs) -> ChatGoogleGenerativeAI:
         """
@@ -31,9 +35,10 @@ class AgentFactory:
         else:
             raise ValueError(f"Unknown agent role requested: {role}")
 
-        # Return the configured LangChain LLM instance ready for orchestration
+        # 2. FIX: Explicitly pass the api_key to the LangChain wrapper
         return ChatGoogleGenerativeAI(
             model=model_id,
+            google_api_key=self.api_key, 
             temperature=temperature,
             max_retries=kwargs.get("max_retries", 3),
         )
