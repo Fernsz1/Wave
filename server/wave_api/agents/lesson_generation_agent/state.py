@@ -15,9 +15,9 @@ class AgentState(TypedDict):
     
     # --- 3. The Automated AI Evaluation Loop ---
     draft_lesson: str
-    ai_scores: Dict[str, int]        # e.g., {"content_simplicity": 40, "analogy_clarity": 85, "accuracy": 95}
-    ai_critique: str                 # Specific comments on what to improve based on the scores
-    ai_verdict: str                  # "PASS" or "FAIL" (Determines if it moves to the Teacher)
+    evaluation_scores: Dict[str, int] # Stores the quantitative scores
+    is_approved: bool # True if all scores >= 4, False if any score <= 3
+    revision_remarks: str # The 2-3 sentence feedback for the generator
     revision_count: Annotated[int, operator.add] # Safely increments: 0 -> 1 -> 2
     
     # --- 4. Human-in-the-Loop (HITL) ---

@@ -1,7 +1,11 @@
-from agents.agent_factory import AgentFactory
-from agents.lesson_generation_agent.state import AgentState
+from server.wave_api.agents.agent_factory import AgentFactory
+from server.wave_api.agents.lesson_generation_agent.state import AgentState
 from server.wave_api.agents.lesson_generation_agent.prompts.diagnostic_prompt import diagnosis_prompt
+from server.wave_api.agents.lesson_generation_agent.prompts.remediation_prompt import remediation_prompt
+from server.wave_api.agents.lesson_generation_agent.prompts.evaluation_prompt import remediation_evaluation_prompt
 from langchain_core.output_parsers import JsonOutputParser 
+from pydantic import BaseModel, Field
+from server.wave_api.agents.lesson_generation_agent.output_schema import RemediationEvaluationResult, RemediationScores
 
 llm_factory = AgentFactory()
 primary_llm = llm_factory.create_llm("primary")
@@ -28,7 +32,7 @@ def diagnose_misconception(state: AgentState):
 def draft_lesson(state: AgentState):
     """Creates remediation material based upon the lesson and the diagnosis of students' performance"""
     
-    chain = diagnosis_prompt | primary_llm | JsonOutputParser()
+    chain = remediation_prompt | primary_llm | JsonOutputParser()
     remediation_material = chain.invoke({
         "subject": state.get("subject"),
         "grade_level": state.get("grade_level"),
@@ -44,17 +48,36 @@ def draft_lesson(state: AgentState):
     }
 
 def evaluate_pedagogy(state: AgentState):
-    # Automated Editor
-    print("-> Evaluating pedagogy...")
+    """Evaluates the drafted prompt and stops after a max number of revisions to prevent infinite loops."""
+
+    # 1. Run the LLM evaluation
+    evaluator_llm = llm_factory.create_llm("evaluator")
+    chain = remediation_evaluation_prompt | evaluator_llm
     
-    # Mocking an automated failure on the first pass to demonstrate the loop
-    if state.get("revision_count", 0) < 2:
-        return {
-            "reviewer_verdict": "FAIL", 
-            "critique": "The analogy is slightly confusing. Simplify it."
-        }
+    result: RemediationEvaluationResult = chain.invoke({
+        "grade_level": state.get("grade_level"),
+        "topic": state.get("topic"),
+        "core_diagnosis": state.get("core_diagnosis"),
+        "draft_lesson": state.get("draft_lesson")
+    })
     
-    return {"reviewer_verdict": "PASS"}
+    # 2. Extract the LLM's natural findings
+    is_approved = result.is_approved
+    remarks = result.remarks
+    
+    current_revisions = state.get("revision_count", 0)
+    max_revisions = 3
+    
+    if not is_approved and current_revisions >= max_revisions:
+        print(f"⚠️ Max revisions ({max_revisions}) reached. Forcing approval to break loop.")
+        is_approved = True 
+        remarks = f"Max revision limit ({max_revisions}) reached. Proceeding with the best available draft. Original AI critique: {result.remarks}"
+
+    return {
+        "evaluation_scores": result.scores.model_dump(),
+        "is_approved": is_approved,
+        "revision_remarks": remarks
+    }
 
 def teacher_review(state: AgentState):
     # This node acts as a passthrough to finalize the state after the human intervenes
