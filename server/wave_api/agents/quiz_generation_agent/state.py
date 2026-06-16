@@ -1,18 +1,24 @@
-from typing import TypedDict, Optional, List, Dict
+from typing import TypedDict, Optional, List, Dict, Any
 
 class AgentState(TypedDict):
     subject: Optional[str]
     grade_level: Optional[int]
     original_topic_id: Optional[str]
-    failed_items: Optional[List[Dict[any]]]       # failed items with wrong answers from the students and the actual answer
-    lesson_context: Optional[str]                 # the actual lesson that is stored in the database
+    failed_items: Optional[List[Dict[str, Any]]]
+    lesson_context: Optional[str]                
     topic: Optional[str]
 
-    core_diagnosis: Optional[Dict[str, any]]      
+    core_diagnosis: Optional[Dict[str, Any]]      
     remedial_lesson: Optional[str]
-
     has_lesson_content: bool
-    quiz_draft: Optional[List[Dict, any]]
-    eval_status: Optional[str] # "PASS" or "FAIL"
-    human_feedback: Optional[str] # "Approve", or feedback like "Make Harder"
-    final_quiz: Optional[str]
+    
+    # Just the current draft. No history tracking.
+    quiz_draft: Optional[Dict[str, Any]]
+    
+    # Will hold the full dump of QuizEvaluationResult
+    eval_remarks: Dict[str, Any]
+    draft_attempts: Optional[int]
+    is_revision: Optional[bool]
+
+    human_feedback: Optional[str] 
+    final_quiz: Optional[List[Dict[str, Any]]]
