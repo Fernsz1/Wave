@@ -104,6 +104,9 @@ export default function TeacherHome({
   const [customQuiz, setCustomQuiz] = useState<Array<QuizQuestion>>([]);
   const [customSummative, setCustomSummative] = useState<Array<QuizQuestion>>([]);
   const [customTargetSection, setCustomTargetSection] = useState(activeSection);
+  const [customLessonNumber, setCustomLessonNumber] = useState<number>(1);
+  const [customLearningGap, setCustomLearningGap] = useState('');
+  const [customTeachersNotes, setCustomTeachersNotes] = useState<string[]>([]);
   
   // AI generation coordination: animation and API call run in parallel
   const [aiGenResult, setAiGenResult] = useState<GeneratedRemediation | null>(null);
@@ -145,6 +148,18 @@ export default function TeacherHome({
     setCustomIntroduction(aiGenResult.teacherNotes);
     setCustomSections(secs.length > 0 ? secs : customSections);
     setCustomQuiz(aiGenResult.createdQuiz.length > 0 ? aiGenResult.createdQuiz : customQuiz);
+    setCustomSummative(aiGenResult.createdQuiz.length > 0 ? aiGenResult.createdQuiz : customSummative);
+    
+    if (aiGenResult.lessonNumber !== undefined) {
+      setCustomLessonNumber(aiGenResult.lessonNumber);
+    }
+    if (aiGenResult.learningGap !== undefined) {
+      setCustomLearningGap(aiGenResult.learningGap);
+    }
+    if (aiGenResult.teachersNotes !== undefined) {
+      setCustomTeachersNotes(aiGenResult.teachersNotes);
+    }
+
     setAiGenResult(null);
     setAnimComplete(false);
     setCustomWizardStep('preview');
@@ -1014,37 +1029,87 @@ export default function TeacherHome({
 
                     {/* Lesson block fields */}
                     <div className="grid grid-cols-1 gap-4">
-                      {/* Title block */}
-                      <div className="space-y-1.5">
-                        <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Unit Focus Title</span>
-                        <input 
-                          type="text" 
-                          value={customTitle} 
-                          onChange={(e) => setCustomTitle(e.target.value)}
-                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all font-sans"
+                      {/* Lesson Number and Title block */}
+                      <div className="grid grid-cols-4 gap-4 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <div className="col-span-1 space-y-1.5">
+                          <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block font-sans">Lesson #</label>
+                          <input 
+                            type="number" 
+                            value={customLessonNumber} 
+                            onChange={(e) => setCustomLessonNumber(parseInt(e.target.value) || 1)}
+                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-850 hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-sans text-center shadow-sm"
+                          />
+                        </div>
+                        <div className="col-span-3 space-y-1.5">
+                          <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block font-sans">Lesson Title</label>
+                          <input 
+                            type="text" 
+                            value={customTitle} 
+                            onChange={(e) => setCustomTitle(e.target.value)}
+                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-850 hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-sans shadow-sm"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Learning Gap block */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-1.5">
+                        <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block font-sans">Learning Gap Addressed</label>
+                        <textarea 
+                          rows={2}
+                          value={customLearningGap} 
+                          onChange={(e) => setCustomLearningGap(e.target.value)}
+                          className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-700 leading-relaxed hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-sans resize-none shadow-sm"
+                          placeholder="Describe the student learning gap..."
                         />
                       </div>
 
-                      {/* Intro text block */}
-                      <div className="space-y-1.5">
-                        <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Unit Introduction & Focus Objectives</span>
-                        <textarea 
-                          rows={3}
-                          value={customIntroduction} 
-                          onChange={(e) => setCustomIntroduction(e.target.value)}
-                          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600 leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all font-sans resize-none"
-                        />
+                      {/* Teacher's Notes block */}
+                      <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                          <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block font-sans">Teacher's Actionable Notes</span>
+                          <button 
+                            type="button" 
+                            onClick={() => setCustomTeachersNotes([...customTeachersNotes, 'New note...'])}
+                            className="text-[10px] text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1 cursor-pointer hover:underline"
+                          >
+                            <Plus className="h-3.5 w-3.5" /> Append Note
+                          </button>
+                        </div>
+                        <div className="space-y-2">
+                          {customTeachersNotes.map((note, idx) => (
+                            <div key={idx} className="flex items-center gap-2">
+                              <span className="text-xs text-slate-400 font-bold font-sans">#{idx + 1}</span>
+                              <input 
+                                type="text" 
+                                value={note} 
+                                onChange={(e) => {
+                                  const updated = [...customTeachersNotes];
+                                  updated[idx] = e.target.value;
+                                  setCustomTeachersNotes(updated);
+                                }}
+                                className="flex-1 bg-white px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-750 font-medium hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm"
+                              />
+                              <button 
+                                type="button"
+                                onClick={() => setCustomTeachersNotes(customTeachersNotes.filter((_, i) => i !== idx))}
+                                className="p-2 text-slate-455 hover:text-rose-500 rounded-xl hover:bg-rose-50 transition-colors cursor-pointer"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
 
                     {/* Interactive Outline Modules block list */}
-                    <div className="space-y-3.5">
+                    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3.5">
                       <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                        <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Interactive Modules</span>
+                        <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block">Interactive Modules</span>
                         <button 
                           type="button" 
                           onClick={() => setCustomSections([...customSections, { title: `Module ${customSections.length + 1}`, body: 'Focus body content...' }])}
-                          className="text-[10px] text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1 cursor-pointer"
+                          className="text-[10px] text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1 cursor-pointer hover:underline"
                         >
                           <Plus className="h-3.5 w-3.5" /> Append Content block
                         </button>
@@ -1052,11 +1117,11 @@ export default function TeacherHome({
 
                       <div className="space-y-3">
                         {customSections.map((sec, sIdx) => (
-                          <div key={sIdx} className="bg-slate-50 border border-slate-100 rounded-2xl p-4.5 space-y-3.5 relative">
+                          <div key={sIdx} className="bg-slate-50/40 border border-slate-200 rounded-2xl p-4.5 space-y-3.5 relative hover:border-slate-300 transition-all">
                             <button 
                               type="button"
                               onClick={() => setCustomSections(customSections.filter((_, idx) => idx !== sIdx))}
-                              className="absolute top-4 right-4 p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-slate-100 transition-colors cursor-pointer"
+                              className="absolute top-4 right-4 p-2 text-slate-455 hover:text-rose-500 rounded-xl hover:bg-rose-50 transition-colors cursor-pointer"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </button>
@@ -1066,14 +1131,14 @@ export default function TeacherHome({
                                 type="text" 
                                 value={sec.title} 
                                 onChange={(e) => handleEditSectionTitle(sIdx, e.target.value)}
-                                className="w-full bg-slate-100 px-3 py-1.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none"
+                                className="w-full bg-white px-3.5 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm"
                                 placeholder={`Module Block ${sIdx + 1}`}
                               />
                               <textarea 
                                 rows={2}
                                 value={sec.body} 
                                 onChange={(e) => handleEditSectionBody(sIdx, e.target.value)}
-                                className="w-full bg-slate-100/50 px-3 py-2 border border-slate-200 rounded-xl text-xs text-slate-600 leading-relaxed focus:outline-none resize-none"
+                                className="w-full bg-white px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs text-slate-650 leading-relaxed hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all resize-none shadow-sm"
                                 placeholder="Module content..."
                               />
                             </div>
@@ -1083,13 +1148,13 @@ export default function TeacherHome({
                     </div>
 
                     {/* Dynamic Quiz block list */}
-                    <div className="space-y-3.5 pt-2">
+                    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3.5">
                       <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                        <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Interactive Evaluation Questionnaire</span>
+                        <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block">Interactive Evaluation Questionnaire</span>
                         <button 
                           type="button" 
                           onClick={() => setCustomQuiz([...customQuiz, { id: `q-${Date.now()}`, question: 'Formulate new assessment question?', options: ['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4'], correctAnswerIndex: 0, explanation: 'Explain choices.' }])}
-                          className="text-[10px] text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1 cursor-pointer"
+                          className="text-[10px] text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1 cursor-pointer hover:underline"
                         >
                           <Plus className="h-3.5 w-3.5" /> Append Assessment question
                         </button>
@@ -1097,42 +1162,42 @@ export default function TeacherHome({
 
                       <div className="space-y-4">
                         {customQuiz.map((q, qIdx) => (
-                          <div key={q.id || qIdx} className="bg-slate-50 border border-slate-100 rounded-2xl p-4.5 space-y-4 relative">
+                          <div key={q.id || qIdx} className="bg-slate-50/40 border border-slate-200 rounded-2xl p-4.5 space-y-4 relative hover:border-slate-300 transition-all">
                             <button 
                               type="button"
                               onClick={() => setCustomQuiz(customQuiz.filter((_, idx) => idx !== qIdx))}
-                              className="absolute top-4 right-4 p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-slate-100 transition-colors cursor-pointer"
+                              className="absolute top-4 right-4 p-2 text-slate-455 hover:text-rose-500 rounded-xl hover:bg-rose-50 transition-colors cursor-pointer"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </button>
 
                             <div className="space-y-1.5 max-w-[90%]">
-                              <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest">Question {qIdx + 1} Question Query</span>
+                              <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest">Question {qIdx + 1} Text</span>
                               <input 
                                 type="text" 
                                 value={q.question} 
                                 onChange={(e) => handleEditQuizQuestion(qIdx, e.target.value)}
-                                className="w-full bg-slate-100 px-3.5 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none"
+                                className="w-full bg-white px-3.5 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm"
                               />
                             </div>
 
                             <div className="space-y-1.5">
-                              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Select correct option answer</span>
+                              <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Choices (Select correct option)</span>
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                 {q.options.map((opt, oIdx) => (
-                                  <div key={oIdx} className="flex items-center gap-2.5 bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2 hover:bg-slate-200 transition-colors">
+                                  <div key={oIdx} className={`flex items-center gap-2.5 bg-white border rounded-xl px-3.5 py-2 transition-all ${q.correctAnswerIndex === oIdx ? 'border-emerald-500 ring-2 ring-emerald-500/10 shadow-sm' : 'border-slate-200'}`}>
                                     <input 
                                       type="radio" 
                                       name={`correct-radio-${qIdx}`}
                                       checked={q.correctAnswerIndex === oIdx} 
                                       onChange={() => handleEditCorrectAnswer(qIdx, oIdx)}
-                                      className="h-3.5 w-3.5 text-blue-600 focus:ring-blue-100 cursor-pointer shrink-0"
+                                      className="h-4 w-4 text-emerald-600 focus:ring-emerald-500/10 cursor-pointer shrink-0 accent-emerald-600"
                                     />
                                     <input 
                                       type="text" 
                                       value={opt} 
                                       onChange={(e) => handleEditQuizOption(qIdx, oIdx, e.target.value)}
-                                      className="w-full bg-transparent text-xs text-slate-700 font-extrabold focus:outline-none"
+                                      className="w-full bg-transparent text-xs text-slate-700 font-bold focus:outline-none"
                                     />
                                   </div>
                                 ))}
@@ -1145,7 +1210,7 @@ export default function TeacherHome({
                                 type="text" 
                                 value={q.explanation || ''} 
                                 onChange={(e) => handleEditQuizExplanation(qIdx, e.target.value)}
-                                className="w-full bg-slate-100 px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-600 font-bold focus:outline-none"
+                                className="w-full bg-white px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-650 font-bold hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm"
                               />
                             </div>
                           </div>
@@ -1154,13 +1219,13 @@ export default function TeacherHome({
                     </div>
 
                     {/* Summative Test block */}
-                    <div className="space-y-3.5 pt-2 border-t border-slate-100">
+                    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3.5 pt-2">
                       <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                         <span className="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest block">Custom Summative Test ({customSummative.length} items)</span>
                         <button
                           type="button"
                           onClick={() => setCustomSummative([...customSummative, { id: `s-${Date.now()}`, question: 'New summative question?', options: ['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4'], correctAnswerIndex: 0, explanation: 'Explain the correct answer.' }])}
-                          className="text-[10px] text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1 cursor-pointer"
+                          className="text-[10px] text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1 cursor-pointer hover:underline"
                         >
                           <Plus className="h-3.5 w-3.5" /> Add question
                         </button>
@@ -1168,49 +1233,52 @@ export default function TeacherHome({
 
                       <div className="space-y-4">
                         {customSummative.map((q: QuizQuestion, qIdx: number) => (
-                          <div key={q.id || qIdx} className="bg-indigo-50/30 border border-indigo-100 rounded-2xl p-4 space-y-3 relative">
+                          <div key={q.id || qIdx} className="bg-indigo-50/20 border border-indigo-200 rounded-2xl p-4.5 space-y-3 relative hover:border-indigo-300 transition-all shadow-sm">
                             <button
                               type="button"
                               onClick={() => setCustomSummative(customSummative.filter((_, idx) => idx !== qIdx))}
-                              className="absolute top-3 right-3 p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-slate-100 transition-colors cursor-pointer"
+                              className="absolute top-3 right-3 p-2 text-slate-450 hover:text-rose-500 rounded-xl hover:bg-rose-55 transition-colors cursor-pointer"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </button>
                             <div className="space-y-1.5 max-w-[90%]">
-                              <span className="text-[9px] font-black text-indigo-600 uppercase tracking-widest">Summative {qIdx + 1}</span>
+                              <span className="text-[9px] font-black text-indigo-600 uppercase tracking-widest">Summative Question {qIdx + 1}</span>
                               <input
                                 type="text"
                                 value={q.question}
                                 onChange={(e) => setCustomSummative(prev => prev.map((item, i) => i === qIdx ? { ...item, question: e.target.value } : item))}
-                                className="w-full bg-white px-3 py-1.5 border border-indigo-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none"
+                                className="w-full bg-white px-3.5 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 hover:border-slate-350 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all shadow-sm"
                               />
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                               {q.options.map((opt, oIdx) => (
-                                <div key={oIdx} className="flex items-center gap-2 bg-white border border-indigo-100 rounded-xl px-3 py-1.5">
+                                <div key={oIdx} className={`flex items-center gap-2.5 bg-white border rounded-xl px-3.5 py-2 transition-all ${q.correctAnswerIndex === oIdx ? 'border-indigo-500 ring-2 ring-indigo-500/10 shadow-sm' : 'border-slate-200'}`}>
                                   <input
                                     type="radio"
                                     name={`s-correct-${qIdx}`}
                                     checked={q.correctAnswerIndex === oIdx}
                                     onChange={() => setCustomSummative(prev => prev.map((item, i) => i === qIdx ? { ...item, correctAnswerIndex: oIdx } : item))}
-                                    className="accent-indigo-600 shrink-0"
+                                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500/10 cursor-pointer shrink-0 accent-indigo-600"
                                   />
                                   <input
                                     type="text"
                                     value={opt}
                                     onChange={(e) => setCustomSummative(prev => prev.map((item, i) => { if (i !== qIdx) return item; const opts = [...item.options]; opts[oIdx] = e.target.value; return { ...item, options: opts }; }))}
-                                    className="bg-transparent text-xs text-slate-700 flex-1 focus:outline-none min-w-0"
+                                    className="bg-transparent text-xs text-slate-755 font-bold focus:outline-none flex-1 min-w-0"
                                   />
                                 </div>
                               ))}
                             </div>
-                            <input
-                              type="text"
-                              value={q.explanation}
-                              onChange={(e) => setCustomSummative(prev => prev.map((item, i) => i === qIdx ? { ...item, explanation: e.target.value } : item))}
-                              placeholder="Explanation..."
-                              className="w-full bg-white px-3 py-1.5 border border-indigo-100 rounded-xl text-xs text-slate-500 italic focus:outline-none"
-                            />
+                            <div className="space-y-1">
+                              <span className="text-[9px] font-black text-indigo-600 uppercase tracking-widest block">Summative Explanation Feedback</span>
+                              <input
+                                type="text"
+                                value={q.explanation}
+                                onChange={(e) => setCustomSummative(prev => prev.map((item, i) => i === qIdx ? { ...item, explanation: e.target.value } : item))}
+                                placeholder="Explanation..."
+                                className="w-full bg-white px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-600 italic hover:border-slate-350 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all shadow-sm"
+                              />
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -1247,9 +1315,30 @@ export default function TeacherHome({
                         <span className="text-[9px] uppercase font-black px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded tracking-wider font-sans">
                           {activeSubject.toUpperCase()} • {customTargetSection} DRAFT OUTLINE
                         </span>
-                        <h2 className="text-sm font-extrabold text-slate-800 mt-2">{customTitle}</h2>
-                        <p className="text-xs text-slate-500 mt-1 pb-3.5 border-b border-slate-100 leading-relaxed font-sans">{customIntroduction}</p>
+                        <h2 className="text-sm font-extrabold text-slate-800 mt-2">Lesson {customLessonNumber}: {customTitle}</h2>
                       </div>
+
+                      {customLearningGap && (
+                        <div className="space-y-1 bg-amber-50/50 border border-amber-100 p-3 rounded-xl text-xs">
+                          <span className="block text-[10px] text-amber-800 uppercase font-black tracking-widest">Learning Gap Addressed</span>
+                          <p className="text-slate-700 font-medium leading-relaxed">{customLearningGap}</p>
+                        </div>
+                      )}
+
+                      {customTeachersNotes.length > 0 ? (
+                        <div className="space-y-1 bg-slate-50 border border-slate-100 p-3 rounded-xl text-xs">
+                          <span className="block text-[10px] text-slate-455 uppercase font-black tracking-widest">Actionable Remediation Notes</span>
+                          <ul className="list-disc pl-4 text-slate-655 space-y-1 mt-1 font-medium leading-relaxed">
+                            {customTeachersNotes.map((note, idx) => (
+                              <li key={idx}>{note}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : (
+                        customIntroduction && (
+                          <p className="text-xs text-slate-500 mt-1 pb-3.5 border-b border-slate-100 leading-relaxed font-sans">{customIntroduction}</p>
+                        )
+                      )}
 
                       {/* Content Section Modules */}
                       <div className="space-y-3">
@@ -1257,7 +1346,7 @@ export default function TeacherHome({
                         {customSections.map((sec, idx) => (
                           <div key={idx} className="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
                             <h4 className="text-xs font-bold text-slate-800">{sec.title}</h4>
-                            <p className="text-[11px] text-slate-600 leading-relaxed">{sec.body}</p>
+                            <p className="text-[11px] text-slate-650 leading-relaxed">{sec.body}</p>
                           </div>
                         ))}
                       </div>
@@ -1324,7 +1413,7 @@ export default function TeacherHome({
                         <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Broadcast Blueprint Summary</span>
                       </div>
                       <span className="text-[10px] font-bold block text-slate-500">{activeSubject.toUpperCase()} • {customTargetSection}</span>
-                      <h4 className="text-xs font-black text-slate-800 leading-normal">{customTitle}</h4>
+                      <h4 className="text-xs font-black text-slate-800 leading-normal">Lesson {customLessonNumber}: {customTitle}</h4>
                       <p className="text-[10px] text-slate-450 leading-relaxed italic">{customQuiz.length} interactive diagnostic evaluation queries locked.</p>
                     </div>
                   </div>
@@ -1367,12 +1456,20 @@ export default function TeacherHome({
                       onClick={() => {
                         const pubId = `custom-pub-${Date.now()}`;
                         const publishDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                        
+                        const gapSection = customLearningGap ? `**Learning Gap:** ${customLearningGap}` : '';
+                        const notesSection = customTeachersNotes.length > 0 
+                          ? customTeachersNotes.map(n => `• ${n}`).join('\n')
+                          : '';
+                        const combinedNotes = [gapSection, notesSection].filter(Boolean).join('\n\n') || customIntroduction;
+                        const fullTitle = `Lesson ${customLessonNumber}: ${customTitle}`;
+
                         const newPub = {
                           id: pubId,
-                          section: activeSection,
+                          section: customTargetSection,
                           subject: activeSubject,
-                          title: customTitle,
-                          introduction: customIntroduction,
+                          title: fullTitle,
+                          introduction: combinedNotes,
                           sectionsCount: customSections.length,
                           quizCount: customQuiz.length,
                           publishDate
@@ -1381,9 +1478,9 @@ export default function TeacherHome({
                         onPublishRemedial({
                           id: pubId,
                           originalTopicId: '',
-                          title: customTitle,
+                          title: fullTitle,
                           content: customSections.map(s => `## ${s.title}\n${s.body}`).join('\n\n'),
-                          teacherNotes: customIntroduction,
+                          teacherNotes: combinedNotes,
                           createdQuiz: customQuiz,
                           createdSummative: customSummative,
                           publishDate,

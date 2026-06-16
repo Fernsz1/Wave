@@ -23,6 +23,9 @@ export interface GeneratedRemediation {
   content: string;
   teacherNotes: string;
   createdQuiz: QuizQuestion[];
+  lessonNumber?: number;
+  learningGap?: string;
+  teachersNotes?: string[];
 }
 
 export interface RepoBootstrap {

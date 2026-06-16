@@ -238,7 +238,10 @@ export class HttpRepository implements WaveRepository {
       title,
       content,
       teacherNotes,
-      createdQuiz
+      createdQuiz,
+      lessonNumber: data.lesson_number,
+      learningGap: data.learning_gap,
+      teachersNotes: data.teachers_notes || [],
     };
   }
 
