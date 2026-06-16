@@ -1,4 +1,14 @@
 from pydantic import BaseModel, Field
+from typing import List 
+
+class StudentDiagnosis(BaseModel):
+    topic: str = Field(description="The topic of the lesson.")
+    learning_gap: str = Field(description="The exact concept students failed to understand.")
+    misconception: str = Field(description="The incorrect thinking pattern behind their mistakes.")
+    error_pattern: str = Field(description="The repeated error patterns across answers.")
+    root_cause: str = Field(description="Why this misconception likely formed based on the context.")
+    affected_skills: List[str] = Field(description="The specific skills that are missing.")
+    intervention_hint: str = Field(description="A short intervention hint for the next AI (NOT a lesson).")
 
 class RemediationScores(BaseModel):
     structural_compliance: int = Field(

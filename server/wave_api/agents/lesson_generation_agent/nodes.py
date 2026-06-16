@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 from server.wave_api.agents.lesson_generation_agent.output_schema import RemediationEvaluationResult, RemediationScores
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
+from .output_schema import StudentDiagnosis
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -25,7 +26,10 @@ def retrieve_local_context(state: AgentState):
 def diagnose_misconception(state: AgentState):
     """Creates class diagnosis to know what steps should be taken to improve classroom performance"""
 
-    chain = diagnosis_prompt | primary_llm | JsonOutputParser()
+    structured_llm = primary_llm.with_structured_output(StudentDiagnosis)
+    
+    chain = diagnosis_prompt | structured_llm
+    
     result = chain.invoke({
         "subject": state["subject"],
         "grade_level": state["grade_level"],
@@ -33,7 +37,9 @@ def diagnose_misconception(state: AgentState):
         "lesson_context": state["lesson_context"],
         "failed_items": state["failed_items"]
     })
-    return {"core_diagnosis": result}
+    
+    # 4. Convert the Pydantic object back into a dictionary for the state
+    return {"core_diagnosis": result.model_dump()}
 
 def draft_lesson(state: AgentState):
     """Creates remediation material based upon the lesson and the diagnosis of students' performance"""
