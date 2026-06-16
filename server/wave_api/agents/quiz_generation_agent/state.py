@@ -1,15 +1,15 @@
 from typing import TypedDict, Optional, List, Dict
 
 class AgentState(TypedDict):
-    subject: str
-    grade_level: int 
-    original_topic_id: str
-    failed_items: List[Dict[any]]       # failed items with wrong answers from the students and the actual answer
-    lesson_context: str                 # the actual lesson that is stored in the database
-    topic: str
+    subject: Optional[str]
+    grade_level: Optional[int]
+    original_topic_id: Optional[str]
+    failed_items: Optional[List[Dict[any]]]       # failed items with wrong answers from the students and the actual answer
+    lesson_context: Optional[str]                 # the actual lesson that is stored in the database
+    topic: Optional[str]
 
-    core_diagnosis: Dict[str, any]      
-
+    core_diagnosis: Optional[Dict[str, any]]      
+    remedial_lesson: Optional[str]
 
     has_lesson_content: bool
     quiz_draft: Optional[List[Dict, any]]

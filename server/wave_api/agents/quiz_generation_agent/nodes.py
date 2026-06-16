@@ -3,8 +3,10 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 from .state import AgentState
 from server.wave_api.agents.agent_factory import AgentFactory
-from .output_schema import DiagnosisResult
+from .output_schema import DiagnosisResult, QuizDraftResponse
 from .prompts.diagnostic_prompt import diagnosis_prompt
+from .prompts.quiz_generation_prompt import quiz_generation_prompt
+import json
 
 llm_factory = AgentFactory()
 
@@ -40,12 +42,61 @@ def diagnose(state: AgentState):
         "core_diagnosis": result.model_dump()
     }
 
-def draft_quiz(state: AgentState):
+def draft_quiz(state: AgentState) -> dict:
     print("--- [Node] Drafting Quiz & Distractor Rationale ---")
-    # Incorporate context, misconception, and any human feedback
+    
+    # 1. Initialize the primary model with structured output matching your Pydantic schema
+    # A low temperature (e.g., 0.2) keeps item generation highly focused on psychometric constraints
+    primary_llm = llm_factory.create_llm("primary")
+    structured_llm = primary_llm.with_structured_output(QuizDraftResponse)
+    
+    # 2. Extract core components from the graph state
+    subject = state["subject"]
+    grade_level = state["grade_level"]
+    topic = state["topic"]
+    lesson_context = state["lesson_context"]
+    
+    # Prepare the core diagnosis payload to inject into the prompt
+    diagnosis_payload = state.get("core_diagnosis", {})
+    core_diagnosis_str = json.dumps(diagnosis_payload, indent=2)
+    
+    # 3. Handle human or AI evaluation feedback loops
     feedback = state.get("human_feedback", "")
-    prefix = f"Refined with feedback: {feedback} | " if feedback else ""
-    return {"quiz_draft": f"{prefix}Drafted Quiz Question 1..."}
+    if feedback:
+        print(f"Applying revision instructions: {feedback}")
+        # Append the feedback explicitly to the core diagnosis context to force a rewrite adjustments
+        core_diagnosis_str += f"\n\n[CRITICAL REVISION INSTRUCTIONS]:\n{feedback}"
+
+    # 4. Assemble and execute the generation chain
+    chain = quiz_generation_prompt | structured_llm
+    
+    try:
+        result: QuizDraftResponse = chain.invoke({
+            "subject": subject,
+            "grade_level": grade_level,
+            "topic": topic,
+            "lesson_context": lesson_context,
+            "core_diagnosis": core_diagnosis_str
+        })
+        
+        # 5. Convert Pydantic objects back into a standard list of raw dictionaries
+        formatted_quiz_list = [item.model_dump() for item in result.quiz_items]
+        
+        print(f"Successfully generated draft containing {len(formatted_quiz_list)} items.")
+        
+        # 6. Update the LangGraph state keys
+        return {
+            "quiz_draft": formatted_quiz_list,
+            # Clear out the feedback channel once consumed to prevent stuck loops
+            "human_feedback": None 
+        }
+        
+    except Exception as e:
+        print(f"--- [Error] Exception during quiz drafting: {e} ---")
+        # Fail-safe state fallback
+        return {
+            "quiz_draft": []
+        }
 
 def eval_quiz(state: AgentState):
     print("--- [Node] Evaluating Quiz Logic ---")
