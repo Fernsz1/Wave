@@ -1,8 +1,7 @@
-from pydantic import BaseModel, Field, Dict
-from typing import List 
+from pydantic import BaseModel, Field
+from typing import List, Dict
 
 class DiagnosisResult(BaseModel):
-    topic: str = Field(description="The topic of the lesson.")
     primary_misunderstanding: str = Field(description="The primary misunderstanding driving the majority of errors.")
     common_error_patterns: List[str] = Field(description="Specific, repeated error patterns observed in the data.")
     flawed_mental_model: str = Field(description="The incorrect mental model or flawed logic the students are using.")
@@ -29,3 +28,16 @@ class QuizItem(BaseModel):
 
 class QuizDraftResponse(BaseModel):
     quiz_items: List[QuizItem] = Field(description="A collection of targeted remediation quiz items.")
+
+class CriteriaScores(BaseModel):
+    curriculum_alignment: int = Field(description="Score (1-5): Direct mapping to topic, objectives, and grade level.")
+    content_validity: int = Field(description="Score (1-5): Measures conceptual understanding over rote memorization.")
+    question_clarity: int = Field(description="Score (1-5): Clear, concise language, free of unnecessary reading complexity.")
+    distractor_quality: int = Field(description="Score (1-5): Plausible options; exactly one matches the core diagnosis misconception.")
+    item_writing_rules: int = Field(description="Score (1-5): Zero usage of forbidden terms ('All/None of above', 'always', 'never').")
+
+class QuizEvaluationResult(BaseModel):
+    scores: CriteriaScores = Field(description="Breakdown of points across Wave psychometric standards.")
+    eval_status: str = Field(description="Must be exactly 'PASS' if there is no criteria that is 2 or lower, otherwise 'FAIL'.")
+    critique_summary: str = Field(description="Detailed overview explaining the evaluation score.")
+    revisions_required: List[str] = Field(description="Step-by-step specific feedback items to fix if the status is 'FAIL'. Empty list if 'PASS'.")

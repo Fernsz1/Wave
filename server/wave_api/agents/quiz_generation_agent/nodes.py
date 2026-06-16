@@ -3,9 +3,10 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 from .state import AgentState
 from server.wave_api.agents.agent_factory import AgentFactory
-from .output_schema import DiagnosisResult, QuizDraftResponse
+from .output_schema import DiagnosisResult, QuizDraftResponse, QuizEvaluationResult
 from .prompts.diagnostic_prompt import diagnosis_prompt
 from .prompts.quiz_generation_prompt import quiz_generation_prompt
+from .prompts.evaluation_prompt import quiz_evaluation_prompt
 import json
 
 llm_factory = AgentFactory()
@@ -100,9 +101,64 @@ def draft_quiz(state: AgentState) -> dict:
 
 def eval_quiz(state: AgentState):
     print("--- [Node] Evaluating Quiz Logic ---")
-    # Add LLM logic to evaluate if the quiz is logically sound
-    # For demonstration, we'll just mock it as passing.
-    return {"eval_status": "PASS"} 
+    
+    primary_llm = llm_factory.create_llm("primary")
+    structured_evaluator = primary_llm.with_structured_output(QuizEvaluationResult)
+    
+    chain = quiz_evaluation_prompt | structured_evaluator
+    
+    # 3. Format state data into strings for the prompt
+    core_diagnosis_str = json.dumps(state.get("core_diagnosis", {}), indent=2)
+    quiz_draft_str = json.dumps(state.get("quiz_draft", []), indent=2)
+    
+    try:
+        # 4. Invoke the evaluation
+        evaluation = chain.invoke({
+            "subject": state["subject"],
+            "grade_level": state["grade_level"],
+            "topic": state["topic"],
+            "lesson_context": state["lesson_context"],
+            "core_diagnosis": core_diagnosis_str,
+            "quiz_draft": quiz_draft_str
+        })
+        
+        # 5. Extract the 1-5 scores into a standard dictionary
+        score_dict = evaluation.scores.model_dump()
+        print(f"Scores Evaluated: {score_dict}")
+        
+        # 6. Python-Enforced Gatekeeping (The Guardrail)
+        # Identify any criterion that scored a 1 or 2
+        failed_criteria = [criteria for criteria, score in score_dict.items() if score < 3]
+        
+        if failed_criteria:
+            print(f"[Guardrail Override] Quiz FAILED due to scores < 3 in: {failed_criteria}")
+            
+            # Compile actionable feedback for the drafting node to use on the next loop
+            feedback_notes = f"Psychometric Audit Failures (Substandard scores in {failed_criteria}):\n" + \
+                             "\n".join(f"- {item}" for item in evaluation.revisions_required)
+            
+            return {
+                "eval_status": "FAIL",
+                "human_feedback": feedback_notes
+            }
+            
+        else:
+            print("[Guardrail Passed] All criteria met the minimum threshold of 3.")
+            
+            # If it passes, clear any lingering feedback and promote the draft to final
+            return {
+                "eval_status": "PASS",
+                "human_feedback": None,
+                "final_quiz": state.get("quiz_draft") 
+            }
+            
+    except Exception as e:
+        print(f"--- [Error] Exception during quiz evaluation: {e} ---")
+        # Fail-safe: If the API call fails or parsing breaks, reject the draft to prevent bad data from advancing
+        return {
+            "eval_status": "FAIL",
+            "human_feedback": "System Error: The evaluation engine encountered an issue. Please review the draft or re-trigger."
+        }
 
 def review_quiz(state: AgentState):
     # This node acts as a landing pad for the human-in-the-loop.
