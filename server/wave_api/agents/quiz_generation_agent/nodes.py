@@ -7,6 +7,7 @@ from .output_schema import DiagnosisResult, QuizDraftResponse, QuizEvaluationRes
 from .prompts.diagnostic_prompt import diagnosis_prompt
 from .prompts.quiz_generation_prompt import quiz_generation_prompt
 from .prompts.evaluation_prompt import quiz_evaluation_prompt
+from .prompts.teacher_evaluation_prompts import prompt_make_harder, prompt_make_easier, prompt_change_context, prompt_fix_distractors
 import json
 
 llm_factory = AgentFactory()
@@ -44,120 +45,187 @@ def diagnose(state: AgentState):
     }
 
 def draft_quiz(state: AgentState) -> dict:
-    print("--- [Node] Drafting Quiz & Distractor Rationale ---")
+    print("--- [Node] Drafting / Revising Quiz Material ---")
     
-    # 1. Initialize the primary model with structured output matching your Pydantic schema
-    # A low temperature (e.g., 0.2) keeps item generation highly focused on psychometric constraints
+    # 1. Initialize the LLM with structured output
     primary_llm = llm_factory.create_llm("primary")
     structured_llm = primary_llm.with_structured_output(QuizDraftResponse)
     
-    # 2. Extract core components from the graph state
-    subject = state["subject"]
-    grade_level = state["grade_level"]
-    topic = state["topic"]
-    lesson_context = state["lesson_context"]
+    # 2. Extract shared core components from the graph state
+    subject = state.get("subject")
+    grade_level = state.get("grade_level")
+    topic = state.get("topic")
     
-    # Prepare the core diagnosis payload to inject into the prompt
-    diagnosis_payload = state.get("core_diagnosis", {})
-    core_diagnosis_str = json.dumps(diagnosis_payload, indent=2)
+    # Extract structural flag checks
+    is_revision = state.get("is_revision", False)
+    has_lesson_content = state.get("has_lesson_content", False)
     
-    # 3. Handle human or AI evaluation feedback loops
-    feedback = state.get("human_feedback", "")
-    if feedback:
-        print(f"Applying revision instructions: {feedback}")
-        # Append the feedback explicitly to the core diagnosis context to force a rewrite adjustments
-        core_diagnosis_str += f"\n\n[CRITICAL REVISION INSTRUCTIONS]:\n{feedback}"
+    # Base payload parameters shared by ALL prompts (both Initial Generation and Revisions)
+    payload = {
+        "subject": subject,
+        "grade_level": grade_level,
+        "topic": topic
+    }
+    
+    # 3. Handle Conditional Branching for Prompt Selection & Payload Configuration
+    if is_revision:
+        print("-> Processing Teacher Revision Pipeline (Omitting lesson context)")
+        
+        # Safely read the revision trigger configuration
+        eval_remarks = state.get("eval_remarks", {})
+        feedback_type = eval_remarks.get("feedback_type", "change_distractors") # Aligned fallback string
+        feedback_text = state.get("human_feedback", "")
+        
+        # Route exclusively to templates expecting: subject, grade_level, topic, quiz_draft, human_feedback
+        if feedback_type == "make_harder":
+            selected_prompt = prompt_make_harder
+        elif feedback_type == "make_easier":
+            selected_prompt = prompt_make_easier
+        elif feedback_type == "change_context":
+            selected_prompt = prompt_change_context
+        else:
+            # Safe Fallback: Handles 'change_distractors' and any miscellaneous values cleanly
+            selected_prompt = prompt_fix_distractors
+            
+        # Add revision payload variables
+        payload["quiz_draft"] = json.dumps(state.get("quiz_draft", {}), indent=2)
+        payload["human_feedback"] = feedback_text
+        
+    else:
+        print("-> Processing Initial/Fresh Quiz Generation Pipeline")
+        # Base generation configuration path
+        selected_prompt = quiz_generation_prompt
+        
+        diagnosis_payload = state.get("core_diagnosis", {})
+        payload["core_diagnosis"] = json.dumps(diagnosis_payload, indent=2)
+        
+        # Branch variables based on lesson content presence rules
+        if has_lesson_content:
+            print("--> Using 'remedial_lesson' as lesson context")
+            payload["lesson_context"] = state.get("remedial_lesson", "")
+        else:
+            print("--> Using standard 'lesson_context' state data")
+            payload["lesson_context"] = state.get("lesson_context", "")
 
-    # 4. Assemble and execute the generation chain
-    chain = quiz_generation_prompt | structured_llm
+    # 4. Bind and execute the designated chain
+    chain = selected_prompt | structured_llm
     
     try:
-        result: QuizDraftResponse = chain.invoke({
-            "subject": subject,
-            "grade_level": grade_level,
-            "topic": topic,
-            "lesson_context": lesson_context,
-            "core_diagnosis": core_diagnosis_str
-        })
-        
-        # 5. Convert Pydantic objects back into a standard list of raw dictionaries
-        formatted_quiz_list = [item.model_dump() for item in result.quiz_items]
-        
-        print(f"Successfully generated draft containing {len(formatted_quiz_list)} items.")
-        
-        # 6. Update the LangGraph state keys
+        result: QuizDraftResponse = chain.invoke(payload)
         return {
-            "quiz_draft": formatted_quiz_list,
-            # Clear out the feedback channel once consumed to prevent stuck loops
-            "human_feedback": None 
+            "quiz_draft": result.model_dump(),
+            "human_feedback": None,
+            "is_revision": False
         }
         
     except Exception as e:
         print(f"--- [Error] Exception during quiz drafting: {e} ---")
-        # Fail-safe state fallback
         return {
-            "quiz_draft": []
+            "quiz_draft": state.get("quiz_draft", {})
         }
 
 def eval_quiz(state: AgentState):
     print("--- [Node] Evaluating Quiz Logic ---")
+    
+    # 1. Track and increment attempts
+    current_attempts = state.get("draft_attempts", 0) + 1
+    MAX_ATTEMPTS = 3
+    print(f"--- Evaluation Attempt: {current_attempts} / {MAX_ATTEMPTS} ---")
     
     primary_llm = llm_factory.create_llm("primary")
     structured_evaluator = primary_llm.with_structured_output(QuizEvaluationResult)
     
     chain = quiz_evaluation_prompt | structured_evaluator
     
-    # 3. Format state data into strings for the prompt
+    # 2. Format entire state objects directly into strings for the prompt
     core_diagnosis_str = json.dumps(state.get("core_diagnosis", {}), indent=2)
-    quiz_draft_str = json.dumps(state.get("quiz_draft", []), indent=2)
+    # No extraction needed—just stringify the entire current dictionary state
+    quiz_draft_str = json.dumps(state.get("quiz_draft", {}), indent=2)
     
     try:
-        # 4. Invoke the evaluation
+        # 3. Invoke the evaluation
         evaluation = chain.invoke({
-            "subject": state["subject"],
-            "grade_level": state["grade_level"],
-            "topic": state["topic"],
-            "lesson_context": state["lesson_context"],
+            "subject": state.get("subject"),
+            "grade_level": state.get("grade_level"),
+            "topic": state.get("topic"),
+            "lesson_context": state.get("lesson_context"),
             "core_diagnosis": core_diagnosis_str,
             "quiz_draft": quiz_draft_str
         })
         
-        # 5. Extract the 1-5 scores into a standard dictionary
+        # 4. Extract the 1-5 scores into a standard dictionary
         score_dict = evaluation.scores.model_dump()
         print(f"Scores Evaluated: {score_dict}")
         
-        # 6. Python-Enforced Gatekeeping (The Guardrail)
-        # Identify any criterion that scored a 1 or 2
+        # 5. Python-Enforced Gatekeeping
         failed_criteria = [criteria for criteria, score in score_dict.items() if score < 3]
+        
+        # Package the raw evaluation data into a single consolidated state variable
+        eval_remarks_data = {
+            "scores": score_dict,
+            "eval_status": "FAIL" if failed_criteria else "PASS",
+            "critique_summary": evaluation.critique_summary,
+            "revisions_required": evaluation.revisions_required,
+            "failed_criteria": failed_criteria,
+            "attempt_number": current_attempts
+        }
         
         if failed_criteria:
             print(f"[Guardrail Override] Quiz FAILED due to scores < 3 in: {failed_criteria}")
             
-            # Compile actionable feedback for the drafting node to use on the next loop
             feedback_notes = f"Psychometric Audit Failures (Substandard scores in {failed_criteria}):\n" + \
                              "\n".join(f"- {item}" for item in evaluation.revisions_required)
             
+            if current_attempts >= MAX_ATTEMPTS:
+                print("--- [Guardrail] Max attempts reached. Halting improvement loop. ---")
+                eval_remarks_data["eval_status"] = "MAX_ATTEMPTS_REACHED"
+                return {
+                    "eval_status": "MAX_ATTEMPTS_REACHED",
+                    "human_feedback": f"Maximum attempts ({MAX_ATTEMPTS}) reached. Final feedback:\n{feedback_notes}",
+                    "eval_remarks": eval_remarks_data,
+                    "draft_attempts": current_attempts
+                }
+            
             return {
                 "eval_status": "FAIL",
-                "human_feedback": feedback_notes
+                "human_feedback": feedback_notes,
+                "eval_remarks": eval_remarks_data,
+                "draft_attempts": current_attempts
             }
             
         else:
             print("[Guardrail Passed] All criteria met the minimum threshold of 3.")
-            
-            # If it passes, clear any lingering feedback and promote the draft to final
             return {
                 "eval_status": "PASS",
                 "human_feedback": None,
-                "final_quiz": state.get("quiz_draft") 
+                "eval_remarks": eval_remarks_data,
+                # Since we pass the whole structure, we pass the clean draft forward
+                "final_quiz": state.get("quiz_draft"), 
+                "draft_attempts": current_attempts
             }
             
     except Exception as e:
         print(f"--- [Error] Exception during quiz evaluation: {e} ---")
-        # Fail-safe: If the API call fails or parsing breaks, reject the draft to prevent bad data from advancing
+        
+        error_remarks = {
+            "system_error": str(e), 
+            "eval_status": "ERROR",
+            "attempt_number": current_attempts
+        }
+        
+        if current_attempts >= MAX_ATTEMPTS:
+            return {
+                "eval_status": "MAX_ATTEMPTS_REACHED",
+                "human_feedback": "System Error: Max attempts reached due to evaluation engine failure.",
+                "eval_remarks": error_remarks,
+                "draft_attempts": current_attempts
+            }
+
         return {
-            "eval_status": "FAIL",
-            "human_feedback": "System Error: The evaluation engine encountered an issue. Please review the draft or re-trigger."
+            "fail_status": "FAIL",
+            "human_feedback": "System Error: The evaluation engine encountered an issue. Please re-draft.",
+            "eval_remarks": error_remarks,
+            "draft_attempts": current_attempts
         }
 
 def review_quiz(state: AgentState):
@@ -188,15 +256,34 @@ def route_after_eval(state: AgentState):
     return "draft_quiz" # Loop back if FAIL
 
 def route_after_human_review(state: AgentState):
-    """Router: ReviewQuiz logic"""
+    """
+    Router: ReviewQuiz logic
+    If the teacher approves, go to finalize.
+    If the teacher gives any other feedback, loop back to draft_quiz.
+    """
     feedback = state.get("human_feedback", "")
-    if feedback.lower() == "approve":
+    
+    if not feedback:
+        return "draft_quiz"
+        
+    if feedback.lower() == "approve" or feedback.lower() == "pass":
         return "finalize_quiz"
-    # Otherwise (Make Harder / Easier / Modify Context) loop back to draft
+
     return "draft_quiz"
 
+def route_after_draft(state: AgentState):
+    """
+    Router: Decides where to send the quiz after it's drafted.
+    If it's processing Teacher Feedback, skip AI evaluation and go straight to the teacher.
+    """
+    # Note: In your draft_quiz node, you clear human_feedback at the very end.
+    # To make this router work, you must preserve the feedback or use a flag like 'is_revision'.
+    if state.get("is_revision"):
+        return "review_quiz"
+    return "eval_quiz"
+
 # ==========================================
-# 4. Build the Graph
+# Simplified Graph (Teacher Only Evaluation)
 # ==========================================
 workflow = StateGraph(AgentState)
 
@@ -204,35 +291,28 @@ workflow = StateGraph(AgentState)
 workflow.add_node("retrieve_context", retrieve_context)
 workflow.add_node("diagnose", diagnose)
 workflow.add_node("draft_quiz", draft_quiz)
-workflow.add_node("eval_quiz", eval_quiz)
-workflow.add_node("review_quiz", review_quiz)
+workflow.add_node("review_quiz", review_quiz)  # Teacher sits here
 workflow.add_node("finalize_quiz", finalize_quiz)
 
-# Add Edges
 # START -> CheckLesson Router
 workflow.add_conditional_edges(START, route_initial_check, {
     "retrieve_context": "retrieve_context",
     "draft_quiz": "draft_quiz"
 })
 
-# Needs Context Track
+# Context Pipeline
 workflow.add_edge("retrieve_context", "diagnose")
 workflow.add_edge("diagnose", "draft_quiz")
 
-# Quiz AI Loop
-workflow.add_edge("draft_quiz", "eval_quiz")
-workflow.add_conditional_edges("eval_quiz", route_after_eval, {
-    "review_quiz": "review_quiz",
-    "draft_quiz": "draft_quiz"
-})
+# Direct Loop: Draft always goes straight to the Teacher Review landing pad
+workflow.add_edge("draft_quiz", "review_quiz")
 
-# Human-in-the-Loop Edge
+# Teacher Gatekeeper Edge
 workflow.add_conditional_edges("review_quiz", route_after_human_review, {
     "finalize_quiz": "finalize_quiz",
-    "draft_quiz": "draft_quiz"
+    "draft_quiz": "draft_quiz"  # Loops back directly to draft, which points back to review
 })
 
-# End Edge
 workflow.add_edge("finalize_quiz", END)
 
 # ==========================================

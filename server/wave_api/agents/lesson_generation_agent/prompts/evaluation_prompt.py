@@ -26,6 +26,8 @@ remediation_evaluation_prompt = ChatPromptTemplate.from_messages([
         
         ## TARGET DIAGNOSIS (What needs fixing)
         {core_diagnosis}
+
+        Teacher Recommendations: {recommendations}
         
         ## DRAFT REMEDIATION MATERIAL TO EVALUATE
         {draft_lesson}

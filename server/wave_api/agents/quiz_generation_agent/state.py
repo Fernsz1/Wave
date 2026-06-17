@@ -11,7 +11,6 @@ class AgentState(TypedDict):
 
     core_diagnosis: Optional[Dict[str, Any]]
     remedial_lesson: Optional[str]
-
     has_lesson_content: bool
     quiz_draft: Optional[List[Dict[str, Any]]]
     eval_status: Optional[str]   # "PASS" or "FAIL"
