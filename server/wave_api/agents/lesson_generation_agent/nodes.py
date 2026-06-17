@@ -51,7 +51,8 @@ def draft_lesson(state: AgentState):
             "topic": state.get("topic"),
             "lesson_context": state.get("lesson_context"),
             # The diagnosis_report variable gets the JSON output saved by your previous node
-            "diagnosis_report": state.get("core_diagnosis")
+            "diagnosis_report": state.get("core_diagnosis"),
+            "recommendations": state.get("teacher_recommendations")
         })
     else:
         match state['teacher_feedback']:
@@ -70,7 +71,8 @@ def draft_lesson(state: AgentState):
             "grade_level": state['grade_level'],
             "topic": state['topic'],
             "diagnosis_report": state["core_diagnosis"],
-            "draft_lesson": state['draft_lesson']
+            "draft_lesson": state['draft_lesson'],
+            "recommendations": state.get("teacher_recommendations")
         })
 
     return {

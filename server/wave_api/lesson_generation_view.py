@@ -44,7 +44,9 @@ def start_lesson_generation(request):
         "failed_items": data['failed_items'],
         "teacher_feedback": "",
         "revision_count": 0, 
-        "teacher_revisions": 0
+        "teacher_revisions": 0, 
+        "final_lesson": "",
+        "teacher_recommendations": data['teachers_notes']
     }
     
     # 4. Invoke the graph. It will process, draft, evaluate, and then PAUSE.

@@ -54,6 +54,7 @@ Subject: {subject}
 Grade Level: {grade_level}
 Topic: {topic}
 Diagnostic Report: {diagnosis_report}
+Teacher Recommendations: {recommendations}
 
 ---
 CRITICAL REVISION REQUEST FROM THE TEACHER:
@@ -73,7 +74,7 @@ Subject: {subject}
 Grade Level: {grade_level}
 Topic: {topic}
 Diagnostic Report: {diagnosis_report}
-
+Teacher Recommendations: {recommendations}
 ---
 CRITICAL REVISION REQUEST FROM THE TEACHER:
 "The lesson is too theoretical. Please make it more practical and concrete. Rewrite the Concept Review using a real-world physical analogy, and ensure the Guided Example and Practice problem use highly contextual, practical scenarios instead of abstract equations or code."
@@ -92,6 +93,7 @@ Subject: {subject}
 Grade Level: {grade_level}
 Topic: {topic}
 Diagnostic Report: {diagnosis_report}
+Teacher Recommendations: {recommendations}
 
 ---
 CRITICAL REVISION REQUEST FROM THE TEACHER:
@@ -111,6 +113,7 @@ Subject: {subject}
 Grade Level: {grade_level}
 Topic: {topic}
 Diagnostic Report: {diagnosis_report}
+Teacher Recommendations: {recommendations}
 
 ---
 CRITICAL REVISION REQUEST FROM THE TEACHER:
