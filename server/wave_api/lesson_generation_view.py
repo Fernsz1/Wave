@@ -1,71 +1,64 @@
 import uuid
+from datetime import date
+
+from rest_framework import serializers, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import serializers
-from server.wave_api.agents.lesson_generation_agent.nodes import workflow_app
 
-# --- Data Models (Serializers instead of Pydantic) ---
+from wave_api.agents import orchestrator
+from wave_api.models import RemediationMaterial
+
+
+VALID_FEEDBACK = ["PASS", "simplify", "practical", "change", "micro"]
+
+
 class InitialLessonSerializer(serializers.Serializer):
     subject = serializers.CharField()
-    grade_level = serializers.IntegerField() # Changed to IntegerField to match AgentState
+    grade_level = serializers.IntegerField()
     original_topic_id = serializers.CharField()
-    # Changed to DictField to match List[Dict[str, Any]] in AgentState
-    failed_items = serializers.ListField(child=serializers.DictField()) 
+    topic = serializers.CharField(required=False, allow_blank=True, default="")
+    lesson_context = serializers.CharField(required=False, allow_blank=True, default="")
+    target_section = serializers.CharField(required=False, allow_blank=True, default="")
+    failed_items = serializers.ListField(child=serializers.DictField(), min_length=1)
+
 
 class TeacherFeedbackSerializer(serializers.Serializer):
     session_id = serializers.CharField()
-    feedback = serializers.CharField()
+    feedback = serializers.ChoiceField(choices=VALID_FEEDBACK)
+    material_id = serializers.CharField(required=False, allow_blank=True, default="")
 
-# --- 1. Endpoint to Start the Process ---
+
 @api_view(['POST'])
 def start_lesson_generation(request):
-    """
-    Starts the AI drafting process. It will run until it hits the TeacherReview node and pause.
-    """
-    # 1. Validate incoming data
+    """Run the lesson graph up to the TeacherReview interrupt and return the draft."""
     serializer = InitialLessonSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    data = serializer.validated_data
 
-    # 2. Generate a unique session ID for this specific teacher's lesson
+    data = serializer.validated_data
     session_id = str(uuid.uuid4())
-    config = {"configurable": {"thread_id": session_id}}
-    
-    # 3. Prepare the initial state
-    initial_state = {
-        "subject": data['subject'],
-        "grade_level": data['grade_level'],
-        "original_topic_id": data['original_topic_id'],
-        "topic": "",                   
-        "lesson_context": "",
-        "failed_items": data['failed_items'],
-        "teacher_feedback": "",
-        "revision_count": 0, 
-        "teacher_revisions": 0
-    }
-    
-    # 4. Invoke the graph. It will process, draft, evaluate, and then PAUSE.
-    print(f"Starting session {session_id}...")
-    current_state = workflow_app.invoke(initial_state, config)
-    
-    # 5. Return the drafted lesson and the session_id to the frontend
+
+    result = orchestrator.start_remediation_session(
+        session_id=session_id,
+        subject=data['subject'],
+        grade_level=data['grade_level'],
+        original_topic_id=data['original_topic_id'],
+        topic=data.get('topic', ''),
+        lesson_context=data.get('lesson_context', ''),
+        failed_items=data['failed_items'],
+        target_section=data.get('target_section', ''),
+    )
+
     return Response({
         "session_id": session_id,
-        "draft_lesson": current_state.get("draft_lesson"),
-        "ai_evaluation_remarks": current_state.get("revision_remarks")
+        "draft_lesson": result.get("draft_lesson"),
+        "ai_evaluation_remarks": result.get("revision_remarks"),
     }, status=status.HTTP_200_OK)
 
 
-# --- 2. Endpoint to Submit Feedback and Resume ---
 @api_view(['POST'])
 def submit_teacher_feedback(request):
-    """
-    Takes the teacher's feedback from the UI, updates the paused state, and resumes the graph.
-    """
-    # 1. Validate incoming data
+    """Apply the teacher's feedback. On PASS, finalize and persist a wire-shaped material."""
     serializer = TeacherFeedbackSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -74,36 +67,57 @@ def submit_teacher_feedback(request):
     session_id = data['session_id']
     feedback = data['feedback']
 
-    config = {"configurable": {"thread_id": session_id}}
-    
-    # 2. Check if this session actually exists and is paused
-    current_state = workflow_app.get_state(config)
-    if not current_state:
-        return Response(
-            {"detail": "Session not found or already completed."}, 
-            status=status.HTTP_404_NOT_FOUND
-        )
-    
-    # 3. Update the state in memory with the teacher's choice
-    print(f"Applying feedback '{feedback}' to session {session_id}...")
-    workflow_app.update_state(
-        config,
-        {"teacher_feedback": feedback}
-    )
-    
-    # 4. Wake the graph back up by invoking it with None.
-    final_state = workflow_app.invoke(None, config)
-    
-    # 5. Check what happened after we resumed
     if feedback == "PASS":
+        material_id = data.get("material_id") or f"REM-{uuid.uuid4().hex[:10].upper()}"
+        try:
+            finalized = orchestrator.finalize_and_publish(
+                session_id=session_id,
+                material_id=material_id,
+                publish_date=date.today().isoformat(),
+            )
+        except KeyError:
+            return Response(
+                {"detail": f"Session {session_id} not found or already completed."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        wire = finalized["wire"]
+        wire_dict = wire.model_dump(by_alias=True)
+
+        RemediationMaterial.objects.update_or_create(
+            material_id=wire.id,
+            defaults={
+                "subject": finalized.get("subject", "science"),
+                "original_topic_id": wire.original_topic_id,
+                "title": wire.title,
+                "content": wire.content,
+                "teacher_notes": wire.teacher_notes,
+                "created_quiz": [q.model_dump(by_alias=True) for q in wire.created_quiz],
+                "publish_date": wire.publish_date,
+                "target_section": wire.target_section,
+                "is_published": wire.is_published,
+                "analytics": finalized.get("analytics", {}),
+            },
+        )
+
         return Response({
             "status": "completed",
-            "final_lesson": final_state.get("final_lesson")
+            "type": "TeacherRemediationMaterial",
+            "material": wire_dict,
         }, status=status.HTTP_200_OK)
-    else:
-        return Response({
-            "status": "needs_review",
-            "message": f"Applied {feedback} feedback. Review the new draft.",
-            "draft_lesson": final_state.get("draft_lesson"),
-            "ai_evaluation_remarks": final_state.get("revision_remarks")
-        }, status=status.HTTP_200_OK)
+
+    try:
+        result = orchestrator.apply_teacher_feedback(
+            session_id=session_id,
+            feedback=feedback,
+        )
+    except KeyError:
+        return Response(
+            {"detail": f"Session {session_id} not found."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+    return Response({
+        "status": "needs_review",
+        "message": f"Applied {feedback} feedback. Review the new draft.",
+        "draft_lesson": result.get("draft_lesson"),
+        "ai_evaluation_remarks": result.get("revision_remarks"),
+    }, status=status.HTTP_200_OK)

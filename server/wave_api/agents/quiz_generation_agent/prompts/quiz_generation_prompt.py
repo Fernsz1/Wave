@@ -17,6 +17,9 @@ quiz_generation_prompt = ChatPromptTemplate.from_messages([
     - NEVER use "All of the above" or "None of the above".
     - NEVER use absolute terms ("always", "never") or grammatical clues.
     - Avoid trick questions, ambiguous phrasing, or negative stems ("is NOT").
+
+    ## EXPLANATION FIELD
+    For each item, populate `explanation` with 1-2 sentences that (a) state why the correct answer is right and (b) explicitly name the misconception the targeted distractor maps to. This text is shown to students after they answer.
     """
     ),
     HumanMessagePromptTemplate.from_template(

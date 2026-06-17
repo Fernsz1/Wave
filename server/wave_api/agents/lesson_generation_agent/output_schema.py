@@ -1,5 +1,14 @@
 from pydantic import BaseModel, Field
-from typing import List 
+from typing import List
+
+class RemediationDraftResponse(BaseModel):
+    title: str = Field(description="Short, student-facing title for the remediation handbook.")
+    content: str = Field(
+        description="The 8-part Markdown remediation handbook (~250 words) addressed to the student."
+    )
+    teacher_notes: str = Field(
+        description="Concise, teacher-facing notes summarizing the misconception targeted and how to support students using this handbook."
+    )
 
 class StudentDiagnosis(BaseModel):
     topic: str = Field(description="The topic of the lesson.")

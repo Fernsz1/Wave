@@ -25,6 +25,9 @@ class QuizItem(BaseModel):
     cognitive_level: str = Field(
         description="The cognitive level tested based on Bloom's Taxonomy (e.g., 'Understanding' or 'Applying')."
     )
+    explanation: str = Field(
+        description="A concise 1-2 sentence rationale that states why the correct answer is right and explicitly references the misconception the targeted distractor maps to."
+    )
 
 class QuizDraftResponse(BaseModel):
     quiz_items: List[QuizItem] = Field(description="A collection of targeted remediation quiz items.")

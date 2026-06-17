@@ -91,7 +91,13 @@ def _decode_value(t: str, token: Token) -> Any:
 
 def _encode_fields(fields: list[dict], obj: dict) -> list[Token]:
     obj = obj or {}
-    return [_encode_value(f["t"], obj.get(f["name"])) for f in fields]
+    out: list[Token] = [_encode_value(f["t"], obj.get(f["name"])) for f in fields]
+    # Trim trailing tokens that correspond to absent optional fields so the
+    # wire array stays compact. Stop at the first required field or the first
+    # present optional value. Decode is already permissive about short arrays.
+    while out and out[-1] is None and fields[len(out) - 1].get("optional"):
+        out.pop()
+    return out
 
 
 def _decode_fields(fields: list[dict], arr: list[Token]) -> dict:

@@ -13,6 +13,6 @@ urlpatterns = [
     path("remediation", views.remediation),
     path("remediation/generate", views.generate_remediation),
     path("sync/push", views.sync_push),
-    path('api/generate-lesson/', lesson_generation_view.start_lesson_generation, name='generate_lesson'),
-    path('api/submit-feedback/', lesson_generation_view.submit_teacher_feedback, name='submit_feedback'),
+    path('generate-lesson', lesson_generation_view.start_lesson_generation, name='generate_lesson'),
+    path('submit-feedback', lesson_generation_view.submit_teacher_feedback, name='submit_feedback'),
 ]

@@ -1,0 +1,107 @@
+{
+  "generator": "wave_api.lora.chunk.fragment v1",
+  "cases": [
+    {
+      "name": "empty",
+      "msgId": "mid-empty",
+      "serialized": "",
+      "frameSize": 200,
+      "chunks": [
+        {
+          "msgId": "mid-empty",
+          "index": 0,
+          "total": 1,
+          "data": ""
+        }
+      ]
+    },
+    {
+      "name": "single-tiny",
+      "msgId": "mid-tiny",
+      "serialized": "hello",
+      "frameSize": 200,
+      "chunks": [
+        {
+          "msgId": "mid-tiny",
+          "index": 0,
+          "total": 1,
+          "data": "hello"
+        }
+      ]
+    },
+    {
+      "name": "exact-boundary",
+      "msgId": "mid-exact",
+      "serialized": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "frameSize": 200,
+      "chunks": [
+        {
+          "msgId": "mid-exact",
+          "index": 0,
+          "total": 1,
+          "data": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ]
+    },
+    {
+      "name": "boundary-plus-one",
+      "msgId": "mid-plus1",
+      "serialized": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "frameSize": 200,
+      "chunks": [
+        {
+          "msgId": "mid-plus1",
+          "index": 0,
+          "total": 2,
+          "data": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "msgId": "mid-plus1",
+          "index": 1,
+          "total": 2,
+          "data": "a"
+        }
+      ]
+    },
+    {
+      "name": "multi-frame",
+      "msgId": "mid-multi",
+      "serialized": "abcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdef",
+      "frameSize": 200,
+      "chunks": [
+        {
+          "msgId": "mid-multi",
+          "index": 0,
+          "total": 3,
+          "data": "abcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefab"
+        },
+        {
+          "msgId": "mid-multi",
+          "index": 1,
+          "total": 3,
+          "data": "cdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcd"
+        },
+        {
+          "msgId": "mid-multi",
+          "index": 2,
+          "total": 3,
+          "data": "efabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdef"
+        }
+      ]
+    },
+    {
+      "name": "utf8-narrow",
+      "msgId": "mid-utf8",
+      "serialized": "naive xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "frameSize": 200,
+      "chunks": [
+        {
+          "msgId": "mid-utf8",
+          "index": 0,
+          "total": 1,
+          "data": "naive xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      ]
+    }
+  ]
+}

@@ -2,7 +2,7 @@ from typing import TypedDict, Optional
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 from .state import AgentState
-from server.wave_api.agents.agent_factory import AgentFactory
+from wave_api.agents.agent_factory import AgentFactory
 from .output_schema import DiagnosisResult, QuizDraftResponse, QuizEvaluationResult
 from .prompts.diagnostic_prompt import diagnosis_prompt
 from .prompts.quiz_generation_prompt import quiz_generation_prompt
