@@ -1,0 +1,24 @@
+flowchart TB
+    START(("START")) --> RetrieveLocalContext["Retrieve Local Context"]
+    RetrieveLocalContext --> DiagnoseMisconception["Diagnose Student <br> Misconception"]
+    DiagnoseMisconception --> DraftLesson["Draft Lesson / Remediation"]
+    DraftLesson --> EvaluateLessonContent{"Evaluate Lesson 
+    Content"}
+    EvaluateLessonContent -- FAIL (Max revisions not reached) --> DraftLesson
+    EvaluateLessonContent -- PASS (or Max revisions forced) --> TeacherReview{"Teacher Review <br> (Execution Pauses)"}
+    TeacherReview -- Simplify / Practical / Change / Micro --> DraftLesson
+    TeacherReview -- Approve (PASS) --> TeacherFinalize["Teacher Finalize"]
+    TeacherFinalize --> END(("END"))
+
+     START:::startEnd
+     RetrieveLocalContext:::automated
+     DiagnoseMisconception:::automated
+     DraftLesson:::automated
+     EvaluateLessonContent:::evaluation
+     TeacherReview:::human
+     TeacherFinalize:::automated
+     END:::startEnd
+    classDef startEnd fill:#2d3748,stroke:#fff,stroke-width:2px,color:#fff
+    classDef automated fill:#3182ce,stroke:#fff,stroke-width:2px,color:#fff
+    classDef human fill:#d69e2e,stroke:#fff,stroke-width:2px,color:#fff
+    classDef evaluation fill:#805ad5,stroke:#fff,stroke-width:2px,color:#fff

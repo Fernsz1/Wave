@@ -90,3 +90,6 @@ class RemediationMaterial(models.Model):
     publish_date = models.CharField(max_length=20)
     target_section = models.CharField(max_length=80)  # whole-section recipient
     is_published = models.BooleanField(default=True)
+    # Server-only sidecar: pedagogical metadata from the quiz-generation agent
+    # (cognitive_level, targeted_distractor_key per item). Never sent over LoRa.
+    analytics = models.JSONField(default=dict, blank=True)

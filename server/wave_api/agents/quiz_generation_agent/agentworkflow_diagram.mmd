@@ -1,0 +1,41 @@
+flowchart TD
+    %% Define Node Styles
+    classDef startEnd fill:#2d3748,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef automated fill:#3182ce,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef human fill:#d69e2e,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef evaluation fill:#805ad5,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef router fill:#e53e3e,stroke:#fff,stroke-width:2px,color:#fff,stroke-dasharray: 5 5;
+
+    %% Nodes
+    START((START)):::startEnd
+    CheckLesson{"Remediation Lesson <br> Content Present?"}:::router
+    RetrieveContext[Retrieve Context]:::automated
+    Diagnose[Diagnose Misconception]:::automated
+    
+    %% Quiz Track
+    DraftQuiz[Draft Quiz & Distractor Rationale]:::automated
+    EvalQuiz{"Evaluate Quiz Logic"}:::evaluation
+    ReviewQuiz{"Teacher Review Quiz <br/> (Paused)"}:::human
+    FinalizeQuiz[Finalize Quiz]:::automated
+    END((END)):::startEnd
+
+    %% --- Edges ---
+    START --> CheckLesson
+
+    %% The Check Routing (Bypass Logic)
+    CheckLesson -- "No (Needs Context)" --> RetrieveContext
+    RetrieveContext --> Diagnose
+    Diagnose --> DraftQuiz
+
+    CheckLesson -- "Yes (Skip Diagnosis)" --> DraftQuiz
+
+    %% Quiz AI Loop
+    DraftQuiz --> EvalQuiz
+    EvalQuiz -- "FAIL" --> DraftQuiz
+    EvalQuiz -- "PASS" --> ReviewQuiz
+
+    %% Human-in-the-Loop Loop
+    ReviewQuiz -- "Make Harder / Easier / Modify Context" --> DraftQuiz
+    ReviewQuiz -- "Approve" --> FinalizeQuiz
+    
+    FinalizeQuiz --> END

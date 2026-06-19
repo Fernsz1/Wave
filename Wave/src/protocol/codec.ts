@@ -102,7 +102,14 @@ function decodeValue(t: string, token: Token): any {
 }
 
 export function encodeFields(fields: FieldDef[], obj: Record<string, any>): Token[] {
-  return fields.map((f) => encodeValue(f.t, obj?.[f.name]));
+  const out: Token[] = fields.map((f) => encodeValue(f.t, obj?.[f.name]));
+  // Trim trailing tokens that correspond to absent optional fields so the
+  // wire array stays compact. Stop at the first required field or the first
+  // present optional value. decodeFields is already permissive about short arrays.
+  while (out.length > 0 && out[out.length - 1] === null && fields[out.length - 1].optional) {
+    out.pop();
+  }
+  return out;
 }
 
 export function decodeFields(fields: FieldDef[], arr: Token[]): Record<string, any> {

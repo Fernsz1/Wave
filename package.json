@@ -1,0 +1,24 @@
+{
+  "name": "wave-1",
+  "version": "1.0.0",
+  "description": "> [!IMPORTANT]\r > **The most complete and up-to-date code is on the [`semi-final-demo`](../../tree/semi-final-demo) branch.**\r > Switch to that branch to see the latest features, fixes, and working demo setup.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fernsz1/Wave.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Fernsz1/Wave/issues"
+  },
+  "homepage": "https://github.com/Fernsz1/Wave#readme",
+  "dependencies": {
+    "stream-json": "^3.4.0"
+  }
+}

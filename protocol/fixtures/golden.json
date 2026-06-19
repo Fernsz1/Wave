@@ -22,8 +22,18 @@
     {
       "name": "QuizScore failing",
       "type": "QuizScore",
-      "object": { "score": 0, "total": 3, "percent": 0, "passed": false },
-      "tokenArray": [0, 3, 0, false]
+      "object": {
+        "score": 0,
+        "total": 3,
+        "percent": 0,
+        "passed": false
+      },
+      "tokenArray": [
+        0,
+        3,
+        0,
+        false
+      ]
     },
     {
       "name": "StudentProgress with maps and nested refs",
@@ -31,21 +41,37 @@
       "object": {
         "studentLrn": "101234567900",
         "section": "Grade 6 - Section Einstein",
-        "completedTopicIds": ["L1-T1", "L1-T2"],
+        "completedTopicIds": [
+          "L1-T1",
+          "L1-T2"
+        ],
         "quizAttempts": {
           "L1-T2": {
             "topicId": "L1-T2",
             "score": 0,
             "perfectScore": 3,
-            "answers": [0, 1, 0],
+            "answers": [
+              0,
+              1,
+              0
+            ],
             "completedAt": "2026-06-03"
           }
         },
         "quizScores": {
-          "L1-T2": { "score": 0, "total": 3, "percent": 0, "passed": false }
+          "L1-T2": {
+            "score": 0,
+            "total": 3,
+            "percent": 0,
+            "passed": false
+          }
         },
         "summativeScores": {
-          "L1": { "score": 7, "perfectScore": 20, "feedback": "Needs targeted tutoring." }
+          "L1": {
+            "score": 7,
+            "perfectScore": 20,
+            "feedback": "Needs targeted tutoring."
+          }
         }
       },
       "tokenArray": [
@@ -69,7 +95,12 @@
         "percent": 35,
         "passed": false,
         "failedItems": [
-          { "questionId": "Q2-1", "topicId": "L1-T2", "selectedOption": 0, "correctOption": 2 }
+          {
+            "questionId": "Q2-1",
+            "topicId": "L1-T2",
+            "selectedOption": 0,
+            "correctOption": 2
+          }
         ]
       },
       "tokenArray": [
@@ -80,7 +111,14 @@
         20,
         35,
         false,
-        [["Q2-1", "L1-T2", 0, 2]]
+        [
+          [
+            "Q2-1",
+            "L1-T2",
+            0,
+            2
+          ]
+        ]
       ]
     },
     {
@@ -92,7 +130,10 @@
         "subject": "science",
         "lessonId": "L1",
         "mode": "summative",
-        "summativeConfig": { "total": 20, "passMark": 12 },
+        "summativeConfig": {
+          "total": 20,
+          "passMark": 12
+        },
         "seed": 20260605
       },
       "tokenArray": [
@@ -105,9 +146,11 @@
         null,
         1,
         null,
-        [20, 12, null, null, null, null],
-        20260605,
-        null
+        [
+          20,
+          12
+        ],
+        20260605
       ]
     },
     {
@@ -117,13 +160,29 @@
         "section": "Grade 4 - Section Newton",
         "subject": "science",
         "standings": [
-          { "rank": 1, "studentLrn": "101234567891", "name": "Sophia Cruz", "score": 19, "perfect": 20, "percent": 95 }
+          {
+            "rank": 1,
+            "studentLrn": "101234567891",
+            "name": "Sophia Cruz",
+            "score": 19,
+            "perfect": 20,
+            "percent": 95
+          }
         ]
       },
       "tokenArray": [
         "Grade 4 - Section Newton",
         0,
-        [[1, "101234567891", "Sophia Cruz", 19, 20, 95]]
+        [
+          [
+            1,
+            "101234567891",
+            "Sophia Cruz",
+            19,
+            20,
+            95
+          ]
+        ]
       ]
     }
   ]
