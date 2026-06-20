@@ -65,6 +65,8 @@ def _save_progress(p: dict) -> None:
     for topic_id, att in (p.get("quizAttempts") or {}).items():
         existing = student.attempts.filter(topic_id=topic_id).first()
         prev_attempts = existing.attempts if existing else 0
+        # The UI doesn't transmit its retry counter, so count server-side
+        # (capped at 3). If a payload ever carries `attempts`, trust it.
         student.attempts.update_or_create(
             topic_id=topic_id,
             defaults={
@@ -76,10 +78,6 @@ def _save_progress(p: dict) -> None:
                 "attempts": att.get("attempts", min(prev_attempts + 1, 3)),
             },
         )
-        # The UI doesn't transmit its retry counter, so count server-side
-        # (capped at 3). If a payload ever carries `attempts`, trust it.
-        obj.attempts = att.get("attempts") if att.get("attempts") is not None else min(obj.attempts + 1, 3)
-        obj.save(update_fields=["attempts"])
     for lesson_id, summ in (p.get("summativeScores") or {}).items():
         _upsert_summative(
             student,
@@ -130,6 +128,12 @@ def _save_remediation(p: dict, subject: str) -> None:
             "is_published": p.get("isPublished", True),
             "assigned_student_lrn": p.get("assignedStudentLrn", ""),
             "target_lesson_id": p.get("targetLessonId", ""),
+            # AI generation metadata (present when published from the AI flow;
+            # empty for the current mock/manual publish path).
+            "lesson_number": p.get("lessonNumber", 0) or 0,
+            "learning_gap": p.get("learningGap", ""),
+            "grade_level_section": p.get("gradeLevelSection", ""),
+            "concepts": p.get("concepts", []),
         },
     )
 

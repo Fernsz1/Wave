@@ -95,6 +95,14 @@ class RemediationMaterial(models.Model):
     # full remediation/AI integration (not all are transmitted by the UI yet).
     assigned_student_lrn = models.CharField(max_length=12, blank=True, default="")
     target_lesson_id = models.CharField(max_length=40, blank=True, default="")
+    # AI generation metadata (the /remediation/generate JSON shape). The UI folds
+    # most of these into `content`/`teacher_notes` before publishing, so these
+    # discrete columns let the backend retain the full AI output without loss.
+    # Populated by the AI generation/finalize path; empty for mock-published rows.
+    lesson_number = models.IntegerField(default=0)
+    learning_gap = models.TextField(blank=True, default="")
+    grade_level_section = models.CharField(max_length=120, blank=True, default="")
+    concepts = models.JSONField(default=list)  # [{header_title, explanation}]
     # Server-only sidecar: pedagogical metadata from the quiz-generation agent
     # (cognitive_level, targeted_distractor_key per item). Never sent over LoRa.
     analytics = models.JSONField(default=dict, blank=True)

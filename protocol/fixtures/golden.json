@@ -69,7 +69,7 @@
         "summativeScores": {
           "L1": {
             "score": 7,
-            "perfectScore": 20,
+            "total": 20,
             "feedback": "Needs targeted tutoring."
           }
         }
@@ -80,7 +80,7 @@
         ["L1-T1", "L1-T2"],
         [["L1-T2", ["L1-T2", 0, 3, [0, 1, 0], "2026-06-03"]]],
         [["L1-T2", [0, 3, 0, false]]],
-        [["L1", [7, 20, "Needs targeted tutoring.", null]]]
+        [["L1", [7, 20, "Needs targeted tutoring."]]]
       ]
     },
     {

@@ -28,26 +28,54 @@ def _client():
         return None
 
 
-def _fallback(subject: str, topic_id: str, student_name: str) -> dict:
+def _fallback(
+    subject: str,
+    topic_id: str,
+    student_name: str,
+    topic_ids: list[str] | None = None,
+    teacher_prompt: str = "",
+) -> dict:
+    topics = topic_ids or ([topic_id] if topic_id else [])
+    topics_label = ", ".join(topics) if topics else (teacher_prompt[:60] or topic_id)
+    title = (
+        f"{subject.title()} Lesson: {topics_label}".strip()
+        if topics or teacher_prompt
+        else f"Remedial Review: {topic_id} ({subject.title()})"
+    )
+
+    concepts = []
+    if teacher_prompt:
+        concepts.append({
+            "header_title": "Overview",
+            "explanation": f"Lesson generated from the teacher's instruction: \"{teacher_prompt}\".",
+        })
+    for t in topics:
+        concepts.append({
+            "header_title": f"Key Concepts — {t}",
+            "explanation": f"This module covers the core concepts of {t} in {subject.title()} for {student_name}.",
+        })
+    if not concepts:
+        concepts = [
+            {
+                "header_title": "Introduction",
+                "explanation": f"This lesson covers key concepts from {topic_id} in {subject.title()} for {student_name}.",
+            },
+            {
+                "header_title": "Practice Tips",
+                "explanation": "Re-read the materials, work through examples step by step, and ask your teacher if a concept is unclear.",
+            },
+        ]
+
     return {
         "lesson_number": 1,
-        "lesson_title": f"Remedial Review: {topic_id} ({subject.title()})",
-        "learning_gap": f"Misunderstandings on core elements of {topic_id}.",
+        "lesson_title": title,
+        "learning_gap": f"Misunderstandings on core elements of {topics_label}." if topics else f"Misunderstandings on core elements of {topic_id}.",
         "grade_level_section": student_name,
         "teachers_notes": [
             "Encourage step-by-step reasoning and class discussion.",
             "Focus on the concepts students struggled with most during evaluation."
         ],
-        "concepts": [
-            {
-                "header_title": "Introduction",
-                "explanation": f"This remedial lesson covers key concepts from {topic_id} in {subject.title()} that students in {student_name} found challenging."
-            },
-            {
-                "header_title": "Practice Tips",
-                "explanation": "Re-read the lesson materials. Work through the examples step by step. Ask your teacher if any concept remains unclear."
-            }
-        ],
+        "concepts": concepts,
         # MOCK quiz so the wizard/TeacherHome preview has usable items until the
         # AI agent is integrated. Shape matches what the frontend maps
         # (question / choices / correct_answer).
@@ -78,25 +106,38 @@ def generate_remediation(
     topic_id: str,
     student_name: str,
     failed_items: list[str] | None = None,
+    topic_ids: list[str] | None = None,
+    prompt: str = "",
 ) -> dict:
     """
     Returns the new AI schema matching format:
     {"lesson_number", "lesson_title", "learning_gap", "grade_level_section", "teachers_notes", "concepts", "summative_test"}.
+
+    `topic_ids` (one or more catalog topics) and `prompt` (free-text teacher
+    instruction) drive the lesson-generator flow; `failed_items` drives the
+    remediation flow. Any combination is accepted.
     """
     client = _client()
     if client is None:
-        return _fallback(subject, topic_id, student_name)
+        return _fallback(subject, topic_id, student_name, topic_ids=topic_ids, teacher_prompt=prompt)
 
     failed_block = ""
     if failed_items:
         items_list = "\n".join(f"- {q}" for q in failed_items[:5])
         failed_block = f"\n\nThe following questions were most commonly answered incorrectly by students:\n{items_list}"
 
-    prompt = f"""You are an expert Grade 6-8 teacher in the Philippines creating a personalized remedial lesson.
+    topics_block = ""
+    if topic_ids:
+        topics_block = f"\nBase the lesson on these catalog topics: {', '.join(topic_ids)}."
+    prompt_block = ""
+    if prompt:
+        prompt_block = f"\nTeacher's instruction for this lesson: {prompt}"
+
+    ai_prompt = f"""You are an expert Grade 6-8 teacher in the Philippines creating a lesson.
 
 Subject: {subject.title()}
 Topic ID: {topic_id}
-Class / Section: {student_name}{failed_block}
+Class / Section: {student_name}{topics_block}{prompt_block}{failed_block}
 
 Generate a complete remedial learning package as a single JSON object matching this schema:
 
@@ -131,7 +172,7 @@ Rules:
 
     try:
         model = getattr(settings, "GEMINI_MODEL", "gemini-2.0-flash")
-        response = client.models.generate_content(model=model, contents=prompt)
+        response = client.models.generate_content(model=model, contents=ai_prompt)
         raw = response.text.strip()
         # Strip markdown code fences if Gemini wraps the JSON anyway
         raw = re.sub(r"^```(?:json)?\s*", "", raw)

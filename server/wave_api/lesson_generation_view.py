@@ -50,7 +50,13 @@ def start_lesson_generation(request):
     data = serializer.validated_data
     session_id = str(uuid.uuid4())
 
-    from wave_api.agents import orchestrator  # lazy: heavy AI deps
+    try:
+        from wave_api.agents import orchestrator  # lazy: heavy AI deps
+    except ImportError:
+        return Response(
+            {"detail": "AI lesson generation is not available (AI dependencies not installed)."},
+            status=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
 
     result = orchestrator.start_remediation_session(
         session_id=session_id,
@@ -81,7 +87,13 @@ def submit_teacher_feedback(request):
     session_id = data['session_id']
     feedback = data['feedback']
 
-    from wave_api.agents import orchestrator  # lazy: heavy AI deps
+    try:
+        from wave_api.agents import orchestrator  # lazy: heavy AI deps
+    except ImportError:
+        return Response(
+            {"detail": "AI lesson generation is not available (AI dependencies not installed)."},
+            status=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
 
     if feedback == "PASS":
         material_id = data.get("material_id") or f"REM-{uuid.uuid4().hex[:10].upper()}"

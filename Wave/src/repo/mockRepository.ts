@@ -94,18 +94,40 @@ export class MockRepository implements WaveRepository {
   async fetchRemediation(): Promise<TeacherRemediationMaterial[]> { return []; }
 
   async generateRemediation(req: GenerateRemediationReq): Promise<GeneratedRemediation> {
-    const topic = findTopic(req.topicId);
-    if (!topic) return { title: 'Remedial Review', content: 'Review the topic and try again.', teacherNotes: '', createdQuiz: [] };
-    const c = topic.content;
-    const parts = [`## Remedial Review: ${topic.name}`, '', c.introduction];
-    for (const s of c.sections) parts.push(`\n### ${s.title}\n${s.body}`);
-    if (c.keyTakeaway) parts.push(`\n**Key takeaway:** ${c.keyTakeaway}`);
-    const quiz: QuizQuestion[] = topic.quiz.slice(0, 3);
+    // Resolve one or more catalog topics (multi-topic supported).
+    const topicIds = req.topicIds ?? (req.topicId ? [req.topicId] : []);
+    const topics = topicIds.map(findTopic).filter((t): t is Topic => Boolean(t));
+
+    // Build structured lesson modules (mirror of the remedial "Interactive Modules").
+    const sections: { title: string; body: string }[] = [];
+    if (req.prompt && req.prompt.trim()) {
+      sections.push({ title: 'Overview', body: `Lesson generated from teacher prompt: "${req.prompt.trim()}"` });
+    }
+    for (const t of topics) {
+      sections.push({ title: t.name, body: t.content.introduction });
+      for (const s of t.content.sections) sections.push({ title: s.title, body: s.body });
+    }
+    if (sections.length === 0) {
+      sections.push({ title: 'Introduction', body: 'Draft lesson content. Edit the modules to finalize.' });
+    }
+
+    const title = topics[0]?.name
+      ? `${topics[0].name}${topics.length > 1 ? ` (+${topics.length - 1} more)` : ''}`
+      : (req.prompt?.trim().slice(0, 60) || 'Generated Lesson');
+    const content = sections.map((s) => `## ${s.title}\n\n${s.body}`).join('\n\n');
+    // Still return a quiz for the TeacherHome remedial flow; the lesson-only
+    // wizard ignores it.
+    const createdQuiz: QuizQuestion[] = topics[0]?.quiz.slice(0, 3) ?? [];
+
     return {
-      title: `Remedial: ${topic.name}`,
-      content: parts.filter(Boolean).join('\n'),
-      teacherNotes: `Custom review on ${topic.name} for ${req.studentName}.`,
-      createdQuiz: quiz,
+      title,
+      content,
+      teacherNotes: 'Review the generated modules and adjust as needed.',
+      createdQuiz,
+      lessonNumber: 1,
+      learningGap: '',
+      teachersNotes: [],
+      sections,
     };
   }
 

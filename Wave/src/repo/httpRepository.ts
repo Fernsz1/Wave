@@ -180,20 +180,31 @@ export class HttpRepository implements WaveRepository {
   }
 
   async generateRemediation(req: GenerateRemediationReq): Promise<GeneratedRemediation> {
+    const topicIds = req.topicIds ?? (req.topicId ? [req.topicId] : []);
     const data = await this.post('/api/remediation/generate', {
       subject: req.subject,
-      originalTopicId: req.topicId,
+      originalTopicId: req.topicId ?? topicIds[0] ?? '',
+      topicIds,
       studentName: req.studentName,
+      gradeLevel: req.gradeLevel,
+      section: req.section,
+      prompt: req.prompt,
       failedItems: req.failedItems ?? [],
     });
 
     // Map Title
     const title = data.lesson_title || data.title || 'Remedial Lesson';
 
-    // Map Content from concepts list
-    let content = '';
+    // Map structured sections from the AI `concepts` (header_title/explanation).
+    let sections: { title: string; body: string }[] = [];
     if (data.concepts && Array.isArray(data.concepts)) {
-      content = data.concepts.map((c: any) => `## ${c.header_title}\n\n${c.explanation}`).join('\n\n');
+      sections = data.concepts.map((c: any) => ({ title: c.header_title ?? '', body: c.explanation ?? '' }));
+    }
+
+    // Map Content (flattened markdown) from sections, for storage/display.
+    let content = '';
+    if (sections.length > 0) {
+      content = sections.map((s) => `## ${s.title}\n\n${s.body}`).join('\n\n');
     } else {
       content = data.content || '';
     }
@@ -234,6 +245,7 @@ export class HttpRepository implements WaveRepository {
       lessonNumber: data.lesson_number,
       learningGap: data.learning_gap,
       teachersNotes: data.teachers_notes || [],
+      sections,
     };
   }
 

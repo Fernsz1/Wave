@@ -145,13 +145,16 @@ def generate_remediation(request):
     - RemediationWizard sends `topicId` / `studentLrn` / `section`.
     """
     data = request.data
-    topic_id = data.get("originalTopicId") or data.get("topicId") or ""
+    topic_ids = data.get("topicIds") or ([data["topicId"]] if data.get("topicId") else [])
+    topic_id = data.get("originalTopicId") or (topic_ids[0] if topic_ids else "") or data.get("topicId") or ""
     student_name = data.get("studentName") or data.get("section") or "your class"
     result = ai.generate_remediation(
         subject=data.get("subject", "science"),
         topic_id=topic_id,
         student_name=student_name,
         failed_items=data.get("failedItems") or [],
+        topic_ids=topic_ids,
+        prompt=data.get("prompt") or "",
     )
     return Response(result)
 

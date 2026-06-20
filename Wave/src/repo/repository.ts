@@ -13,8 +13,12 @@ import { FailedItem, Lesson, QuizQuestion, StudentProgress, StudentUser, Teacher
 
 export interface GenerateRemediationReq {
   subject: string;
-  topicId: string;
-  studentName: string;
+  topicId?: string; // legacy single-topic (still accepted)
+  topicIds?: string[]; // one or more catalog topics to base the lesson on
+  studentName?: string;
+  gradeLevel?: string;
+  section?: string;
+  prompt?: string; // free-text teacher instruction (lesson generator)
   failedItems?: string[];
 }
 
@@ -26,6 +30,9 @@ export interface GeneratedRemediation {
   lessonNumber?: number;
   learningGap?: string;
   teachersNotes?: string[];
+  // Structured lesson body blocks (mirror of the remedial lesson "Interactive
+  // Modules"). Maps from the AI `concepts` (header_title/explanation).
+  sections?: { title: string; body: string }[];
 }
 
 export interface RepoBootstrap {

@@ -32,7 +32,7 @@ import TeacherHome from './components/TeacherHome';
 import TeacherStudents from './components/TeacherStudents';
 import TeacherAnalytics from './components/TeacherAnalytics';
 import TeacherProfile from './components/TeacherProfile';
-import RemediationWizard from './components/RemediationWizard';
+import LessonWizard from './components/LessonWizard';
 import WaveLogo from './components/WaveLogo';
 
 const getFormattedHeader = (subject: string, section: string) => {
@@ -304,7 +304,12 @@ export default function App() {
   // Publish remedial material via wizard triggers
   const handlePublishRemedialMaterial = (newMaterial: TeacherRemediationMaterial) => {
     setRemediationMaterials(prev => [newMaterial, ...prev]);
-    repo.publishRemediation(newMaterial, { subject: activeSubject, section: activeSection }).catch(() => {});
+    // Honor the material's own target subject/section (the wizard lets the teacher
+    // pick these) and fall back to the dashboard's active selection.
+    repo.publishRemediation(newMaterial, {
+      subject: newMaterial.targetSubject || activeSubject,
+      section: newMaterial.targetSection || activeSection,
+    }).catch(() => {});
   };
 
   // Trigger remedial from Student screen
@@ -827,7 +832,7 @@ export default function App() {
       {/* ────────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {showWizard && (
-          <RemediationWizard
+          <LessonWizard
             preSelectedStudent={wizardPreSelectedStudent}
             preSelectedTopicId={wizardPreSelectedTopicId}
             onPublish={handlePublishRemedialMaterial}
