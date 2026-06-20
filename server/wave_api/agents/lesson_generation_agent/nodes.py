@@ -1,18 +1,13 @@
-from wave_api.agents.agent_factory import AgentFactory
-from wave_api.agents.lesson_generation_agent.state import AgentState
-from wave_api.agents.lesson_generation_agent.prompts.diagnostic_prompt import diagnosis_prompt
-from wave_api.agents.lesson_generation_agent.prompts.remediation_prompt import remediation_prompt
-from wave_api.agents.lesson_generation_agent.prompts.teacher_remediation_prompt import (
-    simplify_prompt,
-    practical_prompt,
-    change_exercise_prompt,
-    micro_steps_prompt,
-)
-from wave_api.agents.lesson_generation_agent.prompts.evaluation_prompt import remediation_evaluation_prompt
-from wave_api.agents.lesson_generation_agent.output_schema import (
-    RemediationDraftResponse,
-    RemediationEvaluationResult,
-)
+from server.wave_api.agents.agent_factory import AgentFactory
+from server.wave_api.agents.agent_role import AgentRole
+from server.wave_api.agents.lesson_generation_agent.state import AgentState
+from server.wave_api.agents.lesson_generation_agent.prompts.diagnostic_prompt import diagnosis_prompt
+from server.wave_api.agents.lesson_generation_agent.prompts.remediation_prompt import remediation_prompt
+from server.wave_api.agents.lesson_generation_agent.prompts.teacher_remediation_prompt import simplify_prompt, practical_prompt, change_exercise_prompt, micro_steps_prompt
+from server.wave_api.agents.lesson_generation_agent.prompts.evaluation_prompt import remediation_evaluation_prompt
+from langchain_core.output_parsers import JsonOutputParser 
+from pydantic import BaseModel, Field
+from server.wave_api.agents.lesson_generation_agent.output_schema import RemediationEvaluationResult, RemediationLesson
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 from .output_schema import StudentDiagnosis
@@ -21,8 +16,8 @@ load_dotenv()
 
 
 llm_factory = AgentFactory()
-primary_llm = llm_factory.create_llm("primary")
-evaluator_llm = llm_factory.create_llm("evaluator")
+primary_llm = llm_factory.create_llm(AgentRole.PRIMARY)
+evaluator_llm = llm_factory.create_llm(AgentRole.EVALUATOR)
 
 # --- 2. Node Functions (The "Doers") ---
 def retrieve_local_context(state: AgentState):
@@ -49,16 +44,22 @@ def diagnose_misconception(state: AgentState):
 
 def draft_lesson(state: AgentState):
     """Creates remediation material based upon the lesson and the diagnosis of students' performance"""
-    structured_llm = primary_llm.with_structured_output(RemediationDraftResponse)
+    if state['teacher_feedback'] == '':
+        # 1. Bind the structure to your LLM
+        structured_llm = primary_llm.with_structured_output(RemediationLesson)
 
-    if state.get('teacher_feedback', '') == '':
+        # 2. Create the chain
         chain = remediation_prompt | structured_llm
-        remediation_material: RemediationDraftResponse = chain.invoke({
+
+        # 3. Invoke the chain using your state variables
+        remediation_material = chain.invoke({
             "subject": state.get("subject"),
             "grade_level": state.get("grade_level"),
             "topic": state.get("topic"),
             "lesson_context": state.get("lesson_context"),
-            "diagnosis_report": state.get("core_diagnosis")
+            "diagnosis_report": state.get("core_diagnosis"), 
+            "recommendations": state.get("teacher_recommendations"),
+            "learning_gap": state.get("learning_gap")
         })
     else:
         match state['teacher_feedback']:
@@ -70,22 +71,21 @@ def draft_lesson(state: AgentState):
                 prompt = change_exercise_prompt
             case "micro":
                 prompt = micro_steps_prompt
-            case _:
-                prompt = remediation_prompt
 
-        chain = prompt | structured_llm
-        prior = state.get('draft_lesson') or {}
-        remediation_material: RemediationDraftResponse = chain.invoke({
+        chain = prompt | primary_llm | JsonOutputParser()
+        remediation_material = chain.invoke({
             "subject": state['subject'],
             "grade_level": state['grade_level'],
             "topic": state['topic'],
             "diagnosis_report": state["core_diagnosis"],
-            "draft_lesson": prior.get("content", "") if isinstance(prior, dict) else str(prior)
+            "draft_lesson": state['draft_lesson'],
+            "recommendations": state.get("teacher_recommendations"),
+            "learning_gap": state.get("learning_gap")
         })
 
     return {
-        "draft_lesson": remediation_material.model_dump(),
-        "revision_count": 1
+        "draft_lesson": remediation_material,
+        "revision_count": 1 # Because of Annotated[..., operator.add], this increments the counter
     }
 
 def evaluate_pedagogy(state: AgentState):
@@ -104,7 +104,9 @@ def evaluate_pedagogy(state: AgentState):
         "grade_level": state.get("grade_level"),
         "topic": state.get("topic"),
         "core_diagnosis": state.get("core_diagnosis"),
-        "draft_lesson": state.get("draft_lesson")
+        "learning_gap": state.get("learning_gap"),
+        "draft_lesson": state.get("draft_lesson"),
+        "recommendations": state.get("teacher_recommendations", "")
     })
 
     is_approved = result.is_approved

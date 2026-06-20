@@ -9,8 +9,8 @@ class AgentState(TypedDict):
     failed_items: List[Dict[str, Any]]  # failed items with wrong answers from the students and the actual answer
     lesson_context: str                 # the actual lesson that is stored in the database
     topic: str
-    target_section: str                 # whole-section recipient, threaded for the orchestrator
-    publish_date: str                   # YYYY-MM-DD, threaded for the orchestrator
+    teacher_recommendations: str
+    learning_gap: str
 
     # --- 2. Context & Diagnosis (Carried over from the workflow logic) ---
     core_diagnosis: Dict[str, Any]              # From DiagnoseMisconception

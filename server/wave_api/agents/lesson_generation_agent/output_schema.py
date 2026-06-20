@@ -21,19 +21,19 @@ class StudentDiagnosis(BaseModel):
 
 class RemediationScores(BaseModel):
     structural_compliance: int = Field(
-        description="Score 1-5. Strictly follows the required 8-part Markdown structure and maintains extreme conciseness (approximately 250 words total).", 
+        description="Score 1-5. Strictly follows the required structure of a 'concepts' list, where each item contains a 'header_title' and an 'explanation'. Maintains appropriate conciseness.", 
         ge=1, le=5
     )
     diagnostic_alignment: int = Field(
-        description="Score 1-5. Directly targets the 'misconception' and 'root_cause' from the diagnosis without reteaching the entire original lesson.", 
+        description="Score 1-5. The chosen concepts and explanations directly target and resolve the 'root_cause' and misconception from the diagnosis without unnecessary fluff.", 
         ge=1, le=5
     )
     instructional_clarity: int = Field(
-        description="Score 1-5. The 'Concept Review', 'The Mistake', and 'Correct Approach' sections are simple, actionable, and logically rebuild the student's understanding.", 
+        description="Score 1-5. The 'header_title' is engaging and clear. The 'explanation' is simple, direct, and logically rebuilds the student's understanding.", 
         ge=1, le=5
     )
-    application_quality: int = Field(
-        description="Score 1-5. The 'Guided Example', 'Practice', and 'Mastery Check' are highly relevant, extremely brief, and directly test the corrected concept.", 
+    pedagogical_effectiveness: int = Field(
+        description="Score 1-5. Explanations include practical examples, heuristics, or 'tricks' that make the concept easy to apply in real-time, rather than just abstract definitions.", 
         ge=1, le=5
     )
     tone_and_suitability: int = Field(
@@ -48,4 +48,17 @@ class RemediationEvaluationResult(BaseModel):
     )
     remarks: str = Field(
         description="If failed, provide exactly 2-3 sentences of direct, actionable feedback identifying which section failed and how the generator must rewrite it. If passed, state 'Remediation material meets all instructional standards.'"
+    )
+
+class RemediationConcept(BaseModel):
+    header_title: str = Field(
+        description="A catchy, clear, and engaging title for the concept (e.g., 'The Doer vs. The Receiver' or 'The Past Tense Trap')."
+    )
+    explanation: str = Field(
+        description="A highly pedagogical, concise explanation. Must include practical examples, heuristics, or 'tricks' to fix the misconception."
+    )
+
+class RemediationLesson(BaseModel):
+    concepts: List[RemediationConcept] = Field(
+        description="A list of targeted concepts designed to remediate the student's specific learning gap."
     )

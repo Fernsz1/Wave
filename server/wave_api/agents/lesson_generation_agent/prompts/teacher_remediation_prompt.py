@@ -54,6 +54,7 @@ Subject: {subject}
 Grade Level: {grade_level}
 Topic: {topic}
 Diagnostic Report: {diagnosis_report}
+Teacher's Learning Gap Observation: {learning_gap}
 Teacher Recommendations: {recommendations}
 
 ---
@@ -74,6 +75,7 @@ Subject: {subject}
 Grade Level: {grade_level}
 Topic: {topic}
 Diagnostic Report: {diagnosis_report}
+Teacher's Learning Gap Observation: {learning_gap}
 Teacher Recommendations: {recommendations}
 ---
 CRITICAL REVISION REQUEST FROM THE TEACHER:
@@ -93,6 +95,7 @@ Subject: {subject}
 Grade Level: {grade_level}
 Topic: {topic}
 Diagnostic Report: {diagnosis_report}
+Teacher's Learning Gap Observation: {learning_gap}
 Teacher Recommendations: {recommendations}
 
 ---
@@ -113,6 +116,7 @@ Subject: {subject}
 Grade Level: {grade_level}
 Topic: {topic}
 Diagnostic Report: {diagnosis_report}
+Teacher's Learning Gap Observation: {learning_gap}
 Teacher Recommendations: {recommendations}
 
 ---
