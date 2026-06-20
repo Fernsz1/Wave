@@ -117,7 +117,10 @@ static int doSend(uint16_t dest, const String& data) {
 
   int st = radio.transmit(buf, HDR_LEN + n);   // blocks for the airtime
   radio.startReceive();                        // always return to listening
-  return (st == RADIOLIB_ERR_NONE) ? 0 : 1;
+  if (st == RADIOLIB_ERR_NONE) return 0;
+  // RadioLib codes are negative; surface the real one as 100-st so the host
+  // sees e.g. +ERR=105 for TX_TIMEOUT(-5) instead of a useless +ERR=1.
+  return 100 - st;
 }
 
 // Drain one received packet (if any) and, when it is addressed to us on our
@@ -184,7 +187,7 @@ static void handleLine(String line) {
   if (line.length() == 0) return;
 
   if (line == "AT+VER?") {
-    emit("+VER=WAVE-HELTEC-1.0");
+    emit("+VER=WAVE-HELTEC-1.1-DIAG");
   } else if (line == "AT+ADDRESS?") {
     emit("+ADDRESS=" + String(myAddr));
   } else if (line.startsWith("AT+ADDRESS=")) {
@@ -200,7 +203,9 @@ static void handleLine(String line) {
   } else if (line == "AT") {
     emit("+OK");
   } else {
-    emit("+ERR=1");   // unknown command
+    // Unknown command. Echo what we actually parsed (length + text) so a
+    // mis-terminated or mangled line is visible instead of a bare +ERR=1.
+    emit("+ERR=1 UNKNOWN len=" + String(line.length()) + " [" + line + "]");
   }
 }
 
@@ -222,14 +227,20 @@ void loop() {
 
   // 2) Drain complete AT lines from the host.
   static String inbuf;
+  static bool   overflow = false;   // set when a line exceeds the buffer
   while (Serial.available()) {
     char ch = (char)Serial.read();
     if (ch == '\n') {
-      handleLine(inbuf);
+      // If the line overran the buffer (e.g. two AT+SEND lines pasted at once
+      // with no newline between them), report it instead of letting the
+      // leftover tail be misparsed as a bogus command.
+      if (overflow) emit("+ERR=1 LINE TOO LONG (send one AT+SEND at a time)");
+      else handleLine(inbuf);
       inbuf = "";
-    } else if (ch != '\r') {
+      overflow = false;
+    } else if (ch != '\r' && !overflow) {
       inbuf += ch;
-      if (inbuf.length() > HDR_LEN + MAX_PAYLOAD + 32) inbuf = "";  // overflow guard
+      if (inbuf.length() > HDR_LEN + MAX_PAYLOAD + 32) { inbuf = ""; overflow = true; }
     }
   }
 }

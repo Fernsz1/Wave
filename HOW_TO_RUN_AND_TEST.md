@@ -293,14 +293,18 @@ pip install pyserial pydantic
 classroom). `dnsmasq.conf` answers captive-portal probes (gstatic, captive.apple.com, etc.)
 locally so phones don't auto-disconnect with "no internet" warnings.
 
-### Run the relay
+### Run the relay + HTTP front-end
 ```bash
 cd /repo
-python -m pi.router.relay   # reads /dev/ttyAMA0, reassembles, caches /var/lib/wave/cache.sqlite
+# reads the LoRa serial port, reassembles downlinks, caches /var/lib/wave/cache.sqlite,
+# and serves the cache to students over HTTP (stdlib http.server + pyserial only):
+python -m pi.router.serve --serial /dev/ttyUSB0 --address 2 --bind 10.0.0.1 --http-port 80
 ```
 
-Wrap an HTTP front-end (Flask, FastAPI, or stock `http.server`) around the cache to serve
-`http://10.0.0.1/api/remediation?section=...` to students on the AP.
+`serve.py` is the runnable deployment glue around the `Relay`/`RelayCache` classes in
+`pi/router/relay.py` (which itself leaves the HTTP layer to the caller). It exposes
+`GET /api/health`, `GET /api/remediation?section=...`, and `POST /api/uplink` to phones on the AP.
+Full classroom-on-a-Pi walkthrough: [PI_ROUTER_E2E_SETUP.md](PI_ROUTER_E2E_SETUP.md).
 
 ### Smoke test the classroom path
 1. Server: PASS a remediation via Mode D for `target_section="Grade 6 - Section Newton"`.
