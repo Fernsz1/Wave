@@ -57,13 +57,13 @@ def login(request):
 @api_view(["GET"])
 @permission_classes([permissions.AllowAny])
 def roster(request):
-    """Student and teacher lists for login validation."""
+    """Student and teacher directory (no credentials — login is validated server-side via /api/auth/login)."""
     students = [
-        {"lrn": s.lrn, "name": s.name, "gradeLevel": s.grade_level, "section": s.section, "pin": s.pin}
+        {"lrn": s.lrn, "name": s.name, "gradeLevel": s.grade_level, "section": s.section}
         for s in Student.objects.all()
     ]
     teachers = [
-        {"teacherId": t.teacher_id, "name": t.name, "department": t.department, "password": t.password}
+        {"teacherId": t.teacher_id, "name": t.name, "department": t.department}
         for t in Teacher.objects.all()
     ]
     return Response({"students": students, "teachers": teachers})
@@ -129,6 +129,7 @@ def remediation(request):
             "targetSection": m.target_section,
             "chunks": [],
             "isPublished": m.is_published,
+            "subject": m.subject,
         }
         out.append(codec.encode("TeacherRemediationMaterial", obj))
     return Response({"type": "TeacherRemediationMaterial", "items": out})

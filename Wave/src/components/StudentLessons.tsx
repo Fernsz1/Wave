@@ -55,7 +55,7 @@ function renderSimpleMarkdown(md: string): ReactElement {
   flush();
   return <div className="space-y-2">{elements}</div>;
 }
-import { StudentUser, StudentProgress, Lesson, Topic, QuizQuestion, StudentQuizAttempt, TeacherRemediationMaterial } from '../types';
+import { StudentUser, StudentProgress, Lesson, Topic, QuizQuestion, StudentQuizAttempt, TeacherRemediationMaterial, FailedItem } from '../types';
 
 interface StudentLessonsProps {
   student: StudentUser;
@@ -63,7 +63,7 @@ interface StudentLessonsProps {
   lessons: Lesson[];
   remediationMaterials: TeacherRemediationMaterial[];
   onSaveQuizScore: (topicId: string, lessonId: string, score: number, answers: number[]) => void;
-  onSaveSummativeScore: (lessonId: string, score: number) => void;
+  onSaveSummativeScore: (lessonId: string, score: number, failedItems?: FailedItem[]) => void;
   onStartRemedial: (material: TeacherRemediationMaterial) => void;
   activeSubject: string;
   setActiveSubject: (sbj: string) => void;
@@ -171,8 +171,7 @@ export default function StudentLessons({
     mat => mat.isPublished && (
       mat.targetSection === studentSection ||
       mat.targetSection?.toLowerCase() === 'all sections' ||
-      mat.targetSection === '' ||
-      (!mat.targetSection && mat.assignedStudentLrn === student.lrn)
+      mat.targetSection === ''
     )
   );
 
@@ -293,13 +292,23 @@ export default function StudentLessons({
   const handleSubmitSummative = () => {
     if (!selectedLesson) return;
     let correct = 0;
+    const failedItems: FailedItem[] = [];
     summativeQuestions.forEach((q, idx) => {
-      if (summativeAnswers[idx] === q.correctAnswerIndex) correct++;
+      if (summativeAnswers[idx] === q.correctAnswerIndex) {
+        correct++;
+      } else {
+        failedItems.push({
+          questionId: q.id,
+          topicId: selectedLesson.id,
+          selectedOption: summativeAnswers[idx] ?? -1,
+          correctOption: q.correctAnswerIndex,
+        });
+      }
     });
     const calcScore = correct; // score is already out of 20
     setSummativeScore(calcScore);
     setSummativeSubmitted(true);
-    onSaveSummativeScore(selectedLesson.id, calcScore);
+    onSaveSummativeScore(selectedLesson.id, calcScore, failedItems);
   };
 
   return (

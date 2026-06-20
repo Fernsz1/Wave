@@ -7,11 +7,13 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Sparkles, Wand2, CheckCircle2, Edit3, Trash2, X, Plus } from 'lucide-react';
 import { StudentUser, QuizQuestion, TeacherRemediationMaterial, StudentProgress } from '../types';
+import { GeneratedRemediation, GenerateRemediationReq } from '../repo/repository';
 import { MOCK_LESSONS, MOCK_LESSONS_BY_SUBJECT } from '../data';
 import WaveLogo from './WaveLogo';
 
 interface RemediationWizardProps {
   onPublish: (material: TeacherRemediationMaterial) => void;
+  onGenerateRemediation: (req: GenerateRemediationReq) => Promise<GeneratedRemediation>;
   onClose: () => void;
   preSelectedStudent?: StudentUser | null;
   preSelectedTopicId?: string;
@@ -21,8 +23,9 @@ interface RemediationWizardProps {
   activeSection?: string;
 }
 
-export default function RemediationWizard({ 
-  onPublish, 
+export default function RemediationWizard({
+  onPublish,
+  onGenerateRemediation,
   onClose,
   preSelectedStudent = null,
   preSelectedTopicId = "",
@@ -154,100 +157,43 @@ export default function RemediationWizard({
     setGenStatusMessage('Connecting to Gemini model instance channels...');
   };
 
-  // Call Gemini API via Django to generate the remedial pack
+  // Call Gemini (via the shared repository, same path TeacherHome uses) to generate the remedial pack
   useEffect(() => {
     if (step !== 'generating') return;
 
     const topicObj = availableLessons.flatMap(l => l.topics).find(t => t.id === targetTopicId);
-    const topicName = topicObj?.name ?? targetTopicId;
 
+    // Collect the actual wrong-answer question text for this student & topic —
+    // matches the shape ai.generate_remediation() expects (a list of question strings).
     const prog = student ? progressRecords[student.lrn] : null;
-    const failedItems = prog
+    const failedItems: string[] = prog
       ? Object.values(prog.quizAttempts)
           .filter(a => a.topicId === targetTopicId)
           .flatMap(a =>
-            a.answers.map((selected, idx) => ({
-              questionId: `Q-${idx + 1}`,
-              topicId: a.topicId,
-              selectedOption: selected,
-              correctOption: 0,
-            }))
+            a.answers
+              .map((selected, idx) => (topicObj && selected !== topicObj.quiz[idx]?.correctAnswerIndex ? topicObj.quiz[idx]?.question : null))
+              .filter((q): q is string => Boolean(q))
           )
       : [];
-
-    const apiBase = import.meta.env.VITE_API_BASE ?? 'http://localhost:8000';
 
     setGenStatusMessage('Connecting to Gemini AI model...');
     setGenPercentage(15);
 
-    fetch(`${apiBase}/api/remediation/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        topicId: targetTopicId,
-        topicName,
-        subject: activeSubject,
-        gradeLevel: 'Grade 6',
-        section: activeSection,
-        studentLrn: student?.lrn ?? '',
-        failedItems,
-      }),
+    onGenerateRemediation({
+      subject: activeSubject,
+      topicId: targetTopicId,
+      studentName: student?.name || activeSection || 'your class',
+      failedItems: failedItems.length > 0 ? failedItems : undefined,
     })
-      .then(res => {
-        if (!res.ok) throw new Error(`Server returned HTTP ${res.status}`);
-        setGenPercentage(70);
-        setGenStatusMessage('Processing Gemini response...');
-        return res.json();
-      })
-      .then(data => {
+      .then(result => {
         setGenPercentage(100);
-
-        // Map Title
-        const title = data.lesson_title || data.title || 'Remedial Lesson';
-
-        // Map Content from concepts list
-        let content = '';
-        if (data.concepts && Array.isArray(data.concepts)) {
-          content = data.concepts.map((c: any) => `## ${c.header_title}\n\n${c.explanation}`).join('\n\n');
-        } else {
-          content = data.content || '';
-        }
-
-        // Map Teacher Notes
-        let teacherNotes = '';
-        const notesList = data.teachers_notes || [];
-        const gapPrefix = data.learning_gap ? `**Learning Gap:** ${data.learning_gap}\n` : '';
-        if (notesList.length > 0) {
-          teacherNotes = [gapPrefix, ...notesList.map((note: string) => `• ${note}`)].filter(Boolean).join('\n');
-        } else {
-          teacherNotes = data.teacherNotes || '';
-        }
-
-        // Map Quiz Questions
-        let createdQuiz: QuizQuestion[] = [];
-        if (data.summative_test && Array.isArray(data.summative_test)) {
-          createdQuiz = data.summative_test.map((q: any, idx: number) => {
-            const options = q.choices || [];
-            const correctIdx = options.indexOf(q.correct_answer);
-            return {
-              id: `q-diag-${idx + 1}`,
-              question: q.question,
-              options: options,
-              correctAnswerIndex: correctIdx !== -1 ? correctIdx : 0,
-              explanation: `Correct choice: ${q.correct_answer}`
-            };
-          });
-        } else if (data.createdQuiz && Array.isArray(data.createdQuiz)) {
-          createdQuiz = data.createdQuiz;
-        }
-
-        setGeneratedTitle(title);
-        setGeneratedContent(content);
-        setGeneratedNotes(teacherNotes);
-        setGeneratedQuiz(createdQuiz);
-        setGeneratedLessonNumber(data.lesson_number !== undefined ? data.lesson_number : 1);
-        setGeneratedLearningGap(data.learning_gap || '');
-        setGeneratedTeachersNotes(data.teachers_notes || []);
+        setGeneratedTitle(result.title);
+        setGeneratedContent(result.content);
+        setGeneratedNotes(result.teacherNotes);
+        setGeneratedQuiz(result.createdQuiz);
+        setGeneratedLessonNumber(result.lessonNumber ?? 1);
+        setGeneratedLearningGap(result.learningGap || '');
+        setGeneratedTeachersNotes(result.teachersNotes || []);
         setStep('preview');
       })
       .catch(err => {
@@ -277,7 +223,6 @@ export default function RemediationWizard({
       teacherNotes: combinedNotes || generatedNotes,
       createdQuiz: generatedQuiz,
       publishDate: new Date().toISOString().split('T')[0],
-      assignedStudentLrn: student.lrn,
       isPublished: true,
     };
 

@@ -152,6 +152,7 @@ def finalize_and_publish(
         publish_date=resolved_publish_date,
         is_published=True,
         chunks=[],
+        subject=final_lesson_state.get("subject", ""),
     )
     analytics = extract_analytics_sidecar(
         quiz_items,

@@ -83,7 +83,7 @@ export default function TeacherHome({
     const prog = progressRecords[s.lrn];
     if (!prog) return false;
     return Object.entries(prog.summativeScores).some(
-      ([lid, sc]) => activeLessonIds.has(lid) && sc.score / (sc.perfectScore || 20) < 0.6
+      ([lid, sc]) => activeLessonIds.has(lid) && sc.score / (sc.total || 20) < 0.6
     );
   }).length;
   const failPercent = sectionStudents.length > 0
@@ -583,14 +583,14 @@ export default function TeacherHome({
 
     Object.entries(prog.summativeScores).forEach(([lessonId, sc]) => {
       if (activeLessonIds.has(lessonId)) {
-        const percentage = sc.perfectScore > 0 ? sc.score / sc.perfectScore : 1;
+        const percentage = sc.total > 0 ? sc.score / sc.total : 1;
         if (percentage < 0.6) {
           dynamicAlerts.push({
             student,
             lessonId,
             lessonTitle: currentLessonMap.get(lessonId) || lessonId,
             score: sc.score,
-            perfectScore: sc.perfectScore
+            perfectScore: sc.total
           });
         }
       }
@@ -1484,7 +1484,6 @@ export default function TeacherHome({
                           createdQuiz: customQuiz,
                           createdSummative: customSummative,
                           publishDate,
-                          assignedStudentLrn: '',
                           targetSection: customTargetSection,
                           targetSubject: activeSubject,
                           isPublished: true,

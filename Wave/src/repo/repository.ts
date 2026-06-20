@@ -9,7 +9,7 @@
  * syncs with Django over REST + MQTT. Returns the app's INTERNAL types so the UI
  * components are unchanged.
  */
-import { Lesson, QuizQuestion, StudentProgress, StudentUser, TeacherUser, TeacherRemediationMaterial } from '../types';
+import { FailedItem, Lesson, QuizQuestion, StudentProgress, StudentUser, TeacherUser, TeacherRemediationMaterial } from '../types';
 
 export interface GenerateRemediationReq {
   subject: string;
@@ -66,6 +66,7 @@ export interface SummativeWrite {
   score: number;
   section: string;
   subject: string;
+  failedItems?: FailedItem[];
 }
 
 export interface SubscribeOpts {
@@ -76,12 +77,18 @@ export interface SubscribeOpts {
   onUpdate: (u: RepoUpdate) => void;
 }
 
+export type LoginResult = { ok: true; user: StudentUser | TeacherUser } | { ok: false; error: string };
+
 export interface WaveRepository {
   /** Cold-start data load. */
   bootstrap(): Promise<RepoBootstrap>;
-  /** Establish a session/token (no-op for Mock). */
-  authenticate(role: 'student' | 'teacher', principalId: string, nameOrPassword?: string, pin?: string): Promise<void>;
-  /** Flush any writes queued while offline. Call after authenticate resolves. No-op for Mock. */
+  /**
+   * Validate credentials and, for HttpRepository, establish a session token in
+   * the same round-trip — the server is the sole source of truth for the login
+   * decision (no plaintext PIN/password is ever fetched via bootstrap/roster).
+   */
+  login(role: 'student' | 'teacher', principalId: string, passwordOrPin: string): Promise<LoginResult>;
+  /** Flush any writes queued while offline. Call after login resolves. No-op for Mock. */
   flushPendingWrites(): Promise<void>;
   saveQuizAttempt(w: QuizAttemptWrite): Promise<void>;
   saveSummativeResult(w: SummativeWrite): Promise<void>;

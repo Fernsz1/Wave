@@ -116,7 +116,8 @@
         { "name": "publishDate", "t": "str" },
         { "name": "targetSection", "t": "str" },
         { "name": "chunks", "t": "array:Chunk" },
-        { "name": "isPublished", "t": "bool" }
+        { "name": "isPublished", "t": "bool" },
+        { "name": "subject", "t": "enum:subject", "optional": true }
       ]
     },
     "LessonCatalog": {
@@ -135,7 +136,9 @@
         { "name": "score", "t": "int" },
         { "name": "perfectScore", "t": "int" },
         { "name": "answers", "t": "array:int" },
-        { "name": "completedAt", "t": "str" }
+        { "name": "completedAt", "t": "str" },
+        { "name": "attempts", "t": "int", "optional": true },
+        { "name": "lessonId", "t": "str", "optional": true }
       ]
     },
     "QuizScore": {
@@ -149,9 +152,12 @@
     "SummativeScore": {
       "fields": [
         { "name": "score", "t": "int" },
-        { "name": "perfectScore", "t": "int" },
+        { "name": "total", "t": "int" },
         { "name": "feedback", "t": "str" },
-        { "name": "attempts", "t": "int", "optional": true }
+        { "name": "attempts", "t": "int", "optional": true },
+        { "name": "percent", "t": "int", "optional": true },
+        { "name": "passed", "t": "bool", "optional": true },
+        { "name": "failedItems", "t": "array:FailedItem", "optional": true }
       ]
     },
     "FailedItem": {

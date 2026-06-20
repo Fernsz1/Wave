@@ -7,29 +7,30 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { GraduationCap, LogIn, Sparkles, User, ShieldAlert } from 'lucide-react';
 import { StudentUser, TeacherUser, UserRole } from '../types';
+import { WaveRepository } from '../repo/repository';
 import WaveLogo from './WaveLogo';
 
 interface LoginScreenProps {
   onLoginSuccess: (role: UserRole, user: StudentUser | TeacherUser, presetSubject?: string, presetSection?: string) => void;
-  students: StudentUser[];
-  teachers: TeacherUser[];
+  repo: WaveRepository;
 }
 
-export default function LoginScreen({ onLoginSuccess, students, teachers }: LoginScreenProps) {
+export default function LoginScreen({ onLoginSuccess, repo }: LoginScreenProps) {
   const [role, setRole] = useState<UserRole>('student');
-  
+
   // Student inputs
   const [lrn, setLrn] = useState('');
   const [pin, setPin] = useState('');
-  
+
   // Teacher inputs
   const [teacherId, setTeacherId] = useState('');
   const [password, setPassword] = useState('');
-  
+
   // Error handling
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleManualLogin = (e: React.FormEvent) => {
+  const handleManualLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -45,34 +46,23 @@ export default function LoginScreen({ onLoginSuccess, students, teachers }: Logi
         setError('PIN must be exactly 6 digits.');
         return;
       }
-      
-      const found = students.find(s => s.lrn === cleanLrn);
-      if (found) {
-        if (found.pin === cleanPin) {
-          onLoginSuccess('student', found);
-        } else {
-          setError('Incorrect PIN. Please try again.');
-        }
-      } else {
-        setError('Student LRN is not enrolled on this platform. Please contact your teacher to enroll your account.');
-      }
+
+      setSubmitting(true);
+      const result = await repo.login('student', cleanLrn, cleanPin);
+      setSubmitting(false);
+      if (result.ok === true) onLoginSuccess('student', result.user);
+      else setError(result.error);
     } else {
       if (!teacherId.trim() || !password.trim()) {
         setError('Please enter both your Teacher ID and Password.');
         return;
       }
 
-      const match = teachers.find(t => t.teacherId === teacherId.trim());
-      if (!match) {
-        setError('Teacher ID not recognized. Please contact your administrator.');
-        return;
-      }
-      const expectedPassword = match.password || 'password123';
-      if (expectedPassword !== password.trim()) {
-        setError('Incorrect password for this Teacher ID. Please try again.');
-        return;
-      }
-      onLoginSuccess('teacher', match);
+      setSubmitting(true);
+      const result = await repo.login('teacher', teacherId.trim(), password.trim());
+      setSubmitting(false);
+      if (result.ok === true) onLoginSuccess('teacher', result.user);
+      else setError(result.error);
     }
   };
 
@@ -212,10 +202,11 @@ export default function LoginScreen({ onLoginSuccess, students, teachers }: Logi
             <button
               type="submit"
               id="login-submit-btn"
-              className="w-full mt-2 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl text-sm shadow-md shadow-blue-500/10 hover:shadow-lg transition-all flex items-center justify-center gap-2"
+              disabled={submitting}
+              className="w-full mt-2 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl text-sm shadow-md shadow-blue-500/10 hover:shadow-lg transition-all flex items-center justify-center gap-2"
             >
               <LogIn className="h-4 w-4" />
-              {role === 'student' ? 'Sign In to Portal' : 'Sign In to Platform'}
+              {submitting ? 'Signing in…' : role === 'student' ? 'Sign In to Portal' : 'Sign In to Platform'}
             </button>
           </form>
 

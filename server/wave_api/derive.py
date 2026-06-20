@@ -30,6 +30,8 @@ def assemble_progress(student: Student) -> dict:
             "perfectScore": a.perfect_score,
             "answers": a.answers,
             "completedAt": a.completed_at,
+            "attempts": a.attempts,
+            "lessonId": a.lesson_id,
         }
         quiz_scores[a.topic_id] = {
             "score": a.score,
@@ -39,7 +41,15 @@ def assemble_progress(student: Student) -> dict:
         }
 
     summative_scores = {
-        s.lesson_id: {"score": s.score, "perfectScore": s.total, "feedback": s.feedback, "attempts": s.attempts}
+        s.lesson_id: {
+            "score": s.score,
+            "total": s.total,
+            "feedback": s.feedback,
+            "attempts": s.attempts,
+            "percent": s.percent,
+            "passed": s.passed,
+            "failedItems": s.failed_items,
+        }
         for s in summatives
     }
 
