@@ -75,7 +75,7 @@ def _save_remediation(p: dict, subject: str) -> None:
     RemediationMaterial.objects.update_or_create(
         material_id=p["id"],
         defaults={
-            "subject": subject or "science",
+            "subject": p.get("subject") or subject or "science",
             "original_topic_id": p["originalTopicId"],
             "title": p["title"],
             "content": p["content"],
@@ -87,6 +87,58 @@ def _save_remediation(p: dict, subject: str) -> None:
             "is_published": p.get("isPublished", True),
         },
     )
+
+
+def _quiz_attempt_request_to_material(req: dict) -> dict:
+    """Turn a decoded QuizAttemptRequest into a wire TeacherRemediationMaterial.
+
+    Reuses the existing one-shot generator (which itself falls back to a safe
+    deterministic stub when no API key is present), then maps its lesson/quiz
+    shape onto the wire schema. `seed` makes the material id idempotent so a
+    re-sent request updates rather than duplicates.
+    """
+    from . import ai  # lazy: pulls in django settings / optional genai client
+
+    subject = req.get("subject", "science")
+    topic_id = req.get("topicId") or (req.get("focusTopicIds") or [req.get("lessonId", "")])[0]
+    section = req.get("section", "")
+
+    result = ai.generate_remediation(
+        subject=subject,
+        topic_id=topic_id,
+        student_name=section or "your class",
+        failed_items=[],
+    )
+
+    content = "\n\n".join(
+        f"## {c.get('header_title', '')}\n{c.get('explanation', '')}"
+        for c in result.get("concepts", [])
+    )
+    quiz = []
+    for i, q in enumerate(result.get("summative_test", []), start=1):
+        choices = [str(o) for o in q.get("choices", [])]
+        correct = q.get("correct_answer", "")
+        idx = choices.index(correct) if correct in choices else 0
+        quiz.append({
+            "id": f"QREM-{i:02d}",
+            "question": q.get("question", ""),
+            "options": choices,
+            "correctAnswerIndex": idx,
+            "explanation": "",
+        })
+
+    return {
+        "id": f"REM-{topic_id}-{req.get('seed', 0)}".replace(" ", ""),
+        "originalTopicId": topic_id,
+        "title": result.get("lesson_title", f"Remedial: {topic_id}"),
+        "content": content,
+        "teacherNotes": "\n".join(result.get("teachers_notes", [])),
+        "createdQuiz": quiz,
+        "publishDate": "",
+        "targetSection": section,
+        "isPublished": True,
+        "subject": subject,
+    }
 
 
 def handle(msg_type: str, payload: dict, *, subject: str = "", section: str = "") -> list[dict]:
@@ -130,6 +182,24 @@ def handle(msg_type: str, payload: dict, *, subject: str = "", section: str = ""
                     "section": student.section,
                     "topicKey": student.section,
                     "obj": assemble_progress(student),
+                }
+            )
+
+    elif msg_type == "QuizAttemptRequest":
+        # LoRa-capable trigger for AI remedial generation (see OWNERSHIP.md).
+        # Topic/summative quizzes already travel inside LessonCatalog, so only
+        # the remedial mode generates and broadcasts new material here.
+        if payload.get("mode") == "remedial":
+            material = _quiz_attempt_request_to_material(payload)
+            req_subject = material["subject"]
+            _save_remediation(material, req_subject)
+            downstream.append(
+                {
+                    "type": "TeacherRemediationMaterial",
+                    "subject": req_subject,
+                    "section": material["targetSection"],
+                    "topicKey": material["targetSection"],
+                    "obj": material,
                 }
             )
 

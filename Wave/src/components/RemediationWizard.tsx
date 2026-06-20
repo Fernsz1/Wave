@@ -244,7 +244,8 @@ export default function RemediationWizard({
       teacherNotes: generatedNotes,
       createdQuiz: generatedQuiz,
       publishDate: new Date().toISOString().split('T')[0],
-      assignedStudentLrn: student.lrn,
+      targetSection: student.section || student.gradeLevel || activeSection,
+      targetSubject: activeSubject,
       isPublished: true,
     };
 

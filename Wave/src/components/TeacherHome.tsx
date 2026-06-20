@@ -1387,7 +1387,6 @@ export default function TeacherHome({
                           createdQuiz: customQuiz,
                           createdSummative: customSummative,
                           publishDate,
-                          assignedStudentLrn: '',
                           targetSection: customTargetSection,
                           targetSubject: activeSubject,
                           isPublished: true,

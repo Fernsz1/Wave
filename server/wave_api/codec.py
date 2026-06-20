@@ -131,4 +131,13 @@ def encode_envelope(env: dict) -> list[Token]:
 
 
 def decode_envelope(arr: list[Token]) -> dict:
-    return _decode_fields(ENVELOPE_FIELDS, arr)
+    env = _decode_fields(ENVELOPE_FIELDS, arr)
+    # Reject frames from an incompatible protocol generation. The wire is
+    # append-only within a version (see protocol/OWNERSHIP.md); a different
+    # protocolVersion means the field layout cannot be trusted positionally.
+    version = env.get("version")
+    if version is not None and version != PROTOCOL_VERSION:
+        raise ValueError(
+            f"codec: unsupported protocolVersion {version} (expected {PROTOCOL_VERSION})"
+        )
+    return env

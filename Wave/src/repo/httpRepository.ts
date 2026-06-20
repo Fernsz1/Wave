@@ -16,7 +16,8 @@ import { Outbox, LocalStorageStore } from '../sync/outbox';
 import { MqttTransport, Transport } from '../sync/transport';
 import { topicFor, slug } from '../sync/topics';
 import { Lesson, QuizQuestion, StudentProgress, StudentUser, TeacherUser, TeacherRemediationMaterial } from '../types';
-import { GeneratedRemediation, GenerateRemediationReq, RepoBootstrap, SubscribeOpts, QuizAttemptWrite, SummativeWrite, WaveRepository } from './repository';
+import { GeneratedRemediation, GenerateRemediationReq, RepoBootstrap, SubscribeOpts, QuizAttemptWrite, QuizAttemptRequestWrite, SummativeWrite, WaveRepository } from './repository';
+import { WaveLocalStore, createLocalStore } from '../store/localStore';
 
 const SUBJECTS = ['science', 'mathematics', 'english'];
 
@@ -25,6 +26,7 @@ export class HttpRepository implements WaveRepository {
   private token = '';
   private transport: Transport | null = null;
   private outbox = new Outbox(new LocalStorageStore());
+  private store: WaveLocalStore = createLocalStore();
 
   constructor(
     private apiBase: string,
@@ -67,29 +69,42 @@ export class HttpRepository implements WaveRepository {
   }
 
   async bootstrap(): Promise<RepoBootstrap> {
-    const roster = await this.get('/api/roster');
-    const students: StudentUser[] = roster.students ?? [];
-    const teachers: TeacherUser[] = roster.teachers ?? [];
+    try {
+      const roster = await this.get('/api/roster');
+      const students: StudentUser[] = roster.students ?? [];
+      const teachers: TeacherUser[] = roster.teachers ?? [];
 
-    const lessonsBySubject: Record<string, Lesson[]> = {};
-    for (const subject of SUBJECTS) {
-      const cat = await this.get(`/api/catalog?subject=${subject}`);
-      lessonsBySubject[subject] = decode<{ lessons: Lesson[] }>('LessonCatalog', cat.tokens).lessons;
+      const lessonsBySubject: Record<string, Lesson[]> = {};
+      for (const subject of SUBJECTS) {
+        const cat = await this.get(`/api/catalog?subject=${subject}`);
+        lessonsBySubject[subject] = decode<{ lessons: Lesson[] }>('LessonCatalog', cat.tokens).lessons;
+      }
+
+      const progressRecords: Record<string, StudentProgress> = {};
+      const all = await this.get('/api/allprogress');
+      for (const tokens of all.records as Token[][]) {
+        const p = this.validatedProgress(tokens);
+        if (p) progressRecords[p.studentLrn] = p;
+      }
+
+      const rem = await this.get('/api/remediation');
+      const remediationMaterials = (rem.items as Token[][])
+        .map((t) => this.toInternalRemediation(t))
+        .filter((m): m is TeacherRemediationMaterial => m !== null);
+
+      const fresh = { students, teachers, lessonsBySubject, progressRecords, remediationMaterials };
+      // Write-through so a later offline cold start can hydrate from this.
+      void this.store.saveBootstrap(fresh);
+      return fresh;
+    } catch (err) {
+      // Server unreachable (the normal LoRa case) — hydrate the last snapshot.
+      const cached = await this.store.loadBootstrap();
+      if (cached) {
+        console.warn('[wave] bootstrap offline — hydrated from local store');
+        return cached;
+      }
+      throw err;
     }
-
-    const progressRecords: Record<string, StudentProgress> = {};
-    const all = await this.get('/api/allprogress');
-    for (const tokens of all.records as Token[][]) {
-      const p = this.validatedProgress(tokens);
-      if (p) progressRecords[p.studentLrn] = p;
-    }
-
-    const rem = await this.get('/api/remediation');
-    const remediationMaterials = (rem.items as Token[][])
-      .map((t) => this.toInternalRemediation(t))
-      .filter((m): m is TeacherRemediationMaterial => m !== null);
-
-    return { students, teachers, lessonsBySubject, progressRecords, remediationMaterials };
   }
 
   private validatedProgress(tokens: Token[]): StudentProgress | null {
@@ -112,8 +127,8 @@ export class HttpRepository implements WaveRepository {
       createdQuiz: w.createdQuiz,
       createdSummative: w.createdSummative,
       publishDate: w.publishDate,
-      assignedStudentLrn: '',
       targetSection: w.targetSection,
+      targetSubject: w.subject,
       isPublished: w.isPublished,
     };
   }
@@ -160,6 +175,7 @@ export class HttpRepository implements WaveRepository {
       quizScores: {},
       summativeScores: {},
     };
+    void this.store.putProgress(progress as unknown as StudentProgress);
     await this.push('StudentProgress', progress, w.subject, w.section);
   }
 
@@ -258,8 +274,23 @@ export class HttpRepository implements WaveRepository {
       targetSection: material.targetSection || opts.section,
       chunks: [],
       isPublished: material.isPublished,
+      subject: material.targetSubject || opts.subject,
     };
     await this.push('TeacherRemediationMaterial', wire, opts.subject, wire.targetSection);
+  }
+
+  async requestQuizAttempt(req: QuizAttemptRequestWrite): Promise<void> {
+    const wire = {
+      studentLrn: req.studentLrn,
+      section: req.section,
+      subject: req.subject,
+      lessonId: req.lessonId,
+      topicId: req.topicId,
+      focusTopicIds: req.focusTopicIds,
+      mode: req.mode,
+      seed: req.seed,
+    };
+    await this.push('QuizAttemptRequest', wire, req.subject, req.section);
   }
 
   async flushPendingWrites(): Promise<void> {
@@ -293,14 +324,21 @@ export class HttpRepository implements WaveRepository {
       if (meta.direction !== 'down') return;
       if (meta.type === 'StudentProgress') {
         const parsed = SCHEMA_BY_TYPE.StudentProgress.safeParse(payload);
-        if (parsed.success) opts.onUpdate({ kind: 'progress', record: parsed.data as unknown as StudentProgress });
+        if (parsed.success) {
+          const record = parsed.data as unknown as StudentProgress;
+          void this.store.putProgress(record); // keep the offline cache warm
+          opts.onUpdate({ kind: 'progress', record });
+        }
       } else if (meta.type === 'Rankings') {
         const parsed = SCHEMA_BY_TYPE.Rankings.safeParse(payload);
         if (parsed.success)
           opts.onUpdate({ kind: 'rankings', section: parsed.data.section, subject: parsed.data.subject, standings: parsed.data.standings });
       } else if (meta.type === 'TeacherRemediationMaterial') {
         const material = this.toInternalRemediationObj(payload);
-        if (material) opts.onUpdate({ kind: 'remediation', material });
+        if (material) {
+          void this.store.putRemediation(material);
+          opts.onUpdate({ kind: 'remediation', material });
+        }
       }
     };
 
@@ -332,8 +370,8 @@ export class HttpRepository implements WaveRepository {
       createdQuiz: w.createdQuiz,
       createdSummative: w.createdSummative,
       publishDate: w.publishDate,
-      assignedStudentLrn: '',
       targetSection: w.targetSection,
+      targetSubject: w.subject,
       isPublished: w.isPublished,
     };
   }

@@ -1,6 +1,7 @@
 """Unit tests for the agent->wire adapter layer."""
 import pytest
 
+from wave_api import codec
 from wave_api.agents.adapters import (
     extract_analytics_sidecar,
     quiz_item_to_wire,
@@ -99,10 +100,12 @@ def test_remediation_to_wire_full_payload_matches_zod_shape():
         "content",
         "teacherNotes",
         "createdQuiz",
+        "createdSummative",
         "publishDate",
         "targetSection",
         "chunks",
         "isPublished",
+        "subject",
     }
     assert set(payload.keys()) == expected_keys
     assert payload["originalTopicId"] == "L1-T2"
@@ -110,6 +113,9 @@ def test_remediation_to_wire_full_payload_matches_zod_shape():
     assert payload["publishDate"] == "2026-06-18"
     assert payload["isPublished"] is True
     assert payload["chunks"] == []
+    # No summative agent and no subject passed -> these stay absent on the wire.
+    assert payload["createdSummative"] is None
+    assert payload["subject"] is None
     # createdQuiz items are camelCase too
     assert payload["createdQuiz"][0]["correctAnswerIndex"] == 1
     assert payload["createdQuiz"][1]["correctAnswerIndex"] == 0
@@ -188,3 +194,31 @@ def test_remediation_to_wire_accepts_dict_draft():
     assert wire.title == "T"
     assert wire.teacher_notes == "N"
     assert wire.is_published is False
+
+
+def test_remediation_to_wire_carries_subject_and_summative():
+    """subject + summative_items survive the adapter and a codec round-trip,
+    re-validating against the generated wire model (AI I/O <-> schema)."""
+    quiz = [_sample_quiz_item()]
+    summative = [_sample_quiz_item(correct="C", explanation="Summative rationale.")]
+    wire = remediation_to_wire(
+        {"title": "Photosynthesis", "content": "Body", "teacher_notes": "Notes"},
+        quiz,
+        material_id="REM-SUBJ1",
+        original_topic_id="L1-T2",
+        target_section="Grade 7 - Section Rizal",
+        publish_date="2026-06-18",
+        is_published=True,
+        subject="science",
+        summative_items=summative,
+    )
+    assert wire.subject == "science"
+    assert wire.created_summative and len(wire.created_summative) == 1
+
+    # Encode through the shared codec and re-validate the decoded object.
+    payload = wire.model_dump(by_alias=True)
+    decoded = codec.decode("TeacherRemediationMaterial", codec.encode("TeacherRemediationMaterial", payload))
+    revalidated = WireTeacherRemediationMaterial(**decoded)
+    assert revalidated.subject == "science"
+    assert revalidated.created_summative[0].id == "QREM-L1T201"
+    assert revalidated.created_quiz[0].correct_answer_index == 1

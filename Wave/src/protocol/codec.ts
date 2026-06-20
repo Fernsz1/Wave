@@ -144,5 +144,14 @@ export function encodeEnvelope(env: Record<string, any>): Token[] {
 }
 
 export function decodeEnvelope(arr: Token[]): Record<string, any> {
-  return decodeFields(ENVELOPE_FIELDS, arr);
+  const env = decodeFields(ENVELOPE_FIELDS, arr);
+  // Reject frames from an incompatible protocol generation. The wire is
+  // append-only within a version (see protocol/OWNERSHIP.md); a different
+  // protocolVersion means the field layout cannot be trusted positionally.
+  if (env.version !== undefined && env.version !== PROTOCOL_VERSION) {
+    throw new Error(
+      `codec: unsupported protocolVersion ${env.version} (expected ${PROTOCOL_VERSION})`,
+    );
+  }
+  return env;
 }

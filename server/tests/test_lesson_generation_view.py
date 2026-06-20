@@ -102,9 +102,11 @@ def test_pass_persists_wire_material(client, started_session):
     wire = body["material"]
     expected_keys = {
         "id", "originalTopicId", "title", "content", "teacherNotes",
-        "createdQuiz", "publishDate", "targetSection", "chunks", "isPublished",
+        "createdQuiz", "createdSummative", "publishDate", "targetSection",
+        "chunks", "isPublished", "subject",
     }
     assert set(wire.keys()) == expected_keys
+    assert wire["subject"] == "science"
     assert wire["originalTopicId"] == "L1-T2"
     assert wire["targetSection"] == "Grade 6 - Section Newton"
     assert wire["isPublished"] is True

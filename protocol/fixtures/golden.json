@@ -221,6 +221,104 @@
           ]
         ]
       ]
+    },
+    {
+      "name": "TeacherRemediationMaterial full (subject + createdSummative, empty chunks)",
+      "type": "TeacherRemediationMaterial",
+      "object": {
+        "id": "REM-001",
+        "originalTopicId": "L1-T2",
+        "title": "Remedial: Photosynthesis",
+        "content": "## Review\nPlants make their own food using sunlight.",
+        "teacherNotes": "Focus on the role of sunlight.",
+        "createdQuiz": [
+          {
+            "id": "QREM-L1T201",
+            "question": "What gas do plants take in?",
+            "options": ["Oxygen", "Carbon dioxide", "Nitrogen", "Helium"],
+            "correctAnswerIndex": 1,
+            "explanation": "Plants absorb CO2."
+          }
+        ],
+        "createdSummative": [
+          {
+            "id": "QREM-L1T2S1",
+            "question": "Where does photosynthesis occur?",
+            "options": ["Roots", "Leaves", "Stem", "Flower"],
+            "correctAnswerIndex": 1,
+            "explanation": "In the chloroplasts of leaves."
+          }
+        ],
+        "publishDate": "2026-06-18",
+        "targetSection": "Grade 7 - Section Rizal",
+        "chunks": [],
+        "isPublished": true,
+        "subject": "science"
+      },
+      "tokenArray": [
+        "REM-001",
+        "L1-T2",
+        "Remedial: Photosynthesis",
+        "## Review\nPlants make their own food using sunlight.",
+        "Focus on the role of sunlight.",
+        [["QREM-L1T201", "What gas do plants take in?", ["Oxygen", "Carbon dioxide", "Nitrogen", "Helium"], 1, "Plants absorb CO2."]],
+        [["QREM-L1T2S1", "Where does photosynthesis occur?", ["Roots", "Leaves", "Stem", "Flower"], 1, "In the chloroplasts of leaves."]],
+        "2026-06-18",
+        "Grade 7 - Section Rizal",
+        [],
+        true,
+        0
+      ]
+    },
+    {
+      "name": "LessonCatalog one lesson with nested topic (exercises optional trimming)",
+      "type": "LessonCatalog",
+      "object": {
+        "subject": "science",
+        "lessons": [
+          {
+            "id": "L1",
+            "title": "Lesson 1: Matter",
+            "description": "States and properties of matter.",
+            "topics": [
+              {
+                "id": "L1-T1",
+                "name": "States of Matter",
+                "description": "Solid, liquid, gas.",
+                "readingTime": "5 mins",
+                "content": {
+                  "introduction": "Matter exists in different states.",
+                  "sections": [{ "title": "Solids", "body": "Fixed shape and volume." }],
+                  "definition": { "term": "Matter", "meaning": "Anything that has mass and takes up space." },
+                  "keyTakeaway": "Matter has three common states."
+                },
+                "quiz": [
+                  {
+                    "id": "Q-L1T1-1",
+                    "question": "Which has a fixed shape?",
+                    "options": ["Solid", "Liquid", "Gas", "Plasma"],
+                    "correctAnswerIndex": 0,
+                    "explanation": "Solids keep their shape."
+                  }
+                ]
+              }
+            ],
+            "summative": [
+              {
+                "id": "S-L1-1",
+                "question": "What is matter?",
+                "options": ["Energy", "Anything with mass and volume", "Light", "Sound"],
+                "correctAnswerIndex": 1,
+                "explanation": "Matter has mass and takes up space."
+              }
+            ]
+          }
+        ]
+      },
+      "tokenArray": [
+        0,
+        [["L1", "Lesson 1: Matter", "States and properties of matter.", [["L1-T1", "States of Matter", "Solid, liquid, gas.", "5 mins", null, ["Matter exists in different states.", [["Solids", "Fixed shape and volume."]], ["Matter", "Anything that has mass and takes up space."], "Matter has three common states."], [["Q-L1T1-1", "Which has a fixed shape?", ["Solid", "Liquid", "Gas", "Plasma"], 0, "Solids keep their shape."]]]], [["S-L1-1", "What is matter?", ["Energy", "Anything with mass and volume", "Light", "Sound"], 1, "Matter has mass and takes up space."]]]]
+      ]
     }
   ]
 }

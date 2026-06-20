@@ -65,7 +65,7 @@ export default function App() {
     if (stored) {
       try { return JSON.parse(stored); } catch { /* fall through */ }
     }
-    const seed: StudentUser[] = [{ lrn: '101234567891', name: 'Maria Santos', gradeLevel: 'Grade 6', section: 'Grade 6 - Section Einstein', pin: '123456' }];
+    const seed: StudentUser[] = [{ lrn: '101234567891', name: 'Maria Santos', gradeLevel: 'Grade 7', section: 'Grade 7 - Section Einstein', pin: '123456' }];
     localStorage.setItem('wave_enrolled_students', JSON.stringify(seed));
     return seed;
   });
@@ -317,21 +317,6 @@ export default function App() {
   const handlePublishRemedialMaterial = (newMaterial: TeacherRemediationMaterial) => {
     setRemediationMaterials(prev => [newMaterial, ...prev]);
     repo.publishRemediation(newMaterial, { subject: activeSubject, section: activeSection }).catch(() => {});
-
-    // Force add student progress record trace if none exists, keeping overall systems calculated correctly.
-    const studentLrn = newMaterial.assignedStudentLrn;
-    if (!progressRecords[studentLrn]) {
-      const emptyState: StudentProgress = {
-        studentLrn,
-        completedTopicIds: [],
-        quizAttempts: {},
-        summativeScores: {}
-      };
-      setProgressRecords(prev => ({
-        ...prev,
-        [studentLrn]: emptyState
-      }));
-    }
   };
 
   // Trigger remedial from Student screen

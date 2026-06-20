@@ -28,8 +28,8 @@ const TEACHERS_KEY = 'wave_enrolled_teachers';
 const DEMO_STUDENT: StudentUser = {
   lrn: '101234567891',
   name: 'Maria Santos',
-  gradeLevel: 'Grade 6',
-  section: 'Grade 6 - Section Einstein',
+  gradeLevel: 'Grade 7',
+  section: 'Grade 7 - Section Einstein',
   pin: '123456',
 };
 
@@ -78,6 +78,7 @@ export class MockRepository implements WaveRepository {
   async saveQuizAttempt(): Promise<void> {}
   async saveSummativeResult(): Promise<void> {}
   async publishRemediation(): Promise<void> {}
+  async requestQuizAttempt(): Promise<void> {}
 
   async fetchRemediation(): Promise<TeacherRemediationMaterial[]> { return []; }
 

@@ -80,6 +80,7 @@ def draft_lesson(state: AgentState):
             "grade_level": state['grade_level'],
             "topic": state['topic'],
             "diagnosis_report": state["core_diagnosis"],
+            "recommendations": state.get("recommendations") or "None provided.",
             "draft_lesson": prior.get("content", "") if isinstance(prior, dict) else str(prior)
         })
 
@@ -104,7 +105,8 @@ def evaluate_pedagogy(state: AgentState):
         "grade_level": state.get("grade_level"),
         "topic": state.get("topic"),
         "core_diagnosis": state.get("core_diagnosis"),
-        "draft_lesson": state.get("draft_lesson")
+        "draft_lesson": state.get("draft_lesson"),
+        "recommendations": state.get("recommendations") or "None provided.",
     })
 
     is_approved = result.is_approved

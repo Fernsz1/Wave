@@ -171,8 +171,7 @@ export default function StudentLessons({
     mat => mat.isPublished && (
       mat.targetSection === studentSection ||
       mat.targetSection?.toLowerCase() === 'all sections' ||
-      mat.targetSection === '' ||
-      (!mat.targetSection && mat.assignedStudentLrn === student.lrn)
+      !mat.targetSection
     )
   );
 

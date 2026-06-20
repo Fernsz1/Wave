@@ -115,7 +115,8 @@
         { "name": "publishDate", "t": "str" },
         { "name": "targetSection", "t": "str" },
         { "name": "chunks", "t": "array:Chunk" },
-        { "name": "isPublished", "t": "bool" }
+        { "name": "isPublished", "t": "bool" },
+        { "name": "subject", "t": "enum:subject", "optional": true }
       ]
     },
     "LessonCatalog": {

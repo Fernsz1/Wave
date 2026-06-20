@@ -137,7 +137,12 @@ def finalize_and_publish(
         "human_feedback": "approve",
     }
     quiz_state = _quiz_graph().invoke(quiz_initial_state, _quiz_config(session_id))
-    quiz_items: List[Dict[str, Any]] = quiz_state.get("quiz_draft") or []
+    # `quiz_draft` is a QuizDraftResponse dump ({"quiz_items": [...]}), not the
+    # list itself — unwrap to the items the adapter expects.
+    quiz_draft = quiz_state.get("quiz_draft") or {}
+    quiz_items: List[Dict[str, Any]] = (
+        quiz_draft.get("quiz_items", []) if isinstance(quiz_draft, dict) else (quiz_draft or [])
+    )
 
     original_topic_id = final_lesson_state.get("original_topic_id", "")
     target_section = final_lesson_state.get("target_section", "")
@@ -152,6 +157,7 @@ def finalize_and_publish(
         publish_date=resolved_publish_date,
         is_published=True,
         chunks=[],
+        subject=final_lesson_state.get("subject", ""),
     )
     analytics = extract_analytics_sidecar(
         quiz_items,

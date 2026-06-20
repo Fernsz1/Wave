@@ -105,15 +105,25 @@ def remediation_to_wire(
     publish_date: str,
     is_published: bool = False,
     chunks: List[WireChunk] | None = None,
+    subject: str = "",
+    summative_items: List[Any] | None = None,
 ) -> WireTeacherRemediationMaterial:
     """Assemble a complete WireTeacherRemediationMaterial from agent outputs.
 
     `chunks` is left empty by default — fragmentation is the transport
-    layer's job, not the agent's or the orchestrator's.
+    layer's job, not the agent's or the orchestrator's. `subject` is carried so
+    student-side filtering survives the round-trip (see protocol/OWNERSHIP.md).
+    `summative_items` is optional — the lesson/quiz graphs currently emit a topic
+    quiz only, so it stays absent unless a caller supplies a custom summative.
     """
     draft_dict = draft.model_dump() if hasattr(draft, "model_dump") else dict(draft)
     topic_code = _topic_code(original_topic_id)
     wire_quiz = quiz_items_to_wire(quiz_items, topic_code=topic_code)
+    wire_summative = (
+        quiz_items_to_wire(summative_items, topic_code=topic_code)
+        if summative_items
+        else None
+    )
 
     return WireTeacherRemediationMaterial(
         id=material_id,
@@ -122,8 +132,10 @@ def remediation_to_wire(
         content=draft_dict.get("content", ""),
         teacher_notes=draft_dict.get("teacher_notes", ""),
         created_quiz=wire_quiz,
+        created_summative=wire_summative,
         publish_date=publish_date,
         target_section=target_section,
         chunks=chunks or [],
         is_published=is_published,
+        subject=subject or None,
     )

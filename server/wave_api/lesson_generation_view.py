@@ -92,6 +92,7 @@ def submit_teacher_feedback(request):
                 "content": wire.content,
                 "teacher_notes": wire.teacher_notes,
                 "created_quiz": [q.model_dump(by_alias=True) for q in wire.created_quiz],
+                "created_summative": [q.model_dump(by_alias=True) for q in (wire.created_summative or [])],
                 "publish_date": wire.publish_date,
                 "target_section": wire.target_section,
                 "is_published": wire.is_published,

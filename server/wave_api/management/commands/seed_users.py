@@ -23,8 +23,8 @@ SUBJECTS = {
 DEMO_STUDENT = {
     "lrn": "101234567891",
     "name": "Maria Santos",
-    "grade_level": "Grade 6",
-    "section": "Grade 6 - Section Einstein",
+    "grade_level": "Grade 7",
+    "section": "Grade 7 - Section Einstein",
     "pin": "123456",
 }
 

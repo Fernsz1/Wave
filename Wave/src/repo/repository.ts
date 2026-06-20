@@ -65,6 +65,19 @@ export interface SummativeWrite {
   subject: string;
 }
 
+/** A teacher-initiated request to generate remedial material for a section.
+ *  Sent "up" as the LoRa-capable trigger for AI generation (see OWNERSHIP.md). */
+export interface QuizAttemptRequestWrite {
+  studentLrn: string;
+  section: string;
+  subject: string;
+  lessonId: string;
+  topicId?: string;
+  focusTopicIds?: string[];
+  mode: 'topic' | 'summative' | 'remedial';
+  seed: number;
+}
+
 export interface SubscribeOpts {
   role: 'student' | 'teacher';
   lrn?: string;
@@ -83,6 +96,8 @@ export interface WaveRepository {
   saveQuizAttempt(w: QuizAttemptWrite): Promise<void>;
   saveSummativeResult(w: SummativeWrite): Promise<void>;
   publishRemediation(material: TeacherRemediationMaterial, opts: { subject: string; section: string }): Promise<void>;
+  /** Send a QuizAttemptRequest "up" to trigger server-side AI generation. No-op for Mock. */
+  requestQuizAttempt(req: QuizAttemptRequestWrite): Promise<void>;
   generateRemediation(req: GenerateRemediationReq): Promise<GeneratedRemediation>;
   fetchRemediation(section?: string): Promise<TeacherRemediationMaterial[]>;
   enrollStudent(student: StudentUser): Promise<void>;

@@ -1,0 +1,10 @@
+{
+  "_comment": "Section -> topic-slug golden pairs. Both server/wave_api/mqtt.py slug() and Wave/src/sync/topics.ts slug() must produce these exact slugs, or a device and the server will address different MQTT/LoRa topics for the same section.",
+  "cases": [
+    { "section": "Grade 7 - Section Rizal", "slug": "grade-7-section-rizal" },
+    { "section": "All Sections", "slug": "all-sections" },
+    { "section": "  Mixed__Case  ", "slug": "mixed-case" },
+    { "section": "Grade6", "slug": "grade6" },
+    { "section": "A!@#B", "slug": "a-b" }
+  ]
+}

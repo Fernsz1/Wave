@@ -129,6 +129,7 @@ def remediation(request):
             "targetSection": m.target_section,
             "chunks": [],
             "isPublished": m.is_published,
+            "subject": m.subject,
         }
         out.append(codec.encode("TeacherRemediationMaterial", obj))
     return Response({"type": "TeacherRemediationMaterial", "items": out})
