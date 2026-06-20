@@ -5,7 +5,7 @@ published back "down" as a side effect (e.g. recomputed Rankings).
 Shared by the MQTT subscriber (mqtt.py) and the REST fallback (views.py) so both
 ingress paths behave identically.
 """
-from .derive import assemble_progress, compute_rankings
+from .derive import PASS_PERCENT, _percent, assemble_progress, compute_rankings
 from .models import RemediationMaterial, Student, SummativeResult, Teacher
 
 
@@ -22,18 +22,58 @@ def _upsert_student_from_signup(p: dict) -> Student:
     return student
 
 
+def _upsert_summative(
+    student: Student,
+    lesson_id: str,
+    *,
+    score: int,
+    total: int,
+    feedback: str,
+    percent: int | None = None,
+    passed: bool | None = None,
+    failed_items: list | None = None,
+) -> SummativeResult:
+    """Shared by both ingress paths that can write a SummativeResult row
+    (a `StudentProgress` message carrying `summativeScores`, and a dedicated
+    `StudentSummativeResults` message) so neither one leaves the row partially
+    populated or skips the attempts counter.
+    """
+    if percent is None:
+        percent = _percent(score, total)
+    if passed is None:
+        passed = percent >= PASS_PERCENT
+    obj, _ = student.summatives.update_or_create(
+        lesson_id=lesson_id,
+        defaults={
+            "score": score,
+            "total": total,
+            "feedback": feedback,
+            "percent": percent,
+            "passed": passed,
+            "failed_items": failed_items or [],
+        },
+    )
+    obj.attempts = min(obj.attempts + 1, 3)
+    obj.save(update_fields=["attempts"])
+    return obj
+
+
 def _save_progress(p: dict) -> None:
     student = Student.objects.filter(lrn=p["studentLrn"]).first()
     if not student:
         return
     for topic_id, att in (p.get("quizAttempts") or {}).items():
-        obj, _ = student.attempts.update_or_create(
+        existing = student.attempts.filter(topic_id=topic_id).first()
+        prev_attempts = existing.attempts if existing else 0
+        student.attempts.update_or_create(
             topic_id=topic_id,
             defaults={
                 "score": att["score"],
                 "perfect_score": att.get("perfectScore", 10),
                 "answers": att.get("answers", []),
                 "completed_at": att.get("completedAt", ""),
+                "lesson_id": att.get("lessonId", ""),
+                "attempts": att.get("attempts", min(prev_attempts + 1, 3)),
             },
         )
         # The UI doesn't transmit its retry counter, so count server-side
@@ -41,13 +81,15 @@ def _save_progress(p: dict) -> None:
         obj.attempts = att.get("attempts") if att.get("attempts") is not None else min(obj.attempts + 1, 3)
         obj.save(update_fields=["attempts"])
     for lesson_id, summ in (p.get("summativeScores") or {}).items():
-        student.summatives.update_or_create(
-            lesson_id=lesson_id,
-            defaults={
-                "score": summ["score"],
-                "total": summ.get("perfectScore", 20),
-                "feedback": summ.get("feedback", ""),
-            },
+        _upsert_summative(
+            student,
+            lesson_id,
+            score=summ["score"],
+            total=summ.get("total", 20),
+            feedback=summ.get("feedback", ""),
+            percent=summ.get("percent"),
+            passed=summ.get("passed"),
+            failed_items=summ.get("failedItems"),
         )
 
 
@@ -60,19 +102,16 @@ def _save_summative_results(p: dict) -> None:
         "Good job! You passed the summative assessment." if passed
         else "Keep reviewing the topics and ask your teacher for help."
     )
-    obj, _ = student.summatives.update_or_create(
-        lesson_id=p["lessonId"],
-        defaults={
-            "score": p["score"],
-            "total": p.get("total", 20),
-            "percent": p.get("percent", 0),
-            "passed": passed,
-            "feedback": feedback,
-            "failed_items": p.get("failedItems", []),
-        },
+    _upsert_summative(
+        student,
+        p["lessonId"],
+        score=p["score"],
+        total=p.get("total", 20),
+        feedback=feedback,
+        percent=p.get("percent"),
+        passed=passed,
+        failed_items=p.get("failedItems"),
     )
-    obj.attempts = min(obj.attempts + 1, 3)
-    obj.save(update_fields=["attempts"])
 
 
 def _save_remediation(p: dict, subject: str) -> None:

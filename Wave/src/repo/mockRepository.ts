@@ -10,7 +10,7 @@
  */
 import { MOCK_LESSONS_BY_SUBJECT } from '../data';
 import { QuizQuestion, StudentUser, TeacherUser, Topic, TeacherRemediationMaterial } from '../types';
-import { GeneratedRemediation, GenerateRemediationReq, RepoBootstrap, WaveRepository } from './repository';
+import { GeneratedRemediation, GenerateRemediationReq, LoginResult, RepoBootstrap, WaveRepository } from './repository';
 
 function findTopic(topicId: string): Topic | undefined {
   for (const lessons of Object.values(MOCK_LESSONS_BY_SUBJECT)) {
@@ -73,7 +73,19 @@ export class MockRepository implements WaveRepository {
     };
   }
 
-  async authenticate(role: 'student' | 'teacher', principalId: string, nameOrPassword?: string, pin?: string): Promise<void> {}
+  async login(role: 'student' | 'teacher', principalId: string, passwordOrPin: string): Promise<LoginResult> {
+    if (role === 'student') {
+      const found = loadRoster().find((s) => s.lrn === principalId);
+      if (!found) return { ok: false, error: 'Student LRN is not enrolled on this platform. Please contact your teacher to enroll your account.' };
+      if (found.pin !== passwordOrPin) return { ok: false, error: 'Incorrect PIN. Please try again.' };
+      return { ok: true, user: found };
+    }
+    const found = loadTeachers().find((t) => t.teacherId === principalId);
+    if (!found) return { ok: false, error: 'Teacher ID not recognized. Please contact your administrator.' };
+    const expectedPassword = found.password || 'password123';
+    if (expectedPassword !== passwordOrPin) return { ok: false, error: 'Incorrect password for this Teacher ID. Please try again.' };
+    return { ok: true, user: found };
+  }
   async flushPendingWrites(): Promise<void> {}
   async saveQuizAttempt(): Promise<void> {}
   async saveSummativeResult(): Promise<void> {}

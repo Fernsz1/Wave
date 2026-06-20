@@ -58,7 +58,7 @@ class QuizAttempt(models.Model):
     perfect_score = models.IntegerField(default=10)
     answers = models.JSONField(default=list)
     completed_at = models.CharField(max_length=20)  # YYYY-MM-DD, matches app
-    attempts = models.IntegerField(default=0)  # UI retry counter (capped at 3)
+    attempts = models.IntegerField(default=0)  # capped at 3, incremented in ingest._save_progress
 
     class Meta:
         unique_together = ("student", "topic_id")

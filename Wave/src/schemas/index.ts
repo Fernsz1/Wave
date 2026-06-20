@@ -28,6 +28,8 @@ export const StudentQuizAttemptSchema = z.object({
   perfectScore: z.number().int(),
   answers: z.array(z.number().int()),
   completedAt: z.string(),
+  attempts: z.number().int().optional(),
+  lessonId: z.string().optional(),
 });
 
 export const QuizScoreSchema = z.object({
@@ -37,18 +39,21 @@ export const QuizScoreSchema = z.object({
   passed: z.boolean(),
 });
 
-export const SummativeScoreSchema = z.object({
-  score: z.number().int(),
-  perfectScore: z.number().int(),
-  feedback: z.string(),
-  attempts: z.number().int().optional(),
-});
-
 export const FailedItemSchema = z.object({
   questionId: z.string(),
   topicId: z.string(),
   selectedOption: z.number().int(),
   correctOption: z.number().int(),
+});
+
+export const SummativeScoreSchema = z.object({
+  score: z.number().int(),
+  total: z.number().int(),
+  feedback: z.string(),
+  attempts: z.number().int().optional(),
+  percent: z.number().int().optional(),
+  passed: z.boolean().optional(),
+  failedItems: z.array(FailedItemSchema).optional(),
 });
 
 export const StandingSchema = z.object({
@@ -72,6 +77,7 @@ export const TeacherSignupSchema = z.object({
   teacherId: z.string(),
   name: z.string(),
   department: z.string(),
+  password: z.string().optional(),
 });
 
 export const StudentProgressSchema = z.object({
@@ -118,6 +124,7 @@ export const TeacherRemediationMaterialSchema = z.object({
   targetSection: z.string(),
   chunks: z.array(ChunkSchema),
   isPublished: z.boolean(),
+  subject: SubjectSchema.optional(),
 });
 
 export const DefinitionSchema = z.object({ term: z.string(), meaning: z.string() });

@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 // Models
-import { UserRole, StudentUser, TeacherUser, StudentProgress, TeacherRemediationMaterial, Lesson } from './types';
+import { UserRole, StudentUser, TeacherUser, StudentProgress, TeacherRemediationMaterial, Lesson, FailedItem } from './types';
 
 // Data-access seam (Mock by default; Http+MQTT when VITE_API_BASE is set)
 import { createRepository, RepoUpdate } from './repo';
@@ -67,17 +67,6 @@ export default function App() {
     }
     const seed: StudentUser[] = [{ lrn: '101234567891', name: 'Maria Santos', gradeLevel: 'Grade 6', section: 'Grade 6 - Section Einstein', pin: '123456' }];
     localStorage.setItem('wave_enrolled_students', JSON.stringify(seed));
-    return seed;
-  });
-
-  // Registered teachers — seeded with one demo account on first launch
-  const [teachers, setTeachers] = useState<TeacherUser[]>(() => {
-    const stored = localStorage.getItem('wave_enrolled_teachers');
-    if (stored) {
-      try { return JSON.parse(stored); } catch { /* fall through */ }
-    }
-    const seed: TeacherUser[] = [{ teacherId: 'T-2026-001', name: 'Mrs. Elena Santos', department: 'General Academics', password: 'password123' }];
-    localStorage.setItem('wave_enrolled_teachers', JSON.stringify(seed));
     return seed;
   });
 
@@ -136,7 +125,6 @@ export default function App() {
     repo.bootstrap()
       .then(b => {
         setStudents(b.students);
-        setTeachers(b.teachers);
         setLessonsBySubject(b.lessonsBySubject);
         // Merge: server wins per-student, but keep any locally-cached records the
         // server doesn't know about yet (e.g. a push that hasn't flushed).
@@ -221,15 +209,10 @@ export default function App() {
       }
     }
 
-    // Establish a write token when backed by the server. After the token is
-    // ready, flush any writes that were queued before it arrived (outbox).
+    // repo.login() already established the write token (HttpRepository) during
+    // credential validation; flush anything queued while offline before it arrived.
     if (repo.isLive) {
-      const principalId = selectedRole === 'student' ? (user as StudentUser).lrn : (user as TeacherUser).teacherId;
-      const passOrName = selectedRole === 'student' ? (user as StudentUser).name : (user as TeacherUser).password;
-      const pin = selectedRole === 'student' ? (user as StudentUser).pin : undefined;
-      repo.authenticate(selectedRole, principalId, passOrName, pin)
-        .then(() => repo.flushPendingWrites())
-        .catch(() => {});
+      repo.flushPendingWrites().catch(() => {});
     }
   };
 
@@ -282,21 +265,26 @@ export default function App() {
   };
 
   // Dynamic Summative scoring
-  const handleSaveSummativeScore = (lessonId: string, score: number) => {
+  const handleSaveSummativeScore = (lessonId: string, score: number, failedItems: FailedItem[] = []) => {
     if (!currentUser || role !== 'student') return;
     const lrn = (currentUser as StudentUser).lrn;
-    
+
     const originalProgress = progressRecords[lrn];
     if (!originalProgress) return;
 
     const updatedSummatives = { ...originalProgress.summativeScores };
     const prevSummativeAttempts = originalProgress.summativeScores[lessonId]?.attempts ?? 0;
     if (prevSummativeAttempts >= 3) return; // already at max attempts
+    const percent = Math.round((score / 20) * 100);
+    const passed = score >= 12;
     updatedSummatives[lessonId] = {
       score,
-      perfectScore: 20,
-      feedback: score >= 12 ? "Good job! You passed the summative assessment." : "Keep reviewing the topics and ask your teacher for help.",
-      attempts: prevSummativeAttempts + 1
+      total: 20,
+      feedback: passed ? "Good job! You passed the summative assessment." : "Keep reviewing the topics and ask your teacher for help.",
+      attempts: prevSummativeAttempts + 1,
+      percent,
+      passed,
+      failedItems
     };
 
     const updatedProgress: StudentProgress = {
@@ -310,28 +298,13 @@ export default function App() {
     }));
 
     const section = (currentUser as StudentUser).section || (currentUser as StudentUser).gradeLevel;
-    repo.saveSummativeResult({ lrn, lessonId, score, section, subject: activeSubject }).catch(() => {});
+    repo.saveSummativeResult({ lrn, lessonId, score, section, subject: activeSubject, failedItems }).catch(() => {});
   };
 
   // Publish remedial material via wizard triggers
   const handlePublishRemedialMaterial = (newMaterial: TeacherRemediationMaterial) => {
     setRemediationMaterials(prev => [newMaterial, ...prev]);
     repo.publishRemediation(newMaterial, { subject: activeSubject, section: activeSection }).catch(() => {});
-
-    // Force add student progress record trace if none exists, keeping overall systems calculated correctly.
-    const studentLrn = newMaterial.assignedStudentLrn;
-    if (!progressRecords[studentLrn]) {
-      const emptyState: StudentProgress = {
-        studentLrn,
-        completedTopicIds: [],
-        quizAttempts: {},
-        summativeScores: {}
-      };
-      setProgressRecords(prev => ({
-        ...prev,
-        [studentLrn]: emptyState
-      }));
-    }
   };
 
   // Trigger remedial from Student screen
@@ -348,7 +321,7 @@ export default function App() {
       {/* AUTHENTICATION OVERLAY */}
       {/* ────────────────────────────────────────────────────────── */}
       {!currentUser && (
-        <LoginScreen onLoginSuccess={handleLoginSuccess} students={students} teachers={teachers} />
+        <LoginScreen onLoginSuccess={handleLoginSuccess} repo={repo} />
       )}
 
       {currentUser && (
@@ -656,6 +629,21 @@ export default function App() {
                               progress={progressRecords[(currentUser as StudentUser).lrn] || { studentLrn: (currentUser as StudentUser).lrn, completedTopicIds: [], quizAttempts: {}, summativeScores: {} }}
                               lessons={currentLessons}
                               activeSubject={activeSubject}
+                              onNavigateToTopic={(topicId, viewState) => {
+                                // Find subject key having this topic ID across all subjects
+                                let foundSubject = activeSubject;
+                                for (const [subKey, subLessons] of Object.entries(MOCK_LESSONS_BY_SUBJECT)) {
+                                  if (subLessons.flatMap(l => l.topics).some(t => t.id === topicId)) {
+                                    foundSubject = subKey;
+                                    break;
+                                  }
+                                }
+                                setActiveSubject(foundSubject);
+                                setNavTopicId(topicId);
+                                setNavViewState(viewState);
+                                setHasSelectedSubject(true);
+                                setActiveTab('lessons');
+                              }}
                             />
                           )}
 
@@ -843,6 +831,7 @@ export default function App() {
             preSelectedStudent={wizardPreSelectedStudent}
             preSelectedTopicId={wizardPreSelectedTopicId}
             onPublish={handlePublishRemedialMaterial}
+            onGenerateRemediation={(req) => repo.generateRemediation(req)}
             onClose={() => {
               setShowWizard(false);
               setWizardPreSelectedStudent(null);

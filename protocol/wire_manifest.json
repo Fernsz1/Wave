@@ -50,7 +50,8 @@
       "fields": [
         { "name": "teacherId", "t": "str" },
         { "name": "name", "t": "str" },
-        { "name": "department", "t": "str" }
+        { "name": "department", "t": "str" },
+        { "name": "password", "t": "str", "optional": true }
       ]
     },
     "StudentProgress": {
@@ -138,7 +139,8 @@
         { "name": "perfectScore", "t": "int" },
         { "name": "answers", "t": "array:int" },
         { "name": "completedAt", "t": "str" },
-        { "name": "attempts", "t": "int", "optional": true }
+        { "name": "attempts", "t": "int", "optional": true },
+        { "name": "lessonId", "t": "str", "optional": true }
       ]
     },
     "QuizScore": {
@@ -152,9 +154,12 @@
     "SummativeScore": {
       "fields": [
         { "name": "score", "t": "int" },
-        { "name": "perfectScore", "t": "int" },
+        { "name": "total", "t": "int" },
         { "name": "feedback", "t": "str" },
-        { "name": "attempts", "t": "int", "optional": true }
+        { "name": "attempts", "t": "int", "optional": true },
+        { "name": "percent", "t": "int", "optional": true },
+        { "name": "passed", "t": "bool", "optional": true },
+        { "name": "failedItems", "t": "array:FailedItem", "optional": true }
       ]
     },
     "FailedItem": {

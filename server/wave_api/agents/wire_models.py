@@ -38,7 +38,9 @@ class WireTeacherRemediationMaterial(BaseModel):
     content: str
     teacher_notes: str = Field(alias="teacherNotes")
     created_quiz: List[WireQuizQuestion] = Field(alias="createdQuiz")
+    created_summative: List[WireQuizQuestion] = Field(default_factory=list, alias="createdSummative")
     publish_date: str = Field(alias="publishDate")
     target_section: str = Field(alias="targetSection")
     chunks: List[WireChunk] = Field(default_factory=list)
     is_published: bool = Field(alias="isPublished")
+    subject: str = ""

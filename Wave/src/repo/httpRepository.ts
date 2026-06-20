@@ -16,9 +16,11 @@ import { Outbox, LocalStorageStore } from '../sync/outbox';
 import { MqttTransport, Transport } from '../sync/transport';
 import { topicFor, slug } from '../sync/topics';
 import { Lesson, QuizQuestion, StudentProgress, StudentUser, TeacherUser, TeacherRemediationMaterial } from '../types';
-import { GeneratedRemediation, GenerateRemediationReq, RepoBootstrap, SubscribeOpts, QuizAttemptWrite, SummativeWrite, WaveRepository } from './repository';
+import { GeneratedRemediation, GenerateRemediationReq, LoginResult, RepoBootstrap, SubscribeOpts, QuizAttemptWrite, SummativeWrite, WaveRepository } from './repository';
 
 const SUBJECTS = ['science', 'mathematics', 'english'];
+/** Demo-only fallback PIN when a caller omits one (e.g. quick-enroll without a PIN field). */
+const DEFAULT_DEMO_PIN = '123456';
 
 export class HttpRepository implements WaveRepository {
   readonly isLive = true;
@@ -53,17 +55,22 @@ export class HttpRepository implements WaveRepository {
     return res.json();
   }
 
-  async authenticate(role: 'student' | 'teacher', principalId: string, nameOrPassword?: string, pin?: string): Promise<void> {
+  async login(role: 'student' | 'teacher', principalId: string, passwordOrPin: string): Promise<LoginResult> {
     const body =
-      role === 'student'
-        ? { role, lrn: principalId, pin: pin ?? '123456' }
-        : { role, teacherId: principalId, password: nameOrPassword };
+      role === 'student' ? { role, lrn: principalId, pin: passwordOrPin } : { role, teacherId: principalId, password: passwordOrPin };
     const res = await fetch(`${this.apiBase}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
-    if (res.ok) this.token = (await res.json()).token;
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) return { ok: false, error: data.error || 'Login failed. Please try again.' };
+    this.token = data.token;
+    const user: StudentUser | TeacherUser =
+      role === 'student'
+        ? { lrn: data.user.lrn, name: data.user.name, gradeLevel: data.user.gradeLevel, section: data.user.section, pin: passwordOrPin }
+        : { teacherId: data.user.teacherId, name: data.user.name, department: data.user.department, password: passwordOrPin };
+    return { ok: true, user };
   }
 
   async bootstrap(): Promise<RepoBootstrap> {
@@ -99,23 +106,7 @@ export class HttpRepository implements WaveRepository {
   }
 
   private toInternalRemediation(tokens: Token[]): TeacherRemediationMaterial | null {
-    const obj = decode('TeacherRemediationMaterial', tokens);
-    const parsed = SCHEMA_BY_TYPE.TeacherRemediationMaterial.safeParse(obj);
-    if (!parsed.success) return null;
-    const w = parsed.data;
-    return {
-      id: w.id,
-      originalTopicId: w.originalTopicId,
-      title: w.title,
-      content: w.content,
-      teacherNotes: w.teacherNotes,
-      createdQuiz: w.createdQuiz,
-      createdSummative: w.createdSummative,
-      publishDate: w.publishDate,
-      assignedStudentLrn: '',
-      targetSection: w.targetSection,
-      isPublished: w.isPublished,
-    };
+    return this.toInternalRemediationObj(decode('TeacherRemediationMaterial', tokens));
   }
 
   /** Push one envelope "up" over REST; queue to the outbox if the call fails. */
@@ -155,6 +146,7 @@ export class HttpRepository implements WaveRepository {
           perfectScore: 10,
           answers: w.answers,
           completedAt: new Date().toISOString().split('T')[0],
+          lessonId: w.lessonId,
         },
       },
       quizScores: {},
@@ -173,7 +165,7 @@ export class HttpRepository implements WaveRepository {
       total: 20,
       percent: Math.round((w.score / 20) * 100),
       passed,
-      failedItems: [],
+      failedItems: w.failedItems ?? [],
       feedback: passed ? 'Good job! You passed the summative assessment.' : 'Keep reviewing the topics and ask your teacher for help.',
     };
     await this.push('StudentSummativeResults', results, w.subject, w.section);
@@ -238,7 +230,10 @@ export class HttpRepository implements WaveRepository {
       title,
       content,
       teacherNotes,
-      createdQuiz
+      createdQuiz,
+      lessonNumber: data.lesson_number,
+      learningGap: data.learning_gap,
+      teachersNotes: data.teachers_notes || [],
     };
   }
 
@@ -258,6 +253,7 @@ export class HttpRepository implements WaveRepository {
       targetSection: material.targetSection || opts.section,
       chunks: [],
       isPublished: material.isPublished,
+      subject: opts.subject,
     };
     await this.push('TeacherRemediationMaterial', wire, opts.subject, wire.targetSection);
   }
@@ -272,7 +268,7 @@ export class HttpRepository implements WaveRepository {
       name: student.name,
       gradeLevel: student.gradeLevel,
       section: student.section || student.gradeLevel,
-      pin: student.pin || '123456',
+      pin: student.pin || DEFAULT_DEMO_PIN,
     };
     await this.push('StudentSignup', signup, '', signup.section);
   }
@@ -332,8 +328,8 @@ export class HttpRepository implements WaveRepository {
       createdQuiz: w.createdQuiz,
       createdSummative: w.createdSummative,
       publishDate: w.publishDate,
-      assignedStudentLrn: '',
       targetSection: w.targetSection,
+      targetSubject: w.subject,
       isPublished: w.isPublished,
     };
   }

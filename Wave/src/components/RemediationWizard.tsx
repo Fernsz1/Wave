@@ -5,13 +5,15 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Sparkles, Wand2, CheckCircle2, Edit3, Trash2, X } from 'lucide-react';
+import { Sparkles, Wand2, CheckCircle2, Edit3, Trash2, X, Plus } from 'lucide-react';
 import { StudentUser, QuizQuestion, TeacherRemediationMaterial, StudentProgress } from '../types';
+import { GeneratedRemediation, GenerateRemediationReq } from '../repo/repository';
 import { MOCK_LESSONS, MOCK_LESSONS_BY_SUBJECT } from '../data';
 import WaveLogo from './WaveLogo';
 
 interface RemediationWizardProps {
   onPublish: (material: TeacherRemediationMaterial) => void;
+  onGenerateRemediation: (req: GenerateRemediationReq) => Promise<GeneratedRemediation>;
   onClose: () => void;
   preSelectedStudent?: StudentUser | null;
   preSelectedTopicId?: string;
@@ -21,8 +23,9 @@ interface RemediationWizardProps {
   activeSection?: string;
 }
 
-export default function RemediationWizard({ 
-  onPublish, 
+export default function RemediationWizard({
+  onPublish,
+  onGenerateRemediation,
   onClose,
   preSelectedStudent = null,
   preSelectedTopicId = "",
@@ -90,6 +93,9 @@ export default function RemediationWizard({
   const [generatedContent, setGeneratedContent] = useState('');
   const [generatedNotes, setGeneratedNotes] = useState('');
   const [generatedQuiz, setGeneratedQuiz] = useState<QuizQuestion[]>([]);
+  const [generatedLessonNumber, setGeneratedLessonNumber] = useState<number>(1);
+  const [generatedLearningGap, setGeneratedLearningGap] = useState('');
+  const [generatedTeachersNotes, setGeneratedTeachersNotes] = useState<string[]>([]);
 
   // Sync selected student on preSelected/active filter updates
   useEffect(() => {
@@ -122,6 +128,27 @@ export default function RemediationWizard({
     }
   };
 
+  const handleEditQuizQuestion = (qIdx: number, val: string) => {
+    setGeneratedQuiz(prev => prev.map((q, idx) => idx === qIdx ? { ...q, question: val } : q));
+  };
+
+  const handleEditQuizOption = (qIdx: number, oIdx: number, val: string) => {
+    setGeneratedQuiz(prev => prev.map((q, idx) => {
+      if (idx !== qIdx) return q;
+      const opts = [...q.options];
+      opts[oIdx] = val;
+      return { ...q, options: opts };
+    }));
+  };
+
+  const handleEditCorrectAnswer = (qIdx: number, oIdx: number) => {
+    setGeneratedQuiz(prev => prev.map((q, idx) => idx === qIdx ? { ...q, correctAnswerIndex: oIdx } : q));
+  };
+
+  const handleEditQuizExplanation = (qIdx: number, val: string) => {
+    setGeneratedQuiz(prev => prev.map((q, idx) => idx === qIdx ? { ...q, explanation: val } : q));
+  };
+
 
   // Launch AI generator
   const triggerGenerationFlow = () => {
@@ -130,97 +157,43 @@ export default function RemediationWizard({
     setGenStatusMessage('Connecting to Gemini model instance channels...');
   };
 
-  // Call Gemini API via Django to generate the remedial pack
+  // Call Gemini (via the shared repository, same path TeacherHome uses) to generate the remedial pack
   useEffect(() => {
     if (step !== 'generating') return;
 
     const topicObj = availableLessons.flatMap(l => l.topics).find(t => t.id === targetTopicId);
-    const topicName = topicObj?.name ?? targetTopicId;
 
+    // Collect the actual wrong-answer question text for this student & topic —
+    // matches the shape ai.generate_remediation() expects (a list of question strings).
     const prog = student ? progressRecords[student.lrn] : null;
-    const failedItems = prog
+    const failedItems: string[] = prog
       ? Object.values(prog.quizAttempts)
           .filter(a => a.topicId === targetTopicId)
           .flatMap(a =>
-            a.answers.map((selected, idx) => ({
-              questionId: `Q-${idx + 1}`,
-              topicId: a.topicId,
-              selectedOption: selected,
-              correctOption: 0,
-            }))
+            a.answers
+              .map((selected, idx) => (topicObj && selected !== topicObj.quiz[idx]?.correctAnswerIndex ? topicObj.quiz[idx]?.question : null))
+              .filter((q): q is string => Boolean(q))
           )
       : [];
-
-    const apiBase = import.meta.env.VITE_API_BASE ?? 'http://localhost:8000';
 
     setGenStatusMessage('Connecting to Gemini AI model...');
     setGenPercentage(15);
 
-    fetch(`${apiBase}/api/remediation/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        topicId: targetTopicId,
-        topicName,
-        subject: activeSubject,
-        gradeLevel: 'Grade 6',
-        section: activeSection,
-        studentLrn: student?.lrn ?? '',
-        failedItems,
-      }),
+    onGenerateRemediation({
+      subject: activeSubject,
+      topicId: targetTopicId,
+      studentName: student?.name || activeSection || 'your class',
+      failedItems: failedItems.length > 0 ? failedItems : undefined,
     })
-      .then(res => {
-        if (!res.ok) throw new Error(`Server returned HTTP ${res.status}`);
-        setGenPercentage(70);
-        setGenStatusMessage('Processing Gemini response...');
-        return res.json();
-      })
-      .then(data => {
+      .then(result => {
         setGenPercentage(100);
-
-        // Map Title
-        const title = data.lesson_title || data.title || 'Remedial Lesson';
-
-        // Map Content from concepts list
-        let content = '';
-        if (data.concepts && Array.isArray(data.concepts)) {
-          content = data.concepts.map((c: any) => `## ${c.header_title}\n\n${c.explanation}`).join('\n\n');
-        } else {
-          content = data.content || '';
-        }
-
-        // Map Teacher Notes
-        let teacherNotes = '';
-        const notesList = data.teachers_notes || [];
-        const gapPrefix = data.learning_gap ? `**Learning Gap:** ${data.learning_gap}\n` : '';
-        if (notesList.length > 0) {
-          teacherNotes = [gapPrefix, ...notesList.map((note: string) => `• ${note}`)].filter(Boolean).join('\n');
-        } else {
-          teacherNotes = data.teacherNotes || '';
-        }
-
-        // Map Quiz Questions
-        let createdQuiz: QuizQuestion[] = [];
-        if (data.summative_test && Array.isArray(data.summative_test)) {
-          createdQuiz = data.summative_test.map((q: any, idx: number) => {
-            const options = q.choices || [];
-            const correctIdx = options.indexOf(q.correct_answer);
-            return {
-              id: `q-diag-${idx + 1}`,
-              question: q.question,
-              options: options,
-              correctAnswerIndex: correctIdx !== -1 ? correctIdx : 0,
-              explanation: `Correct choice: ${q.correct_answer}`
-            };
-          });
-        } else if (data.createdQuiz && Array.isArray(data.createdQuiz)) {
-          createdQuiz = data.createdQuiz;
-        }
-
-        setGeneratedTitle(title);
-        setGeneratedContent(content);
-        setGeneratedNotes(teacherNotes);
-        setGeneratedQuiz(createdQuiz);
+        setGeneratedTitle(result.title);
+        setGeneratedContent(result.content);
+        setGeneratedNotes(result.teacherNotes);
+        setGeneratedQuiz(result.createdQuiz);
+        setGeneratedLessonNumber(result.lessonNumber ?? 1);
+        setGeneratedLearningGap(result.learningGap || '');
+        setGeneratedTeachersNotes(result.teachersNotes || []);
         setStep('preview');
       })
       .catch(err => {
@@ -236,15 +209,20 @@ export default function RemediationWizard({
   const handlePublishAssessment = () => {
     if (!student) return;
 
+    const gapSection = generatedLearningGap ? `**Learning Gap:** ${generatedLearningGap}` : '';
+    const notesSection = generatedTeachersNotes.length > 0 
+      ? generatedTeachersNotes.map(n => `• ${n}`).join('\n')
+      : '';
+    const combinedNotes = [gapSection, notesSection].filter(Boolean).join('\n\n');
+
     const newMaterial: TeacherRemediationMaterial = {
       id: `REM-${Math.floor(Math.random() * 900) + 100}`,
       originalTopicId: targetTopicId,
-      title: generatedTitle,
+      title: `Lesson ${generatedLessonNumber}: ${generatedTitle}`,
       content: generatedContent,
-      teacherNotes: generatedNotes,
+      teacherNotes: combinedNotes || generatedNotes,
       createdQuiz: generatedQuiz,
       publishDate: new Date().toISOString().split('T')[0],
-      assignedStudentLrn: student.lrn,
       isPublished: true,
     };
 
@@ -258,7 +236,7 @@ export default function RemediationWizard({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-slate-100 max-w-2xl w-full"
+        className="bg-white rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-slate-100 max-w-4xl w-full"
       >
         {/* Banner with Brand Ribbon */}
         <div className="bg-gradient-to-br from-[#1D4ED8] via-[#2563EB] to-[#10B981] p-6 text-white flex items-center justify-between relative">
@@ -287,7 +265,7 @@ export default function RemediationWizard({
         {step === 'setup' && (
           <div className="p-6 sm:p-8 space-y-6">
             <div className="space-y-4">
-              <h3 className="font-display font-semibold text-sm text-slate-800 uppercase tracking-wide">1. Define Target student and subject struggles</h3>
+              <h3 className="font-display font-semibold text-sm text-slate-800 uppercase tracking-wide">1. Define Target Section and Subject Struggles</h3>
               
               <div className="space-y-4">
                 {/* Target Block/Section */}
@@ -412,12 +390,38 @@ export default function RemediationWizard({
               </div>
 
               {/* Title & Notes */}
-              <div className="space-y-2">
-                <span className="block text-[10px] text-slate-400 uppercase font-black tracking-widest">Outline Title</span>
-                <h3 className="font-display font-bold text-base text-slate-800">{generatedTitle}</h3>
-                
-                <span className="block text-[10px] text-slate-400 uppercase font-black tracking-widest pt-2">Notes to student</span>
-                <p className="text-xs text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-200/60 shadow-sm italic">&quot;{generatedNotes}&quot;</p>
+              <div className="space-y-3">
+                <div>
+                  <span className="block text-[10px] text-slate-400 uppercase font-black tracking-widest">Outline Title</span>
+                  <h3 className="font-display font-bold text-base text-slate-800">
+                    Lesson {generatedLessonNumber}: {generatedTitle}
+                  </h3>
+                </div>
+
+                {generatedLearningGap && (
+                  <div className="space-y-1 bg-amber-50/50 border border-amber-100 p-3 rounded-xl text-xs">
+                    <span className="block text-[10px] text-amber-850 uppercase font-black tracking-widest">Learning Gap Addressed</span>
+                    <p className="text-slate-700 font-medium leading-relaxed">{generatedLearningGap}</p>
+                  </div>
+                )}
+
+                {generatedTeachersNotes.length > 0 ? (
+                  <div className="space-y-1 bg-slate-50 border border-slate-100 p-3 rounded-xl text-xs">
+                    <span className="block text-[10px] text-slate-450 uppercase font-black tracking-widest">Actionable Remediation Notes</span>
+                    <ul className="list-disc pl-4 text-slate-650 space-y-1 mt-1 font-medium leading-relaxed">
+                      {generatedTeachersNotes.map((note, idx) => (
+                        <li key={idx}>{note}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  generatedNotes && (
+                    <div>
+                      <span className="block text-[10px] text-slate-400 uppercase font-black tracking-widest pt-2">Notes to Section</span>
+                      <p className="text-xs text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-200/60 shadow-sm italic">&quot;{generatedNotes}&quot;</p>
+                    </div>
+                  )
+                )}
               </div>
 
               {/* Content Markup */}
@@ -465,7 +469,7 @@ export default function RemediationWizard({
                   onClick={handlePublishAssessment}
                   className="px-4.5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow"
                 >
-                  <CheckCircle2 className="h-4 w-4" /> Publish to student
+                  <CheckCircle2 className="h-4 w-4" /> Publish to Section
                 </button>
               </div>
             </div>
@@ -476,55 +480,196 @@ export default function RemediationWizard({
         {/* STEP 4: INTU-EDITOR FORM SCREEN (EDIT) */}
         {/* ────────────────────────────────────────────────────────── */}
         {step === 'edit' && (
-          <div className="p-6 sm:p-8 space-y-5 max-h-[480px] overflow-y-auto">
-            <h3 className="font-display font-semibold text-sm text-slate-850 flex items-center gap-1.5">
-              <Edit3 className="h-4.5 w-4.5 text-blue-600" /> Polish Generated content
-            </h3>
+          <div className="p-6 sm:p-8 space-y-6 max-h-[520px] overflow-y-auto bg-slate-50/40">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <h3 className="font-display font-extrabold text-sm text-slate-800 flex items-center gap-2">
+                <Edit3 className="h-4.5 w-4.5 text-blue-600" /> Syllabus Redirection Editor
+              </h3>
+              <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest">Double check AI telemetry draft</span>
+            </div>
 
-            <div className="space-y-4">
-              {/* Edit Title */}
-              <div>
-                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5" htmlFor="edit-title">Material Title</label>
-                <input
-                  type="text"
-                  id="edit-title"
-                  value={generatedTitle}
-                  onChange={(e) => setGeneratedTitle(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-lg border border-slate-200 bg-slate-50 text-xs text-slate-800"
-                />
+            <div className="space-y-6">
+              {/* Basic Info Card */}
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 flex items-center gap-1.5">
+                  <Edit3 className="h-3.5 w-3.5 text-blue-500" /> Basic Information
+                </h4>
+                <div className="grid grid-cols-4 gap-4">
+                  <div className="col-span-1 space-y-1.5">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block font-sans">Lesson #</label>
+                    <input 
+                      type="number" 
+                      value={generatedLessonNumber} 
+                      onChange={(e) => setGeneratedLessonNumber(parseInt(e.target.value) || 1)}
+                      className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800 hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-sans text-center shadow-sm"
+                    />
+                  </div>
+                  <div className="col-span-3 space-y-1.5">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block font-sans">Lesson Title</label>
+                    <input 
+                      type="text" 
+                      value={generatedTitle} 
+                      onChange={(e) => setGeneratedTitle(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800 hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-sans shadow-sm"
+                    />
+                  </div>
+                </div>
               </div>
 
-              {/* Edit Notes */}
-              <div>
-                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5" htmlFor="edit-notes">Teacher notes</label>
-                <textarea
-                  id="edit-notes"
-                  rows={2}
-                  value={generatedNotes}
-                  onChange={(e) => setGeneratedNotes(e.target.value)}
-                  className="w-full p-3.5 rounded-lg border border-slate-200 bg-slate-50 text-xs text-slate-800"
-                />
+              {/* Gap & Objectives Card */}
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5 text-amber-500" /> Gap & Remedial Objectives
+                </h4>
+                
+                {/* Learning Gap block */}
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block font-sans">Learning Gap Addressed</label>
+                  <textarea 
+                    rows={2}
+                    value={generatedLearningGap} 
+                    onChange={(e) => setGeneratedLearningGap(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-650 leading-relaxed hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-sans resize-none shadow-sm"
+                    placeholder="Describe the student learning gap..."
+                  />
+                </div>
+
+                {/* Teacher's Actionable Notes block */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block font-sans">Teacher's Actionable Notes</span>
+                    <button 
+                      type="button" 
+                      onClick={() => setGeneratedTeachersNotes([...generatedTeachersNotes, 'New note...'])}
+                      className="text-[10px] text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1 cursor-pointer hover:underline"
+                    >
+                      <Plus className="h-3.5 w-3.5" /> Append Note
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {generatedTeachersNotes.map((note, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <span className="text-xs text-slate-400 font-bold font-sans">#{idx + 1}</span>
+                        <input 
+                          type="text" 
+                          value={note} 
+                          onChange={(e) => {
+                            const updated = [...generatedTeachersNotes];
+                            updated[idx] = e.target.value;
+                            setGeneratedTeachersNotes(updated);
+                          }}
+                          className="flex-1 bg-white px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-750 font-medium hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm"
+                        />
+                        <button 
+                          type="button"
+                          onClick={() => setGeneratedTeachersNotes(generatedTeachersNotes.filter((_, i) => i !== idx))}
+                          className="p-2 text-slate-450 hover:text-rose-500 rounded-xl hover:bg-rose-50 transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              {/* Edit Content */}
-              <div>
-                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5" htmlFor="edit-content">Reading handbook content (Markdown text supported)</label>
-                <textarea
-                  id="edit-content"
-                  rows={7}
-                  value={generatedContent}
-                  onChange={(e) => setGeneratedContent(e.target.value)}
-                  className="w-full p-4 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-800 font-mono"
-                />
+              {/* Handbook content block */}
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 flex items-center gap-1.5">
+                  <Wand2 className="h-3.5 w-3.5 text-indigo-500" /> Reading Handbook Content
+                </h4>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block font-sans" htmlFor="edit-content">Material Content (Markdown supported)</label>
+                  <textarea
+                    id="edit-content"
+                    rows={8}
+                    value={generatedContent}
+                    onChange={(e) => setGeneratedContent(e.target.value)}
+                    className="w-full p-4 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 font-mono hover:border-slate-350 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Diagnostic Evaluation Questionnaire */}
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                  <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> Interactive Diagnostic Test Questions ({generatedQuiz.length})
+                  </h4>
+                  <button 
+                    type="button" 
+                    onClick={() => setGeneratedQuiz([...generatedQuiz, { id: `q-wiz-${Date.now()}`, question: 'Formulate new assessment question?', options: ['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4'], correctAnswerIndex: 0, explanation: 'Explain choices.' }])}
+                    className="text-[10px] bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1 px-3 py-1.5 rounded-xl transition-all cursor-pointer"
+                  >
+                    <Plus className="h-3.5 w-3.5" /> Add Question
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {generatedQuiz.map((q, qIdx) => (
+                    <div key={q.id || qIdx} className="bg-slate-50/50 border border-slate-150 rounded-2xl p-4.5 space-y-4 relative hover:border-slate-300 transition-all shadow-sm">
+                      <button 
+                        type="button"
+                        onClick={() => setGeneratedQuiz(generatedQuiz.filter((_, idx) => idx !== qIdx))}
+                        className="absolute top-4 right-4 p-2 text-slate-450 hover:text-rose-500 rounded-xl hover:bg-rose-50 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+
+                      <div className="space-y-1.5 max-w-[90%]">
+                        <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest">Question {qIdx + 1} Text</span>
+                        <input 
+                          type="text" 
+                          value={q.question} 
+                          onChange={(e) => handleEditQuizQuestion(qIdx, e.target.value)}
+                          className="w-full bg-white px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Choices (Select correct answer choice)</span>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {q.options.map((opt, oIdx) => (
+                            <div key={oIdx} className={`flex items-center gap-2.5 bg-white border rounded-xl px-3.5 py-2 transition-all ${q.correctAnswerIndex === oIdx ? 'border-emerald-500 ring-2 ring-emerald-500/10 shadow-sm' : 'border-slate-200'}`}>
+                              <input 
+                                type="radio" 
+                                name={`correct-radio-wiz-${qIdx}`}
+                                checked={q.correctAnswerIndex === oIdx} 
+                                onChange={() => handleEditCorrectAnswer(qIdx, oIdx)}
+                                className="h-4 w-4 text-emerald-600 focus:ring-emerald-500/10 cursor-pointer shrink-0 accent-emerald-600"
+                              />
+                              <input 
+                                type="text" 
+                                value={opt} 
+                                onChange={(e) => handleEditQuizOption(qIdx, oIdx, e.target.value)}
+                                className="w-full bg-transparent text-xs text-slate-700 font-bold focus:outline-none"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest block">Explanation (Accuracy Feedback)</span>
+                        <input 
+                          type="text" 
+                          value={q.explanation || ''} 
+                          onChange={(e) => handleEditQuizExplanation(qIdx, e.target.value)}
+                          className="w-full bg-white px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs text-slate-650 font-bold focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
             {/* Edit actions */}
-            <div className="pt-6 border-t border-slate-100 flex justify-end gap-3.5">
+            <div className="pt-5 border-t border-slate-200 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setStep('preview')}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 rounded-xl text-xs font-semibold"
+                className="px-5 py-2.5 bg-white border border-slate-250 hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm"
               >
                 Back to Preview
               </button>
@@ -532,7 +677,7 @@ export default function RemediationWizard({
                 type="button"
                 id="save-edits-btn"
                 onClick={() => setStep('preview')}
-                className="px-4.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow"
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs shadow-md shadow-blue-500/10 hover:shadow-lg active:scale-98 transition-all cursor-pointer"
               >
                 Save Changes
               </button>
@@ -550,10 +695,20 @@ export default function RemediationWizard({
             </div>
 
             <div className="space-y-2 max-w-sm mx-auto">
-              <h1 className="font-display font-medium text-lg text-slate-900">Education Material Published!</h1>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Your custom remediation lesson and custom test has been posted to <strong>{student?.name}&apos;s</strong> portal. Their curriculum timeline is updated.
+              <h1 className="font-display font-medium text-lg text-slate-900">Remedial Material Published!</h1>
+              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                Your custom remediation lesson and test has been published to the <strong>{activeSection || 'entire section'}</strong>. All student portals in this section have been updated.
               </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-4 text-left space-y-2 max-w-sm border border-slate-200 shadow-sm mx-auto mb-6">
+              <div className="flex items-center gap-1">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Broadcast Blueprint Summary</span>
+              </div>
+              <span className="text-[10px] font-bold block text-slate-500">{activeSubject.toUpperCase()} • {activeSection}</span>
+              <h4 className="text-xs font-black text-slate-800 leading-normal">Lesson {generatedLessonNumber}: {generatedTitle}</h4>
+              <p className="text-[10px] text-slate-450 leading-relaxed italic">{generatedQuiz.length} interactive diagnostic evaluation queries locked.</p>
             </div>
 
             <button

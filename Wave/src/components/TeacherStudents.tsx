@@ -450,7 +450,7 @@ export default function TeacherStudents({
                         <div className="flex items-center justify-between border-b border-indigo-100/50 pb-2">
                           <span className="font-bold text-slate-800 text-xs">Lesson {lessonId} Final Evaluation</span>
                           <span className="font-mono font-bold text-indigo-700 text-xs bg-indigo-100 px-2.5 py-1 rounded-lg shadow-inner">
-                            {scoreObj.score} / {scoreObj.perfectScore} Correct
+                            {scoreObj.score} / {scoreObj.total} Correct
                           </span>
                         </div>
                         <p className="text-[11px] text-slate-650 italic mt-2 font-medium leading-relaxed">&ldquo;{scoreObj.feedback}&rdquo;</p>

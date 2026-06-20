@@ -8,6 +8,7 @@
   "properties": {
     "teacherId": { "type": "string", "examples": ["T-2026-001"] },
     "name": { "type": "string" },
-    "department": { "type": "string", "default": "General Academics" }
+    "department": { "type": "string", "default": "General Academics" },
+    "password": { "type": "string", "default": "password123" }
   }
 }

@@ -105,11 +105,14 @@ def remediation_to_wire(
     publish_date: str,
     is_published: bool = False,
     chunks: List[WireChunk] | None = None,
+    subject: str = "",
 ) -> WireTeacherRemediationMaterial:
     """Assemble a complete WireTeacherRemediationMaterial from agent outputs.
 
     `chunks` is left empty by default — fragmentation is the transport
-    layer's job, not the agent's or the orchestrator's.
+    layer's job, not the agent's or the orchestrator's. `created_summative`
+    is left empty too: the agent pipeline only generates the topic-level
+    remedial quiz, never a lesson-level summative.
     """
     draft_dict = draft.model_dump() if hasattr(draft, "model_dump") else dict(draft)
     topic_code = _topic_code(original_topic_id)
@@ -126,4 +129,5 @@ def remediation_to_wire(
         target_section=target_section,
         chunks=chunks or [],
         is_published=is_published,
+        subject=subject,
     )

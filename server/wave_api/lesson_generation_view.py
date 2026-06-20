@@ -1,3 +1,12 @@
+"""
+Session-based, human-in-the-loop lesson generation (LangGraph orchestrator).
+
+Not yet wired to the frontend: RemediationWizard.tsx and TeacherHome.tsx both
+call the single-shot /api/remediation/generate (see ai.generate_remediation /
+views.generate_remediation), which remains the canonical generation path for
+now. These endpoints stay available for the future multi-turn teacher-review
+flow (start -> draft -> feedback loop -> PASS -> publish).
+"""
 import uuid
 from datetime import date
 
@@ -99,6 +108,7 @@ def submit_teacher_feedback(request):
                 "content": wire.content,
                 "teacher_notes": wire.teacher_notes,
                 "created_quiz": [q.model_dump(by_alias=True) for q in wire.created_quiz],
+                "created_summative": [q.model_dump(by_alias=True) for q in wire.created_summative],
                 "publish_date": wire.publish_date,
                 "target_section": wire.target_section,
                 "is_published": wire.is_published,
