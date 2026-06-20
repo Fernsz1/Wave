@@ -30,6 +30,7 @@ def assemble_progress(student: Student) -> dict:
             "perfectScore": a.perfect_score,
             "answers": a.answers,
             "completedAt": a.completed_at,
+            "attempts": a.attempts,
         }
         quiz_scores[a.topic_id] = {
             "score": a.score,

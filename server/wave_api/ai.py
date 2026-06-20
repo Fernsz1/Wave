@@ -48,7 +48,26 @@ def _fallback(subject: str, topic_id: str, student_name: str) -> dict:
                 "explanation": "Re-read the lesson materials. Work through the examples step by step. Ask your teacher if any concept remains unclear."
             }
         ],
-        "summative_test": []
+        # MOCK quiz so the wizard/TeacherHome preview has usable items until the
+        # AI agent is integrated. Shape matches what the frontend maps
+        # (question / choices / correct_answer).
+        "summative_test": [
+            {
+                "question": f"Which best describes the main idea of {topic_id}?",
+                "choices": ["A foundational concept", "An unrelated topic", "A type of assessment", "None of these"],
+                "correct_answer": "A foundational concept",
+            },
+            {
+                "question": "What is the best first step when reviewing a topic you found difficult?",
+                "choices": ["Skip it", "Re-read the lesson and examples", "Guess on the quiz", "Wait for the exam"],
+                "correct_answer": "Re-read the lesson and examples",
+            },
+            {
+                "question": "Who can you ask if a concept is still unclear after reviewing?",
+                "choices": ["No one", "Your teacher", "Only classmates", "Search engines only"],
+                "correct_answer": "Your teacher",
+            },
+        ],
     }
 
 

@@ -58,6 +58,7 @@ class QuizAttempt(models.Model):
     perfect_score = models.IntegerField(default=10)
     answers = models.JSONField(default=list)
     completed_at = models.CharField(max_length=20)  # YYYY-MM-DD, matches app
+    attempts = models.IntegerField(default=0)  # UI retry counter (capped at 3)
 
     class Meta:
         unique_together = ("student", "topic_id")
@@ -90,6 +91,10 @@ class RemediationMaterial(models.Model):
     publish_date = models.CharField(max_length=20)
     target_section = models.CharField(max_length=80)  # whole-section recipient
     is_published = models.BooleanField(default=True)
+    # Frontend models carry these; stored so the schema is a superset ready for
+    # full remediation/AI integration (not all are transmitted by the UI yet).
+    assigned_student_lrn = models.CharField(max_length=12, blank=True, default="")
+    target_lesson_id = models.CharField(max_length=40, blank=True, default="")
     # Server-only sidecar: pedagogical metadata from the quiz-generation agent
     # (cognitive_level, targeted_distractor_key per item). Never sent over LoRa.
     analytics = models.JSONField(default=dict, blank=True)

@@ -27,7 +27,7 @@ def _save_progress(p: dict) -> None:
     if not student:
         return
     for topic_id, att in (p.get("quizAttempts") or {}).items():
-        student.attempts.update_or_create(
+        obj, _ = student.attempts.update_or_create(
             topic_id=topic_id,
             defaults={
                 "score": att["score"],
@@ -36,6 +36,10 @@ def _save_progress(p: dict) -> None:
                 "completed_at": att.get("completedAt", ""),
             },
         )
+        # The UI doesn't transmit its retry counter, so count server-side
+        # (capped at 3). If a payload ever carries `attempts`, trust it.
+        obj.attempts = att.get("attempts") if att.get("attempts") is not None else min(obj.attempts + 1, 3)
+        obj.save(update_fields=["attempts"])
     for lesson_id, summ in (p.get("summativeScores") or {}).items():
         student.summatives.update_or_create(
             lesson_id=lesson_id,
@@ -85,6 +89,8 @@ def _save_remediation(p: dict, subject: str) -> None:
             "publish_date": p.get("publishDate", ""),
             "target_section": p["targetSection"],
             "is_published": p.get("isPublished", True),
+            "assigned_student_lrn": p.get("assignedStudentLrn", ""),
+            "target_lesson_id": p.get("targetLessonId", ""),
         },
     )
 

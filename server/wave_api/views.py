@@ -129,6 +129,9 @@ def remediation(request):
             "targetSection": m.target_section,
             "chunks": [],
             "isPublished": m.is_published,
+            "subject": m.subject,
+            "assignedStudentLrn": m.assigned_student_lrn,
+            "targetLessonId": m.target_lesson_id,
         }
         out.append(codec.encode("TeacherRemediationMaterial", obj))
     return Response({"type": "TeacherRemediationMaterial", "items": out})
@@ -137,12 +140,19 @@ def remediation(request):
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
 def generate_remediation(request):
-    """Call Gemini to produce a personalized remedial lesson + quiz for a section."""
+    """Call Gemini (or mock fallback) to produce a remedial lesson + quiz for a section.
+
+    Accepts both request shapes the frozen frontend uses:
+    - HttpRepository sends `originalTopicId` / `studentName`.
+    - RemediationWizard sends `topicId` / `studentLrn` / `section`.
+    """
     data = request.data
+    topic_id = data.get("originalTopicId") or data.get("topicId") or ""
+    student_name = data.get("studentName") or data.get("section") or "your class"
     result = ai.generate_remediation(
         subject=data.get("subject", "science"),
-        topic_id=data.get("originalTopicId", ""),
-        student_name=data.get("studentName", "your class"),
+        topic_id=topic_id,
+        student_name=student_name,
         failed_items=data.get("failedItems") or [],
     )
     return Response(result)

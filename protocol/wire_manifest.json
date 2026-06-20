@@ -115,7 +115,10 @@
         { "name": "publishDate", "t": "str" },
         { "name": "targetSection", "t": "str" },
         { "name": "chunks", "t": "array:Chunk" },
-        { "name": "isPublished", "t": "bool" }
+        { "name": "isPublished", "t": "bool" },
+        { "name": "subject", "t": "enum:subject", "optional": true },
+        { "name": "assignedStudentLrn", "t": "str", "optional": true },
+        { "name": "targetLessonId", "t": "str", "optional": true }
       ]
     },
     "LessonCatalog": {
@@ -134,7 +137,8 @@
         { "name": "score", "t": "int" },
         { "name": "perfectScore", "t": "int" },
         { "name": "answers", "t": "array:int" },
-        { "name": "completedAt", "t": "str" }
+        { "name": "completedAt", "t": "str" },
+        { "name": "attempts", "t": "int", "optional": true }
       ]
     },
     "QuizScore": {

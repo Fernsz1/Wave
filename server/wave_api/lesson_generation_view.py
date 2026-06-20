@@ -5,8 +5,11 @@ from rest_framework import serializers, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from wave_api.agents import orchestrator
 from wave_api.models import RemediationMaterial
+
+# NOTE: `wave_api.agents.orchestrator` pulls in the heavy AI stack (pydantic,
+# langgraph, langchain). It is imported lazily inside each view so a missing AI
+# dependency cannot break URLconf import (and therefore the whole REST API).
 
 
 VALID_FEEDBACK = ["PASS", "simplify", "practical", "change", "micro"]
@@ -38,6 +41,8 @@ def start_lesson_generation(request):
     data = serializer.validated_data
     session_id = str(uuid.uuid4())
 
+    from wave_api.agents import orchestrator  # lazy: heavy AI deps
+
     result = orchestrator.start_remediation_session(
         session_id=session_id,
         subject=data['subject'],
@@ -66,6 +71,8 @@ def submit_teacher_feedback(request):
     data = serializer.validated_data
     session_id = data['session_id']
     feedback = data['feedback']
+
+    from wave_api.agents import orchestrator  # lazy: heavy AI deps
 
     if feedback == "PASS":
         material_id = data.get("material_id") or f"REM-{uuid.uuid4().hex[:10].upper()}"
