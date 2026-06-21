@@ -521,7 +521,7 @@ export default function TeacherHome({
   // Filter students array based on active section
   const filteredStudents = activeSection === 'All Sections'
     ? students
-    : students.filter(student => student.gradeLevel === activeSection);
+    : students.filter(student => (student.section || student.gradeLevel) === activeSection);
 
   const totalStudents = filteredStudents.length;
   
@@ -1464,11 +1464,10 @@ export default function TeacherHome({
                         const pubId = `custom-pub-${Date.now()}`;
                         const publishDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                         
-                        const gapSection = customLearningGap ? `**Learning Gap:** ${customLearningGap}` : '';
                         const notesSection = customTeachersNotes.length > 0 
                           ? customTeachersNotes.map(n => `• ${n}`).join('\n')
                           : '';
-                        const combinedNotes = [gapSection, notesSection].filter(Boolean).join('\n\n') || customIntroduction;
+                        const combinedNotes = notesSection || customIntroduction;
                         const fullTitle = `Lesson ${customLessonNumber}: ${customTitle}`;
 
                         const newPub = {
@@ -1488,6 +1487,7 @@ export default function TeacherHome({
                           title: fullTitle,
                           content: customSections.map(s => `## ${s.title}\n${s.body}`).join('\n\n'),
                           teacherNotes: combinedNotes,
+                          learningGap: customLearningGap,
                           createdSummative: customSummative,
                           publishDate,
                           targetSection: customTargetSection,

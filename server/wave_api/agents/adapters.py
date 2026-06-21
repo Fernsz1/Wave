@@ -124,6 +124,7 @@ def remediation_to_wire(
         title=draft_dict.get("title", ""),
         content=draft_dict.get("content", ""),
         teacher_notes=draft_dict.get("teacher_notes", ""),
+        learning_gap=draft_dict.get("learning_gap", ""),
         created_quiz=wire_quiz,
         publish_date=publish_date,
         target_section=target_section,

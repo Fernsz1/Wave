@@ -117,5 +117,6 @@ export interface TeacherRemediationMaterial {
   publishDate: string;
   targetSection?: string;
   targetSubject?: string;
+  learningGap?: string;
   isPublished: boolean;
 }

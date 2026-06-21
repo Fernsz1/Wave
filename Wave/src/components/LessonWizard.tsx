@@ -168,16 +168,15 @@ export default function LessonWizard({
   // ── Publish (lesson only — no quiz) ────────────────────────────────────
   const handlePublish = () => {
     const content = sections.map((s) => `## ${s.title}\n${s.body}`).join('\n\n');
-    const gapSection = learningGap ? `**Learning Gap:** ${learningGap}` : '';
     const notesSection = teachersNotes.length > 0 ? teachersNotes.map((n) => `• ${n}`).join('\n') : '';
-    const combinedNotes = [gapSection, notesSection].filter(Boolean).join('\n\n');
 
     const material: TeacherRemediationMaterial = {
       id: `REM-${Date.now().toString(36).toUpperCase()}`,
       originalTopicId: selectedTopicIds[0] || '',
       title: `Lesson ${lessonNumber}: ${title}`,
       content,
-      teacherNotes: combinedNotes,
+      teacherNotes: notesSection,
+      learningGap,
       publishDate: new Date().toISOString().split('T')[0],
       targetSection: section,
       targetSubject: subject,

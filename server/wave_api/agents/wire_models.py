@@ -44,3 +44,4 @@ class WireTeacherRemediationMaterial(BaseModel):
     chunks: List[WireChunk] = Field(default_factory=list)
     is_published: bool = Field(alias="isPublished")
     subject: str = ""
+    learning_gap: str = Field(default="", alias="learningGap")

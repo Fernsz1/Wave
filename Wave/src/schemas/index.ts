@@ -124,6 +124,7 @@ export const TeacherRemediationMaterialSchema = z.object({
   chunks: z.array(ChunkSchema),
   isPublished: z.boolean(),
   subject: SubjectSchema.optional(),
+  learningGap: z.string().optional(),
 });
 
 export const DefinitionSchema = z.object({ term: z.string(), meaning: z.string() });

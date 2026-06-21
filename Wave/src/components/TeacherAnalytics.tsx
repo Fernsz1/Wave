@@ -38,7 +38,7 @@ export default function TeacherAnalytics({
   // Filter students based on section
   const relevantStudents = activeSection === 'All Sections'
     ? students
-    : students.filter(s => s.gradeLevel === activeSection);
+    : students.filter(s => (s.section || s.gradeLevel) === activeSection);
 
   // Compile individual calculations to align with class records
   const studentStats = relevantStudents.map(student => {
@@ -157,7 +157,7 @@ export default function TeacherAnalytics({
         // Ensure student exists and matches section
         const studentObj = students.find(s => s.lrn === prog.studentLrn);
         if (!studentObj) return;
-        if (activeSection !== 'All Sections' && studentObj.gradeLevel !== activeSection) return;
+        if (activeSection !== 'All Sections' && (studentObj.section || studentObj.gradeLevel) !== activeSection) return;
 
         const attempt = prog.quizAttempts[topic.id];
         if (attempt) {

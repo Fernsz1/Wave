@@ -118,7 +118,8 @@
         { "name": "isPublished", "t": "bool" },
         { "name": "subject", "t": "enum:subject", "optional": true },
         { "name": "assignedStudentLrn", "t": "str", "optional": true },
-        { "name": "targetLessonId", "t": "str", "optional": true }
+        { "name": "targetLessonId", "t": "str", "optional": true },
+        { "name": "learningGap", "t": "str", "optional": true }
       ]
     },
     "LessonCatalog": {

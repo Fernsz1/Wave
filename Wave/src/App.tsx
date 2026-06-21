@@ -85,6 +85,7 @@ export default function App() {
 
   // Tab states: 学生 default -> 'dashboard', 教师 default -> 'dashboard'
   const [activeTab, setActiveTab] = useState<string>('dashboard');
+  const [bootError, setBootError] = useState<string | null>(null);
 
   // Dynamic system stores — persisted to localStorage in mock mode so attempt counts survive page reloads
   const [progressRecords, setProgressRecords] = useState<Record<string, StudentProgress>>(() => {
@@ -130,15 +131,19 @@ export default function App() {
         // server doesn't know about yet (e.g. a push that hasn't flushed).
         setProgressRecords(prev => ({ ...prev, ...b.progressRecords }));
         setRemediationMaterials(b.remediationMaterials);
+        setBootError(null);
       })
-      .catch(e => console.error('[wave] bootstrap failed', e));
+      .catch(e => {
+        console.error('[wave] bootstrap failed', e);
+        setBootError(e.message || String(e));
+      });
   }, [repo]);
 
   // Course subject tracks: mathematics, science, english
   const [activeSubject, setActiveSubject] = useState<string>('science');
   // Default to a section that has seeded, active student data so the dashboard
   // opens onto meaningful records (and live updates have somewhere to land).
-  const [activeSection, setActiveSection] = useState<string>('All Sections');
+  const [activeSection, setActiveSection] = useState<string>('Grade 6 - Section Einstein');
   const [hasSelectedSubject, setHasSelectedSubject] = useState<boolean>(false);
 
   // Live "down" subscription. Re-runs when the viewed section/subject changes so
@@ -190,7 +195,7 @@ export default function App() {
     setRole(null);
     setActiveTab('dashboard');
     setActiveSubject('science');
-    setActiveSection('All Sections');
+    setActiveSection('Grade 6 - Section Einstein');
     setHasSelectedSubject(false);
   };
 
@@ -319,9 +324,21 @@ export default function App() {
     setActiveTab('lessons');
   };
 
+  if (!role) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col">
+        {bootError && (
+          <div className="bg-red-500 text-white p-2 text-center text-xs font-bold font-mono z-50 fixed top-0 w-full">
+            BOOTSTRAP ERROR: {bootError} | repo.isLive: {repo.isLive ? 'yes' : 'no'}
+          </div>
+        )}
+        <LoginScreen onLoginSuccess={handleLoginSuccess} repo={repo} />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800">
-      
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 flex flex-col">
       {/* ────────────────────────────────────────────────────────── */}
       {/* AUTHENTICATION OVERLAY */}
       {/* ────────────────────────────────────────────────────────── */}

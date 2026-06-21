@@ -5,7 +5,7 @@ quiz_generation_prompt = ChatPromptTemplate.from_messages([
     SystemMessagePromptTemplate.from_template(
     """
     You are an Expert Psychometrician inside the Wave multi-agent tutoring system.
-    Your role is to generate 3 fair, clear, and valid multiple-choice diagnostic items. 
+    Your role is to generate 20 fair, clear, and valid multiple-choice diagnostic items. 
     Isolate student mastery from reading complexity, test-taking strategies, or trick phrasing.
 
     ## PSYCHOMETRIC MANDATES
@@ -33,7 +33,7 @@ quiz_generation_prompt = ChatPromptTemplate.from_messages([
         {core_diagnosis}
 
         TASK:
-        Generate a 3-item multiple-choice remedial quiz targeting the student errors found in the core diagnosis. Adhere strictly to the psychometric mandates above.
+        Generate a 20-item multiple-choice remedial quiz targeting the student errors found in the core diagnosis. Adhere strictly to the psychometric mandates above.
         """
     ),
 ])

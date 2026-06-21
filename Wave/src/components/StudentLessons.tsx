@@ -444,11 +444,18 @@ export default function StudentLessons({
                 <Sparkles className="h-4.5 w-4.5 text-amber-600 animate-pulse" /> Teacher-Assigned Study Pack
               </h2>
               <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                {myRemediations.map((mat) => (
+                {myRemediations.map((mat) => {
+                  const isLessonOnly = !mat.createdSummative || mat.createdSummative.length === 0;
+                  return (
                   <div key={mat.id} className="bg-white rounded-2xl p-5 border border-amber-100/60 shadow-sm hover:shadow-md transition-all flex flex-col justify-between hover:scale-[1.01]">
                     <div>
                       <h3 className="text-xs font-extrabold text-amber-950 mb-1 font-lexend">{mat.title}</h3>
-                      <p className="text-[10px] text-amber-700 font-bold mb-3 uppercase tracking-wider">Published: {mat.publishDate}</p>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${isLessonOnly ? 'bg-blue-100 text-blue-700 border border-blue-200' : 'bg-amber-100 text-amber-700 border border-amber-200'}`}>
+                          {isLessonOnly ? 'Lesson Generation' : 'Remedial'}
+                        </span>
+                        <p className="text-[10px] text-amber-700 font-bold uppercase tracking-wider">Published: {mat.publishDate}</p>
+                      </div>
                       <div className="bg-amber-50/50 p-3.5 rounded-xl text-[11px] text-amber-800 italic border-l-4 border-amber-500 line-clamp-3 leading-relaxed shadow-[0_4px_15px_rgba(245,158,11,0.01)]">
                         &quot;{mat.teacherNotes}&quot;
                       </div>
@@ -459,10 +466,10 @@ export default function StudentLessons({
                       onClick={() => handleOpenRemedial(mat)}
                       className="mt-5 w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/10 cursor-pointer hover:scale-[1.02] active:scale-98"
                     >
-                      <GraduationCap className="h-3.5 w-3.5" /> Execute Workbook
+                      <GraduationCap className="h-3.5 w-3.5" /> {isLessonOnly ? 'Execute Lesson' : 'Execute Remedial'}
                     </button>
                   </div>
-                ))}
+                )})}
               </div>
             </motion.div>
           )}
@@ -1269,8 +1276,28 @@ export default function StudentLessons({
               >
                 Done Reading
               </button>
-              {/* Remedial test is the teacher's summative — taken from the lesson's
-                  Summative row (see createdSummative flow), not a separate quiz. */}
+              {activeRemedialMaterial.createdSummative && activeRemedialMaterial.createdSummative.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const questions = activeRemedialMaterial.createdSummative!.slice(0, 20);
+                    const remedialLesson = lessons.find(l => l.id === activeRemedialMaterial.originalTopicId || l.topics.some(t => t.id === activeRemedialMaterial.originalTopicId));
+                    if (remedialLesson) {
+                      setSelectedLesson(remedialLesson);
+                    } else {
+                      setSelectedLesson({ id: activeRemedialMaterial.originalTopicId || activeRemedialMaterial.id, title: activeRemedialMaterial.title, description: '', topics: [], summative: questions });
+                    }
+                    setSummativeQuestions(questions);
+                    setSummativeAnswers([]);
+                    setSummativeSubmitted(false);
+                    setSummativeScore(0);
+                    setViewState('summative');
+                  }}
+                  className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-md shadow-indigo-600/20 cursor-pointer"
+                >
+                  Take Remedial Summative
+                </button>
+              )}
             </div>
           </div>
         </motion.div>

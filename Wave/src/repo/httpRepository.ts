@@ -58,11 +58,16 @@ export class HttpRepository implements WaveRepository {
   async login(role: 'student' | 'teacher', principalId: string, passwordOrPin: string): Promise<LoginResult> {
     const body =
       role === 'student' ? { role, lrn: principalId, pin: passwordOrPin } : { role, teacherId: principalId, password: passwordOrPin };
-    const res = await fetch(`${this.apiBase}/api/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+    let res: Response;
+    try {
+      res = await fetch(`${this.apiBase}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+    } catch (e: any) {
+      return { ok: false, error: 'Network error: Could not reach the server.' };
+    }
     const data = await res.json().catch(() => ({}));
     if (!res.ok) return { ok: false, error: data.error || 'Login failed. Please try again.' };
     this.token = data.token;
@@ -210,12 +215,11 @@ export class HttpRepository implements WaveRepository {
       content = data.content || '';
     }
 
-    // Map Teacher Notes
+    // Map Teacher Notes (learning gap is now a separate field — not merged here)
     let teacherNotes = '';
     const notesList = data.teachers_notes || [];
-    const gapPrefix = data.learning_gap ? `**Learning Gap:** ${data.learning_gap}\n` : '';
     if (notesList.length > 0) {
-      teacherNotes = [gapPrefix, ...notesList.map((note: string) => `• ${note}`)].filter(Boolean).join('\n');
+      teacherNotes = notesList.map((note: string) => `• ${note}`).join('\n');
     } else {
       teacherNotes = data.teacherNotes || '';
     }
@@ -260,6 +264,7 @@ export class HttpRepository implements WaveRepository {
       title: material.title,
       content: material.content,
       teacherNotes: material.teacherNotes,
+      learningGap: material.learningGap || '',
       createdSummative: material.createdSummative ?? [],
       publishDate: material.publishDate,
       targetSection: material.targetSection || opts.section,
@@ -337,6 +342,7 @@ export class HttpRepository implements WaveRepository {
       title: w.title,
       content: w.content,
       teacherNotes: w.teacherNotes,
+      learningGap: w.learningGap,
       createdSummative: w.createdSummative,
       publishDate: w.publishDate,
       targetSection: w.targetSection,

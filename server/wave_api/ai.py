@@ -317,7 +317,7 @@ Generate a complete remedial learning package as a single JSON object matching t
 
 Rules:
 - concepts must contain at least 2 key concept blocks.
-- summative_test must contain exactly 3 multiple choice questions.
+- summative_test must contain exactly 20 multiple choice questions.
 - Respond with ONLY the JSON object — no markdown fences, no extra text."""
 
     try:
