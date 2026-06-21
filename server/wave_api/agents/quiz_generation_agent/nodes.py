@@ -3,6 +3,7 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 from .state import AgentState
 from wave_api.agents.agent_factory import AgentFactory
+from wave_api.agents.agent_role import AgentRole
 from .output_schema import DiagnosisResult, QuizDraftResponse, QuizEvaluationResult
 from .prompts.diagnostic_prompt import diagnosis_prompt
 from .prompts.quiz_generation_prompt import quiz_generation_prompt
@@ -16,14 +17,43 @@ llm_factory = AgentFactory()
 # 2. Define the Nodes (Automated AI Actions)
 # ==========================================
 def retrieve_context(state: AgentState):
-    print("--- [Node] Retrieving Context ---")
-    # Add your vector DB / RAG logic here
-    return {"context": "Retrieved context about the subject."}
+    from server.wave_api.models import CatalogDocument
+
+    print("--- [Node] Retrieving Context & catalog document ---")
+    subject = state.get("subject", "science")
+    topic_id = state.get("original_topic_id")
+    
+    lesson_context = state.get("lesson_context", "")
+
+    try:
+        catalog = CatalogDocument.objects.get(subject=subject)
+        # Search the catalog data for the specific lesson/topic
+        found = False
+        for lesson in catalog.data:
+            if lesson.get("id") == topic_id or lesson.get("title") == state.get("topic"):
+                lesson_context = str(lesson)
+                found = True
+                break
+            # Check if topics are nested inside lessons
+            for topic in lesson.get("topics", []):
+                if topic.get("id") == topic_id:
+                    lesson_context = str(topic)
+                    found = True
+                    break
+            if found:
+                break
+    except CatalogDocument.DoesNotExist:
+        pass
+
+    return {
+        "context": "Retrieved context about the subject.",
+        "lesson_context": lesson_context
+    }
 
 def diagnose(state: AgentState):
     print("--- [Node] Diagnosing Misconception ---")
 
-    llm = llm_factory.create_llm("primary")
+    llm = llm_factory.create_llm(AgentRole.PRIMARY)
     # Bind the Pydantic schema to the model
     structured_llm = llm.with_structured_output(DiagnosisResult)
     
@@ -48,7 +78,7 @@ def draft_quiz(state: AgentState) -> dict:
     print("--- [Node] Drafting / Revising Quiz Material ---")
     
     # 1. Initialize the LLM with structured output
-    primary_llm = llm_factory.create_llm("primary")
+    primary_llm = llm_factory.create_llm(AgentRole.PRIMARY)
     structured_llm = primary_llm.with_structured_output(QuizDraftResponse)
     
     # 2. Extract shared core components from the graph state
@@ -114,8 +144,8 @@ def draft_quiz(state: AgentState) -> dict:
         result: QuizDraftResponse = chain.invoke(payload)
         return {
             "quiz_draft": result.model_dump(),
-            "human_feedback": None,
-            "is_revision": False
+            "human_feedback": None
+            # Removed 'is_revision: False' so route_after_draft can successfully read the flag
         }
         
     except Exception as e:
@@ -132,7 +162,7 @@ def eval_quiz(state: AgentState):
     MAX_ATTEMPTS = 3
     print(f"--- Evaluation Attempt: {current_attempts} / {MAX_ATTEMPTS} ---")
     
-    primary_llm = llm_factory.create_llm("primary")
+    primary_llm = llm_factory.create_llm(AgentRole.PRIMARY)
     structured_evaluator = primary_llm.with_structured_output(QuizEvaluationResult)
     
     chain = quiz_evaluation_prompt | structured_evaluator
@@ -222,7 +252,7 @@ def eval_quiz(state: AgentState):
             }
 
         return {
-            "fail_status": "FAIL",
+            "eval_status": "FAIL",
             "human_feedback": "System Error: The evaluation engine encountered an issue. Please re-draft.",
             "eval_remarks": error_remarks,
             "draft_attempts": current_attempts
@@ -233,11 +263,35 @@ def review_quiz(state: AgentState):
     # The graph will be paused BEFORE executing this node.
     print("--- [Node] Teacher Reviewing Quiz ---")
     # State is already updated by the human before resuming.
-    return {}
+    # Set is_revision=True when teacher gives revision feedback so that
+    # route_after_draft skips AI eval and sends the revised draft straight
+    # back to the teacher for review.
+    feedback = state.get("human_feedback", "")
+    if feedback and feedback.lower() not in ("approve", "pass"):
+        return {"is_revision": True}
+    return {"is_revision": False}
 
 def finalize_quiz(state: AgentState):
     print("--- [Node] Finalizing Quiz ---")
-    return {"final_quiz": "Final Output: " + str(state.get("quiz_draft"))}
+    from server.wave_api.models import RemediationMaterial
+    import uuid
+    from datetime import datetime
+
+    approved_quiz = state.get("quiz_draft", [])
+
+    # Save the approved quiz draft into the RemediationMaterial database model
+    material_id = str(uuid.uuid4())
+    RemediationMaterial.objects.create(
+        material_id=material_id,
+        subject=state.get("subject", "science"),
+        original_topic_id=state.get("original_topic_id", ""),
+        title=f"Remediation Quiz: {state.get('topic')}",
+        created_quiz=approved_quiz,
+        publish_date=datetime.now().strftime("%Y-%m-%d"),
+        is_published=True
+    )
+
+    return {"final_quiz": approved_quiz}
 
 # ==========================================
 # 3. Define the Routing Logic (Conditional Edges)
@@ -251,7 +305,7 @@ def route_initial_check(state: AgentState):
 def route_after_eval(state: AgentState):
     """Router: EvalQuiz"""
     status = state.get("eval_status", "FAIL")
-    if status == "PASS":
+    if status == "PASS" or status == "MAX_ATTEMPTS_REACHED":
         return "review_quiz"
     return "draft_quiz" # Loop back if FAIL
 
@@ -283,7 +337,7 @@ def route_after_draft(state: AgentState):
     return "eval_quiz"
 
 # ==========================================
-# Simplified Graph (Teacher Only Evaluation)
+# Full Graph Compilation
 # ==========================================
 workflow = StateGraph(AgentState)
 
@@ -291,6 +345,7 @@ workflow = StateGraph(AgentState)
 workflow.add_node("retrieve_context", retrieve_context)
 workflow.add_node("diagnose", diagnose)
 workflow.add_node("draft_quiz", draft_quiz)
+workflow.add_node("eval_quiz", eval_quiz)      # <-- Restored evaluation node
 workflow.add_node("review_quiz", review_quiz)  # Teacher sits here
 workflow.add_node("finalize_quiz", finalize_quiz)
 
@@ -304,8 +359,17 @@ workflow.add_conditional_edges(START, route_initial_check, {
 workflow.add_edge("retrieve_context", "diagnose")
 workflow.add_edge("diagnose", "draft_quiz")
 
-# Direct Loop: Draft always goes straight to the Teacher Review landing pad
-workflow.add_edge("draft_quiz", "review_quiz")
+# Draft -> Router (Eval or Skip to Human)
+workflow.add_conditional_edges("draft_quiz", route_after_draft, {
+    "eval_quiz": "eval_quiz",
+    "review_quiz": "review_quiz"
+})
+
+# Eval -> Router (Pass to Human or Fail to Draft)
+workflow.add_conditional_edges("eval_quiz", route_after_eval, {
+    "review_quiz": "review_quiz",
+    "draft_quiz": "draft_quiz"
+})
 
 # Teacher Gatekeeper Edge
 workflow.add_conditional_edges("review_quiz", route_after_human_review, {

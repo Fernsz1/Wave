@@ -1,29 +1,5 @@
 
-from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 
-# --- THE UNIFIED SYSTEM PROMPT ---
-teacher_remediation_prompt = ChatPromptTemplate.from_messages([
-    
-    SystemMessagePromptTemplate.from_template("""
-You are a Remediation Lesson Designer. Generate highly targeted intervention material based on the provided diagnostic report. Do NOT create a full lesson; focus strictly on fixing the identified gaps.
-
-CRITICAL CONSTRAINT: Your entire output MUST be incredibly concise, totaling strictly around 250 words. You must follow this length constraint even during revisions!
-
-## OUTPUT STRUCTURE (Use Markdown)
-### 1. Focus Area (1 sentence)
-### 2. Concept Review (2 sentences max)
-### 3. The Mistake (1-2 sentences)
-### 4. Correct Approach (2-3 brief steps)
-### 5. Guided Example
-### 6. Practice (1 problem)
-### 7. Mastery Check
-### 8. Key Takeaways
-
----
-
-## REVISION INSTRUCTIONS
-If a previous draft and teacher feedback are provided below, your task is to REWRITE the material. You must preserve the 8-part structure and the ~250-word constraint, but completely adapt the content to satisfy the teacher's specific requested adjustment.
-""")])
 from langchain_core.prompts import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
@@ -54,6 +30,7 @@ Subject: {subject}
 Grade Level: {grade_level}
 Topic: {topic}
 Diagnostic Report: {diagnosis_report}
+Teacher's Learning Gap Observation: {learning_gap}
 Teacher Recommendations: {recommendations}
 
 ---
@@ -74,6 +51,7 @@ Subject: {subject}
 Grade Level: {grade_level}
 Topic: {topic}
 Diagnostic Report: {diagnosis_report}
+Teacher's Learning Gap Observation: {learning_gap}
 Teacher Recommendations: {recommendations}
 ---
 CRITICAL REVISION REQUEST FROM THE TEACHER:
@@ -93,6 +71,7 @@ Subject: {subject}
 Grade Level: {grade_level}
 Topic: {topic}
 Diagnostic Report: {diagnosis_report}
+Teacher's Learning Gap Observation: {learning_gap}
 Teacher Recommendations: {recommendations}
 
 ---
@@ -113,6 +92,7 @@ Subject: {subject}
 Grade Level: {grade_level}
 Topic: {topic}
 Diagnostic Report: {diagnosis_report}
+Teacher's Learning Gap Observation: {learning_gap}
 Teacher Recommendations: {recommendations}
 
 ---

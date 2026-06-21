@@ -42,6 +42,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
 
+<<<<<<< HEAD
 # Database: DATABASE_URL set -> Postgres (or any dj-database-url URL); unset ->
 # bundled SQLite (offline/dev default). Same models/migrations drive both.
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
@@ -55,6 +56,16 @@ else:
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
+=======
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "wave_db",            
+        "USER": "wave_user",          
+        "PASSWORD": "wave_password",  
+        "HOST": "127.0.0.1",          
+        "PORT": "5432",               
+>>>>>>> 5fb843f01822e3c5850abebd7af7efd5c9c20295
     }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

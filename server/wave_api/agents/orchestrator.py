@@ -9,6 +9,7 @@ Boundaries:
 - Transport (mqtt.py / codec.py) owns chunk fragmentation.
 """
 from datetime import date
+import json
 from typing import Any, Dict, List, Optional
 
 from .adapters import (
@@ -134,7 +135,10 @@ def finalize_and_publish(
         "failed_items": final_lesson_state.get("failed_items", []),
         "core_diagnosis": final_lesson_state.get("core_diagnosis", {}),
         "has_lesson_content": True,
+        "remedial_lesson": json.dumps(approved_draft) if isinstance(approved_draft, dict) else str(approved_draft),
         "human_feedback": "approve",
+        "is_revision": False,
+        "draft_attempts": 0,
     }
     quiz_state = _quiz_graph().invoke(quiz_initial_state, _quiz_config(session_id))
     quiz_items: List[Dict[str, Any]] = quiz_state.get("quiz_draft") or []
@@ -164,3 +168,17 @@ def finalize_and_publish(
         "analytics": analytics,
         "subject": final_lesson_state.get("subject", ""),
     }
+
+
+def auto_approve_lesson(
+    *,
+    session_id: str,
+) -> Dict[str, Any]:
+    """Auto-approve the current lesson draft and return the finalized state.
+
+    Used by start_lesson_only to skip the human-in-the-loop review and go
+    straight to TeacherFinalize.
+    """
+    config = _require_session(session_id)
+    _lesson_workflow_app().update_state(config, {"teacher_feedback": "PASS"})
+    return _lesson_workflow_app().invoke(None, config)
