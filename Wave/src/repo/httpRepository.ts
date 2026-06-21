@@ -189,6 +189,7 @@ export class HttpRepository implements WaveRepository {
       gradeLevel: req.gradeLevel,
       section: req.section,
       prompt: req.prompt,
+      lessonOnly: req.lessonOnly ?? false,
       failedItems: req.failedItems ?? [],
     });
 

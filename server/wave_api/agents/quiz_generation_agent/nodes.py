@@ -17,7 +17,7 @@ llm_factory = AgentFactory()
 # 2. Define the Nodes (Automated AI Actions)
 # ==========================================
 def retrieve_context(state: AgentState):
-    from server.wave_api.models import CatalogDocument
+    from wave_api.models import CatalogDocument
 
     print("--- [Node] Retrieving Context & catalog document ---")
     subject = state.get("subject", "science")
@@ -273,7 +273,7 @@ def review_quiz(state: AgentState):
 
 def finalize_quiz(state: AgentState):
     print("--- [Node] Finalizing Quiz ---")
-    from server.wave_api.models import RemediationMaterial
+    from wave_api.models import RemediationMaterial
     import uuid
     from datetime import datetime
 

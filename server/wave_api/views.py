@@ -148,6 +148,9 @@ def generate_remediation(request):
     topic_ids = data.get("topicIds") or ([data["topicId"]] if data.get("topicId") else [])
     topic_id = data.get("originalTopicId") or (topic_ids[0] if topic_ids else "") or data.get("topicId") or ""
     student_name = data.get("studentName") or data.get("section") or "your class"
+    # Lesson Wizard sends lessonOnly=True (lesson, no quiz); the remedial flow
+    # omits it -> quiz included.
+    include_quiz = not data.get("lessonOnly", False)
     result = ai.generate_remediation(
         subject=data.get("subject", "science"),
         topic_id=topic_id,
@@ -155,6 +158,8 @@ def generate_remediation(request):
         failed_items=data.get("failedItems") or [],
         topic_ids=topic_ids,
         prompt=data.get("prompt") or "",
+        grade_level=data.get("gradeLevel", 6),
+        include_quiz=include_quiz,
     )
     return Response(result)
 

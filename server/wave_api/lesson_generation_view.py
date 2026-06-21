@@ -168,6 +168,14 @@ def start_lesson_only(request):
     data = serializer.validated_data
     session_id = str(uuid.uuid4())
 
+    try:
+        from wave_api.agents import orchestrator  # lazy: heavy AI deps
+    except ImportError:
+        return Response(
+            {"detail": "AI lesson generation is not available (AI dependencies not installed)."},
+            status=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+
     # 1. Run the lesson graph up to the TeacherReview interrupt
     result = orchestrator.start_remediation_session(
         session_id=session_id,
@@ -220,6 +228,14 @@ def start_lesson_and_quiz(request):
 
     data = serializer.validated_data
     session_id = str(uuid.uuid4())
+
+    try:
+        from wave_api.agents import orchestrator  # lazy: heavy AI deps
+    except ImportError:
+        return Response(
+            {"detail": "AI lesson generation is not available (AI dependencies not installed)."},
+            status=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
 
     # 1. Run the lesson graph up to the TeacherReview interrupt
     result = orchestrator.start_remediation_session(

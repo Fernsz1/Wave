@@ -1,13 +1,13 @@
-from server.wave_api.agents.agent_factory import AgentFactory
-from server.wave_api.agents.agent_role import AgentRole
-from server.wave_api.agents.lesson_generation_agent.state import AgentState
-from server.wave_api.agents.lesson_generation_agent.prompts.diagnostic_prompt import diagnosis_prompt
-from server.wave_api.agents.lesson_generation_agent.prompts.remediation_prompt import remediation_prompt
-from server.wave_api.agents.lesson_generation_agent.prompts.teacher_remediation_prompt import simplify_prompt, practical_prompt, change_exercise_prompt, micro_steps_prompt
-from server.wave_api.agents.lesson_generation_agent.prompts.evaluation_prompt import remediation_evaluation_prompt
+from wave_api.agents.agent_factory import AgentFactory
+from wave_api.agents.agent_role import AgentRole
+from wave_api.agents.lesson_generation_agent.state import AgentState
+from wave_api.agents.lesson_generation_agent.prompts.diagnostic_prompt import diagnosis_prompt
+from wave_api.agents.lesson_generation_agent.prompts.remediation_prompt import remediation_prompt
+from wave_api.agents.lesson_generation_agent.prompts.teacher_remediation_prompt import simplify_prompt, practical_prompt, change_exercise_prompt, micro_steps_prompt
+from wave_api.agents.lesson_generation_agent.prompts.evaluation_prompt import remediation_evaluation_prompt
 from langchain_core.output_parsers import JsonOutputParser 
 from pydantic import BaseModel, Field
-from server.wave_api.agents.lesson_generation_agent.output_schema import RemediationEvaluationResult, RemediationLesson
+from wave_api.agents.lesson_generation_agent.output_schema import RemediationEvaluationResult, RemediationLesson
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 from .output_schema import StudentDiagnosis
@@ -21,7 +21,7 @@ evaluator_llm = llm_factory.create_llm(AgentRole.EVALUATOR)
 
 # --- 2. Node Functions (The "Doers") ---
 def retrieve_local_context(state: AgentState):
-    from server.wave_api.models import CatalogDocument
+    from wave_api.models import CatalogDocument
 
     print("-> Retrieving local cultural context & catalog document...")
     subject = state.get("subject", "science")
@@ -174,7 +174,7 @@ def teacher_finalize(state: AgentState):
     Finalizes the lesson after human approval.
     This is the last node executed before the graph reaches the END.
     """
-    from server.wave_api.models import RemediationMaterial
+    from wave_api.models import RemediationMaterial
     import uuid
     from datetime import datetime
 

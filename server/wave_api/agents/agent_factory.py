@@ -27,10 +27,11 @@ class AgentFactory:
             temperature = kwargs.get("temperature", 0.5)
             
         elif role == AgentRole.EVALUATOR:
-            # gemini-2.5-pro: The heavyweight. Used for deep reasoning, complex problem-solving, and strict grading.
-            model_id = "gemini-2.5-pro"
+            # gemini-2.5-flash: free-tier-available. (Was gemini-2.5-pro, but pro
+            # has 0 free-tier quota; flash is the model the account has quota for.)
+            model_id = "gemini-2.5-flash"
             # Default to a highly deterministic temperature for consistent evaluation
-            temperature = kwargs.get("temperature", 0.0) 
+            temperature = kwargs.get("temperature", 0.0)
             
         else:
             raise ValueError(f"Unknown agent role requested: {role}")

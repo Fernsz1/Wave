@@ -42,7 +42,6 @@ MIDDLEWARE = [
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
 
-<<<<<<< HEAD
 # Database: DATABASE_URL set -> Postgres (or any dj-database-url URL); unset ->
 # bundled SQLite (offline/dev default). Same models/migrations drive both.
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
@@ -56,16 +55,6 @@ else:
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
-=======
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "wave_db",            
-        "USER": "wave_user",          
-        "PASSWORD": "wave_password",  
-        "HOST": "127.0.0.1",          
-        "PORT": "5432",               
->>>>>>> 5fb843f01822e3c5850abebd7af7efd5c9c20295
     }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -85,3 +74,9 @@ MQTT_PORT = int(os.getenv("WAVE_BROKER_PORT", "1883"))
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+
+# The LangGraph agents (langchain-google-genai) authenticate via GOOGLE_API_KEY,
+# while the single-shot path uses GEMINI_API_KEY. Mirror one to the other so a
+# single key in .env activates both generation paths.
+if not os.getenv("GOOGLE_API_KEY") and GEMINI_API_KEY:
+    os.environ["GOOGLE_API_KEY"] = GEMINI_API_KEY

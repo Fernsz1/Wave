@@ -132,6 +132,7 @@ export default function LessonWizard({
       topicIds: selectedTopicIds,
       topicId: selectedTopicIds[0],
       prompt: prompt.trim() || undefined,
+      lessonOnly: true, // Lesson Wizard generates a lesson without a quiz
     })
       .then((result) => {
         setGenPercentage(100);

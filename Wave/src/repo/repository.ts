@@ -19,6 +19,7 @@ export interface GenerateRemediationReq {
   gradeLevel?: string;
   section?: string;
   prompt?: string; // free-text teacher instruction (lesson generator)
+  lessonOnly?: boolean; // Lesson Wizard: generate lesson without a quiz
   failedItems?: string[];
 }
 

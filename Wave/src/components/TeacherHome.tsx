@@ -147,7 +147,9 @@ export default function TeacherHome({
     setCustomTitle(aiGenResult.title);
     setCustomIntroduction(aiGenResult.teacherNotes);
     setCustomSections(secs.length > 0 ? secs : customSections);
-    setCustomQuiz(aiGenResult.createdQuiz.length > 0 ? aiGenResult.createdQuiz : customQuiz);
+    // Remedial = lesson + summative (no separate quiz). The AI-generated test
+    // populates the summative; createdQuiz stays empty.
+    setCustomQuiz([]);
     setCustomSummative(aiGenResult.createdQuiz.length > 0 ? aiGenResult.createdQuiz : customSummative);
     
     if (aiGenResult.lessonNumber !== undefined) {
@@ -439,7 +441,8 @@ export default function TeacherHome({
     setCustomTitle(title);
     setCustomIntroduction(intro);
     setCustomSections(sections);
-    setCustomQuiz(quiz);
+    // Remedial = lesson + summative (no separate quiz).
+    setCustomQuiz([]);
     setCustomSummative(summative);
 
     // Fire real Gemini call — result applied by coordination effect once animation also completes.
@@ -456,7 +459,7 @@ export default function TeacherHome({
         title,
         content: sections.map(s => `## ${s.title}\n${s.body}`).join('\n\n'),
         teacherNotes: intro,
-        createdQuiz: quiz,
+        createdQuiz: summative, // routed to the summative (remedial has no separate quiz)
       });
     });
   };
@@ -870,11 +873,11 @@ export default function TeacherHome({
           <div className="bg-gradient-to-br from-[#DBEAFE] to-[#ECFDF5] border border-blue-100/60 rounded-3xl p-6 shadow-[0_12px_40px_rgba(37,99,235,0.04)] hover:shadow-[0_12px_40px_rgba(37,99,235,0.08)] hover:scale-[1.01] transition-all duration-300 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
             <div className="space-y-2">
               <span className="inline-block text-[10px] bg-blue-100/80 border border-blue-200 text-blue-700 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider mb-2.5 font-sans">
-                Copilot Remedial Wizard
+                Copilot Lesson Generator
               </span>
-              <h3 className="font-display font-bold text-lg text-slate-900 leading-tight">Generate Custom AI Remediation material</h3>
+              <h3 className="font-display font-bold text-lg text-slate-900 leading-tight">Generate a Custom AI Lesson</h3>
               <p className="text-xs text-slate-500 max-w-md">
-                Select flagged underperforming students, scan their topic failures, and trigger Gemini to output targeted study booklets and custom test questions instantly.
+                Pick a grade level, section, subject, lesson and topics — or just write a prompt — and Gemini drafts a ready-to-publish lesson instantly.
               </p>
             </div>
             
@@ -883,7 +886,7 @@ export default function TeacherHome({
               id="faculty-launch-wizard"
               className="px-5 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl text-xs shadow-md shadow-[#2563EB]/15 hover:shadow-lg transition-transform flex items-center gap-1.5 shrink-0 cursor-pointer"
             >
-              Run AI Wizard
+              Run Lesson Generator
             </button>
           </div>
         </div>
@@ -1147,7 +1150,8 @@ export default function TeacherHome({
                       </div>
                     </div>
 
-                    {/* Dynamic Quiz block list */}
+                    {/* Quiz block hidden — remedial has no separate quiz, only a summative test */}
+                    {customQuiz.length > 0 && (
                     <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3.5">
                       <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                         <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block">Interactive Evaluation Questionnaire</span>
@@ -1217,6 +1221,7 @@ export default function TeacherHome({
                         ))}
                       </div>
                     </div>
+                    )}
 
                     {/* Summative Test block */}
                     <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3.5 pt-2">
@@ -1351,7 +1356,8 @@ export default function TeacherHome({
                         ))}
                       </div>
 
-                      {/* Quiz questions count */}
+                      {/* Quiz preview hidden — remedial has no separate quiz, only a summative */}
+                      {customQuiz.length > 0 && (
                       <div className="space-y-3.5 pt-2">
                         <h3 className="text-[10px] font-black text-slate-400 tracking-wider uppercase font-sans">Topic Quiz Questions ({customQuiz.length})</h3>
                         {customQuiz.map((q, qIdx) => (
@@ -1369,6 +1375,7 @@ export default function TeacherHome({
                           </div>
                         ))}
                       </div>
+                      )}
 
                       {/* Custom summative questions */}
                       <div className="space-y-3.5 pt-2 border-t border-slate-100">
@@ -1414,7 +1421,7 @@ export default function TeacherHome({
                       </div>
                       <span className="text-[10px] font-bold block text-slate-500">{activeSubject.toUpperCase()} • {customTargetSection}</span>
                       <h4 className="text-xs font-black text-slate-800 leading-normal">Lesson {customLessonNumber}: {customTitle}</h4>
-                      <p className="text-[10px] text-slate-450 leading-relaxed italic">{customQuiz.length} interactive diagnostic evaluation queries locked.</p>
+                      <p className="text-[10px] text-slate-450 leading-relaxed italic">{customSummative.length}-item summative test locked.</p>
                     </div>
                   </div>
                 )}
@@ -1471,7 +1478,7 @@ export default function TeacherHome({
                           title: fullTitle,
                           introduction: combinedNotes,
                           sectionsCount: customSections.length,
-                          quizCount: customQuiz.length,
+                          quizCount: customSummative.length,
                           publishDate
                         };
                         setPublishedLessons(prev => [newPub, ...prev]);
@@ -1481,7 +1488,7 @@ export default function TeacherHome({
                           title: fullTitle,
                           content: customSections.map(s => `## ${s.title}\n${s.body}`).join('\n\n'),
                           teacherNotes: combinedNotes,
-                          createdQuiz: customQuiz,
+                          createdQuiz: [], // remedial has no separate quiz — summative only
                           createdSummative: customSummative,
                           publishDate,
                           targetSection: customTargetSection,

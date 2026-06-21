@@ -96,6 +96,137 @@ def _fallback(
                 "correct_answer": "Your teacher",
             },
         ],
+        "generator": "mock",
+    }
+
+
+# ── LangGraph multi-agent path ──────────────────────────────────────────────
+
+def _parse_grade_level(value) -> int:
+    """Extract an int grade from 'Grade 6' / '6' / 6. Defaults to 6."""
+    if isinstance(value, int):
+        return value
+    digits = "".join(c for c in str(value or "") if c.isdigit())
+    return int(digits) if digits else 6
+
+
+def _generate_with_agents(
+    subject: str,
+    topic_id: str,
+    student_name: str,
+    failed_items: list | None,
+    prompt: str,
+    grade_level: int,
+    include_quiz: bool,
+) -> dict | None:
+    """Run the LangGraph lesson (+optionally quiz) agents and return the AI JSON
+    schema the frontend maps. Returns None if the agent stack/key is unavailable
+    so the caller can fall back. Generate-only — never persists to the DB.
+    """
+    import os
+    import uuid as _uuid
+
+    if not os.getenv("GOOGLE_API_KEY"):
+        return None
+    try:
+        from wave_api.agents import orchestrator
+    except ImportError:
+        return None
+
+    # Agents expect failed_items as dicts; the frontend sends question strings.
+    raw_items = failed_items or []
+    fi_dicts = [({"question": q} if isinstance(q, str) else dict(q)) for q in raw_items]
+    if not fi_dicts:
+        # Lesson-generator (no failures) — seed the diagnosis from the prompt/topic.
+        fi_dicts = [{"question": prompt or f"Introduce {topic_id}"}]
+
+    sid = str(_uuid.uuid4())
+    start = orchestrator.start_remediation_session(
+        session_id=sid,
+        subject=subject,
+        grade_level=grade_level,
+        original_topic_id=topic_id,
+        topic="",
+        lesson_context=prompt or "",
+        failed_items=fi_dicts,
+        target_section=student_name,
+    )
+
+    def _as_dict(v):
+        return v.model_dump() if hasattr(v, "model_dump") else (dict(v) if isinstance(v, dict) else {})
+
+    # The lesson agent's draft_lesson is a RemediationLesson: {concepts:[{header_title, explanation}]}.
+    draft = _as_dict(start.get("draft_lesson"))
+    diagnosis = _as_dict(start.get("core_diagnosis"))
+
+    concepts = [
+        {"header_title": c.get("header_title", ""), "explanation": c.get("explanation", "")}
+        for c in (draft.get("concepts") or [])
+        if isinstance(c, dict)
+    ]
+    content = "\n\n".join(f"## {c['header_title']}\n{c['explanation']}" for c in concepts)
+    title = diagnosis.get("topic") or topic_id or "Generated Lesson"
+    learning_gap = diagnosis.get("learning_gap") or ""
+    teacher_notes = diagnosis.get("intervention_hint") or ""
+
+    summative_test: list = []
+    if include_quiz:
+        # Run the quiz graph directly off the approved lesson. We avoid
+        # orchestrator.finalize_and_publish here because its lesson-finalize node
+        # writes a (placeholder-content) RemediationMaterial row as a side effect;
+        # generation must not persist — the teacher publishes via /sync/push.
+        try:
+            from wave_api.agents.orchestrator import _quiz_graph, _quiz_config
+            quiz_state = _quiz_graph().invoke(
+                {
+                    "subject": subject,
+                    "grade_level": grade_level,
+                    "original_topic_id": topic_id,
+                    "topic": title,
+                    "lesson_context": prompt or "",
+                    "failed_items": fi_dicts,
+                    "core_diagnosis": diagnosis,
+                    "has_lesson_content": True,
+                    "remedial_lesson": json.dumps({"concepts": concepts}),
+                    "human_feedback": "approve",
+                    "is_revision": False,
+                    "draft_attempts": 0,
+                },
+                _quiz_config(sid),
+            )
+            # quiz_draft is a QuizDraftResponse dump: {"quiz_items": [...]}.
+            quiz_draft = quiz_state.get("quiz_draft") or {}
+            if hasattr(quiz_draft, "quiz_items"):
+                quiz_items = quiz_draft.quiz_items
+            elif isinstance(quiz_draft, dict):
+                quiz_items = quiz_draft.get("quiz_items", [])
+            elif isinstance(quiz_draft, list):
+                quiz_items = quiz_draft
+            else:
+                quiz_items = []
+            for item in quiz_items:
+                raw = _as_dict(item)
+                opts_dict = raw.get("options", {}) or {}
+                choices = [opts_dict[k] for k in ("A", "B", "C", "D") if k in opts_dict]
+                letter = (raw.get("correct_answer") or "").strip().upper()
+                summative_test.append({
+                    "question": raw.get("question_text", ""),
+                    "choices": choices,
+                    "correct_answer": opts_dict.get(letter, choices[0] if choices else ""),
+                })
+        except Exception as exc:
+            print(f"[ai] quiz agent failed: {exc}")
+
+    return {
+        "lesson_number": 1,
+        "lesson_title": title,
+        "learning_gap": learning_gap,
+        "grade_level_section": student_name,
+        "teachers_notes": [teacher_notes] if teacher_notes else [],
+        "concepts": concepts,
+        "content": content,
+        "summative_test": summative_test,
+        "generator": "agent",
     }
 
 
@@ -108,15 +239,34 @@ def generate_remediation(
     failed_items: list[str] | None = None,
     topic_ids: list[str] | None = None,
     prompt: str = "",
+    grade_level=6,
+    include_quiz: bool = True,
 ) -> dict:
     """
     Returns the new AI schema matching format:
     {"lesson_number", "lesson_title", "learning_gap", "grade_level_section", "teachers_notes", "concepts", "summative_test"}.
 
+    Generation strategy, in order:
+      1. LangGraph multi-agent pipeline   (if GOOGLE_API_KEY set + stack installed)
+      2. Single-shot Gemini               (if GEMINI_API_KEY set + google-genai)
+      3. Deterministic mock               (offline / no key)
+
     `topic_ids` (one or more catalog topics) and `prompt` (free-text teacher
     instruction) drive the lesson-generator flow; `failed_items` drives the
-    remediation flow. Any combination is accepted.
+    remediation flow. `include_quiz=False` skips quiz generation (Lesson Wizard).
     """
+    # 1. Real AI via the agent pipeline (the configured path).
+    try:
+        agent_result = _generate_with_agents(
+            subject, topic_id, student_name, failed_items, prompt,
+            _parse_grade_level(grade_level), include_quiz,
+        )
+        if agent_result is not None:
+            return agent_result
+    except Exception as exc:  # never let the agent path break generation
+        print(f"[ai] agent generation failed, falling back: {exc}")
+
+    # 2. Single-shot Gemini, else 3. mock.
     client = _client()
     if client is None:
         return _fallback(subject, topic_id, student_name, topic_ids=topic_ids, teacher_prompt=prompt)
@@ -233,7 +383,8 @@ Rules:
             "grade_level_section": grade_level_section,
             "teachers_notes": teachers_notes,
             "concepts": concepts,
-            "summative_test": summative_test
+            "summative_test": summative_test,
+            "generator": "single_shot",
         }
 
     except Exception as exc:
