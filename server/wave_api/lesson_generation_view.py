@@ -131,3 +131,129 @@ def submit_teacher_feedback(request):
         "draft_lesson": result.get("draft_lesson"),
         "ai_evaluation_remarks": result.get("revision_remarks"),
     }, status=status.HTTP_200_OK)
+
+
+# =============================================
+# Endpoint: Lesson Generation Only (no quiz)
+# =============================================
+@api_view(['POST'])
+def start_lesson_only(request):
+    """
+    Run ONLY the lesson generation agent (diagnose -> draft -> evaluate -> finalize)
+    and return the outputs without invoking the quiz agent.
+    """
+    serializer = InitialLessonSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    data = serializer.validated_data
+    session_id = str(uuid.uuid4())
+
+    # 1. Run the lesson graph up to the TeacherReview interrupt
+    result = orchestrator.start_remediation_session(
+        session_id=session_id,
+        subject=data['subject'],
+        grade_level=data['grade_level'],
+        original_topic_id=data['original_topic_id'],
+        topic=data.get('topic', ''),
+        lesson_context=data.get('lesson_context', ''),
+        failed_items=data['failed_items'],
+        target_section=data.get('target_section', ''),
+    )
+
+    # 2. Auto-approve the lesson (send PASS feedback to finalize)
+    try:
+        final_state = orchestrator.auto_approve_lesson(session_id=session_id)
+    except KeyError:
+        return Response(
+            {"detail": f"Session {session_id} not found or already completed."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    approved_lesson = (
+        final_state.get("final_lesson")
+        or final_state.get("draft_lesson")
+        or {}
+    )
+
+    return Response({
+        "session_id": session_id,
+        "status": "completed",
+        "core_diagnosis": final_state.get("core_diagnosis"),
+        "draft_lesson": approved_lesson,
+        "ai_evaluation_remarks": result.get("revision_remarks"),
+    }, status=status.HTTP_200_OK)
+
+
+# =============================================
+# Endpoint: Lesson + Quiz Generation (chained)
+# =============================================
+@api_view(['POST'])
+def start_lesson_and_quiz(request):
+    """
+    Run the lesson generation agent first, then feed its approved output
+    into the quiz generation agent. Returns both the finalized lesson
+    and the generated quiz in one response.
+    """
+    serializer = InitialLessonSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    data = serializer.validated_data
+    session_id = str(uuid.uuid4())
+
+    # 1. Run the lesson graph up to the TeacherReview interrupt
+    result = orchestrator.start_remediation_session(
+        session_id=session_id,
+        subject=data['subject'],
+        grade_level=data['grade_level'],
+        original_topic_id=data['original_topic_id'],
+        topic=data.get('topic', ''),
+        lesson_context=data.get('lesson_context', ''),
+        failed_items=data['failed_items'],
+        target_section=data.get('target_section', ''),
+    )
+
+    # 2. Auto-approve the lesson so it finalizes
+    try:
+        finalized = orchestrator.finalize_and_publish(
+            session_id=session_id,
+            material_id=f"REM-{uuid.uuid4().hex[:10].upper()}",
+            publish_date=date.today().isoformat(),
+        )
+    except KeyError:
+        return Response(
+            {"detail": f"Session {session_id} could not be finalized."},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+    # 3. Extract wire model and convert to dict
+    wire = finalized["wire"]
+    wire_dict = wire.model_dump(by_alias=True)
+
+    # 4. Persist to RemediationMaterial
+    RemediationMaterial.objects.update_or_create(
+        material_id=wire.id,
+        defaults={
+            "subject": finalized.get("subject", "science"),
+            "original_topic_id": wire.original_topic_id,
+            "title": wire.title,
+            "content": wire.content,
+            "teacher_notes": wire.teacher_notes,
+            "created_quiz": [q.model_dump(by_alias=True) for q in wire.created_quiz],
+            "created_summative": [q.model_dump(by_alias=True) for q in wire.created_summative],
+            "publish_date": wire.publish_date,
+            "target_section": wire.target_section,
+            "is_published": wire.is_published,
+            "analytics": finalized.get("analytics", {}),
+        },
+    )
+
+    return Response({
+        "session_id": session_id,
+        "status": "completed",
+        "core_diagnosis": result.get("core_diagnosis"),
+        "draft_lesson": result.get("draft_lesson"),
+        "ai_evaluation_remarks": result.get("revision_remarks"),
+        "material": wire_dict,
+    }, status=status.HTTP_200_OK)

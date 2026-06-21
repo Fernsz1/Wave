@@ -21,8 +21,38 @@ evaluator_llm = llm_factory.create_llm(AgentRole.EVALUATOR)
 
 # --- 2. Node Functions (The "Doers") ---
 def retrieve_local_context(state: AgentState):
-    print("-> Retrieving local cultural context...")
-    return {"local_analogy_context": "Found local cultural analogy relevant to the syllabus."}
+    from server.wave_api.models import CatalogDocument
+
+    print("-> Retrieving local cultural context & catalog document...")
+    subject = state.get("subject", "science")
+    topic_id = state.get("original_topic_id")
+    
+    lesson_content = state.get("lesson_context", "")
+
+    try:
+        catalog = CatalogDocument.objects.get(subject=subject)
+        # Search the catalog data for the specific lesson/topic
+        found = False
+        for lesson in catalog.data:
+            if lesson.get("id") == topic_id or lesson.get("title") == state.get("topic"):
+                lesson_content = str(lesson)
+                found = True
+                break
+            # Check if topics are nested inside lessons
+            for topic in lesson.get("topics", []):
+                if topic.get("id") == topic_id:
+                    lesson_content = str(topic)
+                    found = True
+                    break
+            if found:
+                break
+    except CatalogDocument.DoesNotExist:
+        pass
+
+    return {
+        "local_analogy_context": "Found local cultural analogy relevant to the syllabus.",
+        "lesson_context": lesson_content
+    }
 
 def diagnose_misconception(state: AgentState):
     """Creates class diagnosis to know what steps should be taken to improve classroom performance"""
@@ -71,6 +101,8 @@ def draft_lesson(state: AgentState):
                 prompt = change_exercise_prompt
             case "micro":
                 prompt = micro_steps_prompt
+            case _:
+                prompt = simplify_prompt  # safe fallback for unexpected values
 
         chain = prompt | primary_llm | JsonOutputParser()
         remediation_material = chain.invoke({
@@ -82,6 +114,14 @@ def draft_lesson(state: AgentState):
             "recommendations": state.get("teacher_recommendations"),
             "learning_gap": state.get("learning_gap")
         })
+
+    # Normalize Pydantic models to dict for consistent state handling.
+    # The initial path returns a RemediationLesson Pydantic object while
+    # the teacher-feedback path returns a plain dict from JsonOutputParser.
+    # Downstream nodes (evaluate_pedagogy, teacher_finalize) use .get()
+    # which only works on dicts.
+    if hasattr(remediation_material, 'model_dump'):
+        remediation_material = remediation_material.model_dump()
 
     return {
         "draft_lesson": remediation_material,
@@ -95,7 +135,9 @@ def evaluate_pedagogy(state: AgentState):
     max_revisions = 3
 
     if state.get("is_approved"):
-        return state
+        # Return empty dict (no-op) instead of the full state to avoid
+        # doubling revision_count via the Annotated[int, operator.add] reducer.
+        return {}
 
     structured_evaluator = evaluator_llm.with_structured_output(RemediationEvaluationResult)
     chain = remediation_evaluation_prompt | structured_evaluator
@@ -132,9 +174,26 @@ def teacher_finalize(state: AgentState):
     Finalizes the lesson after human approval.
     This is the last node executed before the graph reaches the END.
     """
+    from server.wave_api.models import RemediationMaterial
+    import uuid
+    from datetime import datetime
 
     # 1. Grab the currently approved draft (whether it was the first AI draft or a human-modified one)
-    approved_lesson = state.get("draft_lesson")
+    approved_lesson = state.get("draft_lesson", {})
+
+    # 2. Save the approved draft into the RemediationMaterial database model
+    material_id = str(uuid.uuid4())
+    RemediationMaterial.objects.create(
+        material_id=material_id,
+        subject=state.get("subject", "science"),
+        original_topic_id=state.get("original_topic_id", ""),
+        title=approved_lesson.get("title", f"Remediation: {state.get('topic')}"),
+        content=approved_lesson.get("content", ""),
+        teacher_notes=approved_lesson.get("teacher_notes", ""),
+        publish_date=datetime.now().strftime("%Y-%m-%d"),
+        is_published=True
+    )
+
     # 3. Return the final state updates
     return {
         # Lock in the final lesson
