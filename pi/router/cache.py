@@ -1,13 +1,17 @@
 """
 Late-joiner cache for the classroom router.
 
-Stores the last N TeacherRemediationMaterial payloads per section so a student
-device that joins the AP after the LoRa broadcast can still fetch their
-material via HTTP. Plain SQLite keeps it dependency-light on the Pi.
+Stores the last N downstream payloads per section so a student device that joins
+the AP after the LoRa broadcast can still fetch their material via HTTP. Plain
+SQLite keeps it dependency-light on the Pi.
+
+The cached `payload` is the **raw serialized tokenized-envelope array** (the exact
+JSON string that arrived over the air). The HTTP serve layer returns these
+verbatim and the student app decodes them with its codec — byte-identical to
+the MQTT path. The cache never decodes the protocol itself.
 """
 from __future__ import annotations
 
-import json
 import sqlite3
 import threading
 import time
@@ -40,11 +44,12 @@ class RelayCache:
         )
         self._conn.commit()
 
-    def store(self, *, section: str, msg_type: str, payload: dict) -> None:
+    def store(self, *, section: str, msg_type: str, payload: str) -> None:
+        """Persist a raw serialized tokenized-envelope string for a section."""
         with self._lock:
             self._conn.execute(
                 "INSERT INTO payloads(section, msg_type, payload, received_at) VALUES (?,?,?,?)",
-                (section, msg_type, json.dumps(payload, separators=(",", ":")), time.time()),
+                (section, msg_type, payload, time.time()),
             )
             self._conn.execute(
                 """
@@ -58,7 +63,8 @@ class RelayCache:
             )
             self._conn.commit()
 
-    def list_for_section(self, section: str, msg_type: Optional[str] = None) -> List[dict]:
+    def list_for_section(self, section: str, msg_type: Optional[str] = None) -> List[str]:
+        """Return the raw serialized envelope strings for a section, newest first."""
         with self._lock:
             if msg_type:
                 cur = self._conn.execute(
@@ -70,7 +76,7 @@ class RelayCache:
                     "SELECT payload FROM payloads WHERE section = ? ORDER BY received_at DESC",
                     (section,),
                 )
-            return [json.loads(row[0]) for row in cur.fetchall()]
+            return [row[0] for row in cur.fetchall()]
 
     def close(self) -> None:
         with self._lock:

@@ -14,6 +14,13 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+# The `pi/` package lives at the repo root (one level above `server/`). Put the
+# repo root on sys.path so tests can `import pi.router.*` while `wave_api` still
+# resolves from `server/`.
+_REPO_ROOT = _ROOT.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 # AgentFactory() is constructed at module import time in nodes.py and refuses
 # to load without a key. Tests never reach the real API because `stub_agents`
 # replaces `create_llm` — but a placeholder must satisfy the constructor.

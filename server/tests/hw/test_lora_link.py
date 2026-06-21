@@ -16,12 +16,13 @@ import time
 
 import pytest
 
+from wave_api import codec
 from wave_api.lora.chunk import fragment
 from wave_api.lora.rylr998 import Rylr998Error
 from wave_api.lora.transport import recv_payloads, send_payload
 
 from pi.router.cache import RelayCache
-from pi.router.relay import Relay, RelayConfig
+from pi.router.relay import Relay, RelayConfig, _slug
 
 
 # H1
@@ -145,13 +146,57 @@ def test_concurrent_uplink_during_downlink(server_driver, router_driver, tmp_pat
     frames by design.
     """
     section = "Grade 6 - Section Newton"
-    downlink_env = {
-        "type": "TeacherRemediationMaterial",
-        "section": section,
-        "payload": {"id": "REM-HW14", "content": "D" * 500},  # multi-frame
+    material = {
+        "id": "REM-HW14",
+        "originalTopicId": "T1",
+        "title": "HW14 Remedial",
+        "content": "D" * 500,  # multi-frame
+        "teacherNotes": "notes",
+        "createdQuiz": [],
+        "publishDate": "2026-06-21T00:00:00Z",
+        "targetSection": section,
+        "chunks": [],
+        "isPublished": True,
     }
-    downlink = json.dumps(downlink_env, separators=(",", ":"))
-    uplink_env = {"type": "StudentQuizAttempt", "section": section, "payload": [1, 2, 3]}
+    # Real tokenized down-cast envelope — exactly what the server ships over LoRa.
+    downlink_tokens = codec.encode_envelope(
+        {
+            "version": codec.PROTOCOL_VERSION,
+            "msgId": "hw14down",
+            "type": "TeacherRemediationMaterial",
+            "direction": "down",
+            "subject": None,
+            "section": section,
+            "createdAt": "2026-06-21T00:00:00Z",
+            "chunkIndex": 0,
+            "chunkTotal": 1,
+            "payload": codec.encode("TeacherRemediationMaterial", material),
+        }
+    )
+    downlink = json.dumps(downlink_tokens, separators=(",", ":"))
+    # Student uplink is a tokenized QuizAttemptRequest envelope.
+    uplink_attempt = {
+        "studentLrn": "111",
+        "section": section,
+        "subject": "science",
+        "lessonId": "L1",
+        "mode": "topic",
+        "seed": 7,
+    }
+    uplink_tokens = codec.encode_envelope(
+        {
+            "version": codec.PROTOCOL_VERSION,
+            "msgId": "hw14up",
+            "type": "QuizAttemptRequest",
+            "direction": "up",
+            "subject": "science",
+            "section": section,
+            "createdAt": "2026-06-21T00:00:00Z",
+            "chunkIndex": 0,
+            "chunkTotal": 1,
+            "payload": codec.encode("QuizAttemptRequest", uplink_attempt),
+        }
+    )
 
     cache = RelayCache(tmp_path / "cache.sqlite")
     relay = Relay(router_driver, cache, RelayConfig(server_addr=1))
@@ -189,19 +234,20 @@ def test_concurrent_uplink_during_downlink(server_driver, router_driver, tmp_pat
         deadline = time.monotonic() + 10
         while relay._last_rx_ms == 0.0 and time.monotonic() < deadline:
             time.sleep(0.05)
-        relay.enqueue_uplink(uplink_env)
+        relay.enqueue_uplink(uplink_tokens)
 
         sender.join(timeout=30)
         t_up.join(timeout=30)
 
-        # Downlink survived and was cached by the relay.
-        cached = cache.list_for_section(section, "TeacherRemediationMaterial")
-        assert cached and cached[0] == downlink_env["payload"]
+        # Downlink survived and was cached by the relay — stored verbatim as the
+        # tokenized array, keyed by the section SLUG.
+        cached = cache.list_for_section(_slug(section), "TeacherRemediationMaterial")
+        assert cached and json.loads(cached[0]) == downlink_tokens
 
         # Uplink survived the half-duplex window and reached the server.
         got = uplink_result.get("v")
         assert got is not None and not str(got).startswith("err:"), f"uplink not received: {got!r}"
-        assert json.loads(got) == uplink_env
+        assert json.loads(got) == uplink_tokens
     finally:
         relay.stop()
         cache.close()

@@ -13,7 +13,7 @@ import { decode, Token } from '../protocol/codec';
 import { SCHEMA_BY_TYPE } from '../schemas';
 import { buildEnvelope, parseEnvelope } from '../sync/envelope';
 import { Outbox, LocalStorageStore } from '../sync/outbox';
-import { MqttTransport, Transport } from '../sync/transport';
+import { MqttTransport, HttpPollTransport, Transport } from '../sync/transport';
 import { topicFor, slug } from '../sync/topics';
 import { Lesson, QuizQuestion, StudentProgress, StudentUser, TeacherUser, TeacherRemediationMaterial } from '../types';
 import { GeneratedRemediation, GenerateRemediationReq, LoginResult, RepoBootstrap, SubscribeOpts, QuizAttemptWrite, SummativeWrite, WaveRepository } from './repository';
@@ -31,6 +31,7 @@ export class HttpRepository implements WaveRepository {
   constructor(
     private apiBase: string,
     private mqttUrl: string | null,
+    private piHttp: string | null = null,
   ) {}
 
   private headers(): Record<string, string> {
@@ -286,9 +287,13 @@ export class HttpRepository implements WaveRepository {
   }
 
   subscribeLive(opts: SubscribeOpts): void {
-    if (!this.mqttUrl) return;
+    // Pi-HTTP (LoRa) path takes precedence when configured: the student device
+    // polls the Raspberry Pi's cache instead of an (unreachable) MQTT broker.
+    if (!this.piHttp && !this.mqttUrl) return;
     if (!this.transport) {
-      this.transport = new MqttTransport(this.mqttUrl);
+      this.transport = this.piHttp
+        ? new HttpPollTransport(this.piHttp)
+        : new MqttTransport(this.mqttUrl as string);
       // On every (re)connect, drain any writes that were queued while offline.
       this.transport.onReconnect(() => void this.flushOutbox());
     }

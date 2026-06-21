@@ -78,3 +78,7 @@ def publish_downstream(messages: list[dict]) -> None:
         topic = topic_for(m["type"], m["topicKey"])
         client.publish(topic, json.dumps(env), qos=1, retain=True)
         print(f"[mqtt] down -> {topic}")
+        # Also broadcast over LoRa to the village radio (no-op unless LORA_ENABLED).
+        from .lora import egress as lora_egress
+
+        lora_egress.send_envelope(env)

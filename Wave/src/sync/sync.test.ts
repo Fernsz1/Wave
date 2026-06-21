@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fragment, Reassembler } from './chunk';
-import { InMemoryTransport, matches } from './transport';
+import { HttpPollTransport, InMemoryTransport, matches } from './transport';
 import { Outbox, MemoryStore } from './outbox';
 import { buildEnvelope, parseEnvelope } from './envelope';
 
@@ -89,6 +89,56 @@ describe('Outbox offline buffering', () => {
     online = true;
     expect(await ob.flushAsync(send)).toBe(2);
     expect(ob.pending).toBe(0);
+  });
+});
+
+describe('HttpPollTransport (LoRa / Pi-HTTP path)', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const downEnv = buildEnvelope(
+    'Rankings',
+    { section: 'grade-6', subject: 'science', standings: [] },
+    { direction: 'down', subject: 'science', section: 'grade-6' },
+  );
+
+  it('polls the Pi cache, routes by synthesized topic, and dedupes by msgId', async () => {
+    let calls = 0;
+    const fetchMock = vi.fn(async (url: string) => {
+      if (typeof url === 'string' && url.includes('/api/sync')) {
+        calls += 1;
+        return { ok: true, json: async () => [downEnv] } as unknown as Response;
+      }
+      return { ok: false, json: async () => [] } as unknown as Response;
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const t = new HttpPollTransport('http://10.0.0.1', 20);
+    const got: any[] = [];
+    t.subscribe('wave/grade-6/#', (_topic, tokens) => got.push(tokens));
+
+    // First poll fires synchronously on subscribe; wait for the same envelope
+    // to be re-served on a later poll without being re-delivered (dedupe).
+    await vi.waitFor(() => expect(got.length).toBe(1), { timeout: 500 });
+    await new Promise((r) => setTimeout(r, 60)); // let further polls run
+    expect(calls).toBeGreaterThan(1); // it kept polling
+    expect(got.length).toBe(1); // but only delivered once (deduped by msgId)
+    expect(got[0]).toEqual(downEnv);
+
+    t.close();
+  });
+
+  it('POSTs uplinks to the Pi /api/uplink endpoint', () => {
+    const fetchMock = vi.fn(async () => ({ ok: true, json: async () => ({}) }) as unknown as Response);
+    vi.stubGlobal('fetch', fetchMock);
+    const t = new HttpPollTransport('http://10.0.0.1/');
+    t.publish('wave/grade-6/QuizAttemptRequest', [1, 2, 3]);
+    expect(fetchMock).toHaveBeenCalledWith(
+      'http://10.0.0.1/api/uplink',
+      expect.objectContaining({ method: 'POST', body: JSON.stringify([1, 2, 3]) }),
+    );
+    t.close();
   });
 });
 

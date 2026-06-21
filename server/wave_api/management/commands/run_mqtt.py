@@ -13,6 +13,7 @@ from django.core.management.base import BaseCommand
 
 from wave_api import codec, ingest
 from wave_api import mqtt as wave_mqtt
+from wave_api.lora import egress as lora_egress
 
 
 class Command(BaseCommand):
@@ -49,5 +50,7 @@ class Command(BaseCommand):
                 topic = wave_mqtt.topic_for(m["type"], m["topicKey"])
                 client.publish(topic, json.dumps(env_out), qos=1, retain=True)
                 self.stdout.write(f"[mqtt] down -> {topic}")
+                # Also broadcast over LoRa (no-op unless LORA_ENABLED).
+                lora_egress.send_envelope(env_out)
         except Exception as exc:  # noqa: BLE001 — keep the loop alive on a bad frame
             self.stderr.write(f"[mqtt] error: {exc}")

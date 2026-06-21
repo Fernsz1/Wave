@@ -16,11 +16,13 @@ from __future__ import annotations
 import json
 import logging
 import random
+import re
 import threading
 import time
 from dataclasses import dataclass
 from typing import Optional
 
+from wave_api import codec
 from wave_api.lora.chunk import Reassembler
 from wave_api.lora.transport import send_payload
 from wave_api.lora.rylr998 import ReceivedFrame, Rylr998Driver
@@ -30,6 +32,11 @@ from .cache import RelayCache
 log = logging.getLogger(__name__)
 
 REASSEMBLY_TIMEOUT_MS = 30_000
+
+
+def _slug(section: str) -> str:
+    """Section -> URL/topic slug. Must match server mqtt.slug and app topics.slug."""
+    return re.sub(r"[^a-z0-9]+", "-", section.lower()).strip("-")
 
 
 @dataclass
@@ -117,16 +124,30 @@ class Relay:
             self.ingest_downlink_payload(assembled)
 
     def ingest_downlink_payload(self, serialized: str) -> None:
-        """Called when a reassembled downlink payload is ready. Caches per section."""
+        """Called when a reassembled downlink payload is ready. Caches per section.
+
+        The reassembled payload is the tokenized envelope ARRAY (the exact bytes
+        that came over the air — identical to what flows over MQTT). We decode it
+        only to read `section`/`type` for the cache keys, then store the raw
+        array string verbatim so the student app can decode it with its codec,
+        unchanged from the MQTT path.
+        """
         try:
-            env = json.loads(serialized)
+            tokens = json.loads(serialized)
         except ValueError:
             log.warning("relay.bad_payload serialized=%r", serialized[:120])
             return
-        section = env.get("section", "")
-        msg_type = env.get("type", "")
-        payload = env.get("payload", env)
-        self._cache.store(section=section, msg_type=msg_type, payload=payload)
+        try:
+            env = codec.decode_envelope(tokens)
+        except Exception as exc:  # noqa: BLE001 — malformed envelope, drop it
+            log.warning("relay.bad_envelope err=%s tokens=%r", exc, str(tokens)[:120])
+            return
+        # Cache key is the section SLUG so it matches the app's topic globs and
+        # the /api/sync?section=<slug> query. The raw section still lives inside
+        # the cached envelope for the app to read.
+        section = _slug(env.get("section") or "")
+        msg_type = env.get("type") or ""
+        self._cache.store(section=section, msg_type=msg_type, payload=serialized)
         log.info("relay.cached section=%s type=%s", section, msg_type)
 
     # ---- uplink (student -> Pi -> server) --------------------------------

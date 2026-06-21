@@ -198,5 +198,36 @@ applies verbatim — the Pi relay, cache, and hostapd AP are untouched by this f
 | [firmware/heltec_wave_at/heltec_wave_at.ino](firmware/heltec_wave_at/heltec_wave_at.ino) | The firmware (RYLR998 AT emulation on SX1262) |
 | [firmware/heltec_wave_at/platformio.ini](firmware/heltec_wave_at/platformio.ini) | PlatformIO build config |
 | [server/wave_api/lora/rylr998.py](server/wave_api/lora/rylr998.py) | Host AT driver — the contract this firmware satisfies |
+| [server/wave_api/lora/egress.py](server/wave_api/lora/egress.py) | Server LoRa egress — fragments + sends down-casts via Heltec A |
+| [pi/router/relay.py](pi/router/relay.py) · [pi/router/serve.py](pi/router/serve.py) | Pi reassembly/cache + HTTP serve to student phones |
 | [server/tests/hw/test_lora_link.py](server/tests/hw/test_lora_link.py) | Hardware bench tests (gated on `WAVE_HW_BENCH=1`) |
 | [HARDWARE.md](HARDWARE.md) | Physical wiring & pin connections |
+| [PI_SETUP.md](PI_SETUP.md) | Raspberry Pi 3B village-node setup (AP + relay + serve) |
+
+---
+
+## 9. Integration status — end-to-end LoRa delivery
+
+The firmware is **unchanged** for the live integration: the server-side egress
+([egress.py](server/wave_api/lora/egress.py)) and the Pi relay/serve
+([relay.py](pi/router/relay.py), [serve.py](pi/router/serve.py)) drive the boards
+through the **exact AT subset documented in §4** — nothing new is required on the
+board. Verified against the driver's regexes in
+[rylr998.py](server/wave_api/lora/rylr998.py):
+
+| Driver call | AT line the firmware must answer | Firmware reply | OK |
+|---|---|---|---|
+| `configure()` | `AT+ADDRESS=` / `AT+NETWORKID=` / `AT+PARAMETER=` | `+OK` | ✓ |
+| `version()` | `AT+VER?` | `+VER=WAVE-HELTEC-1.0` | ✓ |
+| `address()` | `AT+ADDRESS?` | `+ADDRESS=<n>` | ✓ |
+| `send()` | `AT+SEND=<addr>,<len>,<data>` | `+OK` / `+ERR=<c>` | ✓ |
+| `recv()` | _(async)_ | `+RCV=<src>,<len>,<data>,<rssi>,<snr>` | ✓ |
+
+**Live data path (downlink).** Teacher publishes → server tokenizes the envelope
+(same array as MQTT) → [`egress.send_envelope`](server/wave_api/lora/egress.py)
+fragments it (`LORA_SAFE_FRAME=180`) and issues one `AT+SEND` per chunk to
+**Heltec A** → over the air to **Heltec B** → the Pi relay reassembles, decodes
+just `section`/`type`, and caches the raw array → the student PWA polls
+`GET /api/sync?section=<slug>` and decodes it with the same codec. Enable on the
+server with `LORA_ENABLED=true` + `LORA_PORT` (see `server/.env.example`); point
+the app at the Pi with `VITE_PI_HTTP=http://10.0.0.1`.

@@ -72,5 +72,21 @@ REST_FRAMEWORK = {
 MQTT_HOST = os.getenv("WAVE_BROKER_HOST", "127.0.0.1")
 MQTT_PORT = int(os.getenv("WAVE_BROKER_PORT", "1883"))
 
+# LoRa egress (Heltec A on the town/server side). Disabled by default so the
+# pure-MQTT LAN demo is unchanged. When enabled, every downstream cast that is
+# published to MQTT is ALSO fragmented and shipped over LoRa to the village
+# radio (Heltec B on the Pi). See wave_api/lora/egress.py.
+def _env_bool(name: str, default: bool = False) -> bool:
+    return os.getenv(name, str(default)).strip().lower() in ("1", "true", "yes", "on")
+
+
+LORA_ENABLED = _env_bool("LORA_ENABLED", False)
+LORA_PORT = os.getenv("LORA_PORT", "").strip()  # e.g. COM3 or /dev/ttyUSB0
+LORA_BAUD = int(os.getenv("LORA_BAUD", "115200"))
+LORA_TOWN_ADDR = int(os.getenv("LORA_TOWN_ADDR", "1"))      # Heltec A (this host)
+LORA_VILLAGE_ADDR = int(os.getenv("LORA_VILLAGE_ADDR", "2"))  # Heltec B (the Pi)
+LORA_NETWORK_ID = int(os.getenv("LORA_NETWORK_ID", "18"))
+LORA_PARAMETER = os.getenv("LORA_PARAMETER", "10,7,1,7")  # SF10,BW125,CR4/5,PP7
+
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
