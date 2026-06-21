@@ -10,8 +10,17 @@ Configure the two serial ports via WAVE_HW_SERVER_PORT and WAVE_HW_ROUTER_PORT
 from __future__ import annotations
 
 import os
+import sys
+from pathlib import Path
 
 import pytest
+
+# The `pi/` package lives at the repo root, one level above pytest's rootdir
+# (`server/`). Put the repo root on sys.path so the relay-backed H14 test can
+# `import pi.router.relay` while `wave_api` still resolves from `server/`.
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
 
 def _hw_enabled() -> bool:
