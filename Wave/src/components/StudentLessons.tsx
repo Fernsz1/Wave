@@ -70,7 +70,7 @@ interface StudentLessonsProps {
   hasSelectedSubject: boolean;
   setHasSelectedSubject: (selected: boolean) => void;
   navTopicId?: string;
-  navViewState?: 'syllabus' | 'reading' | 'quiz' | 'summative' | 'remedial-reading' | 'remedial-quiz';
+  navViewState?: 'syllabus' | 'reading' | 'quiz' | 'summative' | 'remedial-reading';
   clearNavContext?: () => void;
 }
 
@@ -90,12 +90,9 @@ export default function StudentLessons({
   navViewState = 'syllabus',
   clearNavContext
 }: StudentLessonsProps) {
-  const [viewState, setViewState] = useState<'syllabus' | 'reading' | 'quiz' | 'summative' | 'remedial-reading' | 'remedial-quiz'>('syllabus');
+  const [viewState, setViewState] = useState<'syllabus' | 'reading' | 'quiz' | 'summative' | 'remedial-reading'>('syllabus');
   const [activeRemedialMaterial, setActiveRemedialMaterial] = useState<TeacherRemediationMaterial | null>(null);
-  const [remedialQuizAnswers, setRemedialQuizAnswers] = useState<number[]>([]);
-  const [remedialQuizIdx, setRemedialQuizIdx] = useState(0);
-  const [remedialQuizResults, setRemedialQuizResults] = useState<{ correct: number; total: number } | null>(null);
-  
+
   // Selected Contexts
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [selectedLessonId, setSelectedLessonId] = useState<string>('');
@@ -185,9 +182,6 @@ export default function StudentLessons({
   // Open remedial reading view from "Execute Workbook"
   const handleOpenRemedial = (mat: TeacherRemediationMaterial) => {
     setActiveRemedialMaterial(mat);
-    setRemedialQuizAnswers([]);
-    setRemedialQuizIdx(0);
-    setRemedialQuizResults(null);
     setViewState('remedial-reading');
   };
 
@@ -1275,198 +1269,9 @@ export default function StudentLessons({
               >
                 Done Reading
               </button>
-              {activeRemedialMaterial.createdQuiz.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setRemedialQuizAnswers([]);
-                    setRemedialQuizIdx(0);
-                    setRemedialQuizResults(null);
-                    setViewState('remedial-quiz');
-                  }}
-                  className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-2 shadow-md shadow-amber-500/15 cursor-pointer hover:scale-[1.02] active:scale-98"
-                >
-                  Take the Quiz <ArrowRight className="h-4 w-4" />
-                </button>
-              )}
+              {/* Remedial test is the teacher's summative — taken from the lesson's
+                  Summative row (see createdSummative flow), not a separate quiz. */}
             </div>
-          </div>
-        </motion.div>
-      )}
-      {/* REMEDIAL QUIZ VIEW */}
-      {/* ────────────────────────────────────────────────────────── */}
-      {viewState === 'remedial-quiz' && activeRemedialMaterial && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-white border border-amber-100/70 rounded-3xl overflow-hidden shadow-[0_12px_40px_rgba(245,158,11,0.03)]"
-        >
-          <div className="px-5 py-4 border-b border-amber-100/60 bg-gradient-to-r from-amber-50 to-amber-50/20 flex items-center justify-between">
-            <div>
-              <h2 className="text-xs font-bold text-amber-700 uppercase tracking-wider">{activeRemedialMaterial.title} — Quiz</h2>
-              <span className="text-[11px] font-bold text-amber-600">Remedial Assessment</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setViewState('remedial-reading')}
-              className="text-xs text-slate-400 hover:text-slate-650 transition cursor-pointer font-bold animate-fade-in"
-            >
-              Back
-            </button>
-          </div>
-
-          <div className="p-6 sm:p-10 max-w-2xl mx-auto">
-            {!remedialQuizResults ? (
-              <div className="space-y-4">
-                <div className="flex justify-between text-xs text-slate-400 font-bold uppercase tracking-wider">
-                  <span>Question {remedialQuizIdx + 1} of {activeRemedialMaterial.createdQuiz.length}</span>
-                  <span>Remedial Quiz</span>
-                </div>
-                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200/40">
-                  <div
-                    className="h-full bg-gradient-to-r from-amber-500 to-amber-600 rounded-full transition-all duration-300"
-                    style={{ width: `${((remedialQuizIdx + 1) / activeRemedialMaterial.createdQuiz.length) * 100}%` }}
-                  />
-                </div>
-
-                <div className="pt-6">
-                  <h3 className="font-display font-semibold text-base sm:text-lg text-slate-900 leading-relaxed">
-                    {activeRemedialMaterial.createdQuiz[remedialQuizIdx].question}
-                  </h3>
-                </div>
-
-                <div className="space-y-3 pt-6">
-                  {activeRemedialMaterial.createdQuiz[remedialQuizIdx].options.map((opt, optIdx) => {
-                    const isSelected = remedialQuizAnswers[remedialQuizIdx] === optIdx;
-                    return (
-                      <button
-                        key={optIdx}
-                        type="button"
-                        onClick={() => {
-                          const updated = [...remedialQuizAnswers];
-                          updated[remedialQuizIdx] = optIdx;
-                          setRemedialQuizAnswers(updated);
-                        }}
-                        className={`w-full p-4 rounded-2xl text-left text-xs font-semibold border transition-all flex items-center justify-between cursor-pointer ${
-                          isSelected
-                            ? 'bg-amber-50/80 border-amber-500 text-amber-900 ring-4 ring-amber-100/60 shadow-md shadow-amber-500/5'
-                            : 'bg-white hover:bg-slate-50/80 border-slate-200/80 text-slate-600 shadow-sm hover:shadow'
-                        }`}
-                      >
-                        <span>{opt}</span>
-                        <span className={`h-4 w-4 rounded-full border shrink-0 flex items-center justify-center text-[10px] ${
-                          isSelected ? 'border-amber-600 bg-amber-600 text-white font-bold' : 'border-slate-300'
-                        }`}>
-                          {isSelected && '✓'}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="pt-8 border-t border-slate-100/80 flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={() => setRemedialQuizIdx(prev => Math.max(0, prev - 1))}
-                    disabled={remedialQuizIdx === 0}
-                    className="px-4 py-2 bg-slate-100 border border-slate-200/80 hover:bg-slate-200 text-slate-600 text-xs font-bold rounded-xl disabled:opacity-40 transition cursor-pointer"
-                  >
-                    Previous
-                  </button>
-
-                  {remedialQuizIdx < activeRemedialMaterial.createdQuiz.length - 1 ? (
-                    <button
-                      type="button"
-                      onClick={() => setRemedialQuizIdx(prev => prev + 1)}
-                      disabled={remedialQuizAnswers[remedialQuizIdx] === undefined}
-                      className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-bold rounded-xl shadow-md shadow-amber-500/10 disabled:opacity-40 transition cursor-pointer hover:scale-[1.02] active:scale-98"
-                    >
-                      Next Question
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const quiz = activeRemedialMaterial.createdQuiz;
-                        let correct = 0;
-                        quiz.forEach((q, i) => { if (remedialQuizAnswers[i] === q.correctAnswerIndex) correct++; });
-                        setRemedialQuizResults({ correct, total: quiz.length });
-                        onSaveQuizScore(
-                          activeRemedialMaterial.originalTopicId || activeRemedialMaterial.id,
-                          activeRemedialMaterial.id,
-                          correct,
-                          remedialQuizAnswers,
-                        );
-                      }}
-                      disabled={remedialQuizAnswers[remedialQuizIdx] === undefined}
-                      className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-xs font-extrabold rounded-xl shadow-lg shadow-emerald-500/15 disabled:opacity-40 transition cursor-pointer hover:scale-[1.02] active:scale-98"
-                    >
-                      Submit Quiz
-                    </button>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1 }}
-                className="space-y-6 text-center"
-              >
-                <div className="inline-flex h-16 w-16 bg-amber-50 border border-amber-200/80 rounded-2xl items-center justify-center text-amber-600 shadow-md">
-                  <Award className="h-9 w-9 animate-pulse" />
-                </div>
-                <h1 className="font-display font-medium text-xl text-slate-900">Remedial Quiz Completed!</h1>
-
-                <div className="bg-slate-50/60 border border-slate-200/80 p-5 rounded-2xl max-w-xs mx-auto flex items-center justify-around shadow-sm">
-                  <div>
-                    <span className="block text-[10px] text-slate-400 font-bold uppercase">Score</span>
-                    <span className="text-2xl font-black text-slate-800">
-                      {remedialQuizResults.correct} <span className="text-slate-400 text-base font-normal">/ {remedialQuizResults.total}</span>
-                    </span>
-                  </div>
-                  <div className="h-8 border-r border-slate-200" />
-                  <div>
-                    <span className="block text-[10px] text-slate-400 font-bold uppercase">Percentage</span>
-                    <span className="text-2xl font-black text-amber-600">
-                      {Math.round((remedialQuizResults.correct / remedialQuizResults.total) * 100)}%
-                    </span>
-                  </div>
-                </div>
-
-                {/* Per-question review */}
-                <div className="space-y-4 text-left">
-                  {activeRemedialMaterial.createdQuiz.map((q, qIdx) => {
-                    const studentAnswer = remedialQuizAnswers[qIdx];
-                    const isCorrect = studentAnswer === q.correctAnswerIndex;
-                    return (
-                      <div key={qIdx} className="bg-slate-50/50 border border-slate-200/60 rounded-2xl p-4 space-y-2 shadow-[0_4px_15px_rgba(0,0,0,0.01)]">
-                        <div className="flex items-start gap-2">
-                          <span className={`shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold ${isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
-                            {isCorrect ? '✓' : '✗'}
-                          </span>
-                          <p className="text-xs font-semibold text-slate-800 leading-relaxed">
-                            <span className="text-slate-400 font-bold mr-1">Q{qIdx + 1}.</span>{q.question}
-                          </p>
-                        </div>
-                        {q.explanation && (
-                          <p className="pl-7 text-[11px] text-slate-400 italic leading-relaxed border-t border-slate-100 pt-2">
-                            {q.explanation}
-                          </p>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setViewState('syllabus')}
-                  className="w-full py-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shadow-slate-900/10 cursor-pointer"
-                >
-                  <ArrowLeft className="h-4 w-4" /> Back to Syllabus
-                </button>
-              </motion.div>
-            )}
           </div>
         </motion.div>
       )}

@@ -86,8 +86,8 @@ class RemediationMaterial(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     teacher_notes = models.TextField(blank=True, default="")
-    created_quiz = models.JSONField(default=list)  # QuizQuestion[]
-    created_summative = models.JSONField(default=list)  # QuizQuestion[] — custom summative from AI wizard
+    # Remedial materials have a summative test only (no separate quiz).
+    created_summative = models.JSONField(default=list)  # QuizQuestion[] — 20-item summative
     publish_date = models.CharField(max_length=20)
     target_section = models.CharField(max_length=80)  # whole-section recipient
     is_published = models.BooleanField(default=True)

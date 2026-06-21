@@ -1488,7 +1488,6 @@ export default function TeacherHome({
                           title: fullTitle,
                           content: customSections.map(s => `## ${s.title}\n${s.body}`).join('\n\n'),
                           teacherNotes: combinedNotes,
-                          createdQuiz: [], // remedial has no separate quiz — summative only
                           createdSummative: customSummative,
                           publishDate,
                           targetSection: customTargetSection,

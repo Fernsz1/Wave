@@ -105,7 +105,7 @@ class Command(BaseCommand):
                     "title": m["title"],
                     "content": m["content"],
                     "teacher_notes": m.get("teacherNotes", ""),
-                    "created_quiz": m.get("createdQuiz", []),
+                    "created_summative": m.get("createdSummative", m.get("createdQuiz", [])),
                     "publish_date": m.get("publishDate", ""),
                     "target_section": target_section,
                     "is_published": m.get("isPublished", True),

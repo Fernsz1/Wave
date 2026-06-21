@@ -111,7 +111,6 @@
         { "name": "title", "t": "str" },
         { "name": "content", "t": "str" },
         { "name": "teacherNotes", "t": "str" },
-        { "name": "createdQuiz", "t": "array:QuizQuestion" },
         { "name": "createdSummative", "t": "array:QuizQuestion", "optional": true },
         { "name": "publishDate", "t": "str" },
         { "name": "targetSection", "t": "str" },

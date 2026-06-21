@@ -119,8 +119,8 @@ def submit_teacher_feedback(request):
                 "title": wire.title,
                 "content": wire.content,
                 "teacher_notes": wire.teacher_notes,
-                "created_quiz": [q.model_dump(by_alias=True) for q in wire.created_quiz],
-                "created_summative": [q.model_dump(by_alias=True) for q in wire.created_summative],
+                # Remedial = summative only; the agent's generated test is the summative.
+                "created_summative": [q.model_dump(by_alias=True) for q in wire.created_quiz],
                 "publish_date": wire.publish_date,
                 "target_section": wire.target_section,
                 "is_published": wire.is_published,
@@ -275,8 +275,8 @@ def start_lesson_and_quiz(request):
             "title": wire.title,
             "content": wire.content,
             "teacher_notes": wire.teacher_notes,
-            "created_quiz": [q.model_dump(by_alias=True) for q in wire.created_quiz],
-            "created_summative": [q.model_dump(by_alias=True) for q in wire.created_summative],
+            # Remedial = summative only; the agent's generated test is the summative.
+            "created_summative": [q.model_dump(by_alias=True) for q in wire.created_quiz],
             "publish_date": wire.publish_date,
             "target_section": wire.target_section,
             "is_published": wire.is_published,

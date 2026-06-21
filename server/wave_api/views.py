@@ -123,7 +123,6 @@ def remediation(request):
             "title": m.title,
             "content": m.content,
             "teacherNotes": m.teacher_notes,
-            "createdQuiz": m.created_quiz,
             "createdSummative": m.created_summative,
             "publishDate": m.publish_date,
             "targetSection": m.target_section,

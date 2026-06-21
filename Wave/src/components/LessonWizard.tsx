@@ -178,7 +178,6 @@ export default function LessonWizard({
       title: `Lesson ${lessonNumber}: ${title}`,
       content,
       teacherNotes: combinedNotes,
-      createdQuiz: [], // lesson-only generator — no quiz
       publishDate: new Date().toISOString().split('T')[0],
       targetSection: section,
       targetSubject: subject,

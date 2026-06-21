@@ -172,7 +172,7 @@ export default function App() {
   }, [repo, role, currentUser]);
 
   const [navTopicId, setNavTopicId] = useState<string>('');
-  const [navViewState, setNavViewState] = useState<'syllabus' | 'reading' | 'quiz' | 'summative' | 'remedial-reading' | 'remedial-quiz'>('syllabus');
+  const [navViewState, setNavViewState] = useState<'syllabus' | 'reading' | 'quiz' | 'summative' | 'remedial-reading'>('syllabus');
   const clearNavContext = () => {
     setNavTopicId('');
     setNavViewState('syllabus');

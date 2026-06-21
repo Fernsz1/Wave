@@ -121,7 +121,6 @@ def _save_remediation(p: dict, subject: str) -> None:
             "title": p["title"],
             "content": p["content"],
             "teacher_notes": p.get("teacherNotes", ""),
-            "created_quiz": p.get("createdQuiz", []),
             "created_summative": p.get("createdSummative", []),
             "publish_date": p.get("publishDate", ""),
             "target_section": p["targetSection"],

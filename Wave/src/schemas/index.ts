@@ -118,7 +118,6 @@ export const TeacherRemediationMaterialSchema = z.object({
   title: z.string(),
   content: z.string(),
   teacherNotes: z.string(),
-  createdQuiz: z.array(QuizQuestionSchema),
   createdSummative: z.array(QuizQuestionSchema).optional(),
   publishDate: z.string(),
   targetSection: z.string(),
